@@ -13,7 +13,7 @@ p.add_option('-m','--metadata',dest='metadata',metavar='*.txt',default=False,
 			help='specify metadata with sample id at first column')
 p.add_option('-g','--group',dest='group',metavar='[group name]',default=False,
 			help='column name of group in metadata')
-p.add_option('-r','--repseqs',dest='repseqs',metavar='FeatureData[Sequences]',default=False,
+p.add_option('-r','--repseqs',dest='repseqs',metavar='FeatureTable[Sequence]',default=False,
 			help='specify representive sequences file before mask and align')
 p.add_option('-o','--outdir',dest='outdir',metavar='[Directory]',default='./',
 			help='specify the output directory')
