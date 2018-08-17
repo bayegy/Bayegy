@@ -13,8 +13,8 @@ p.add_option('-m','--metadata',dest='metadata',metavar='*.txt',default=False,
 			help='specify metadata with sample id at first column')
 p.add_option('-g','--group',dest='group',metavar='[group name]',default=False,
 			help='column name of group in metadata')
-p.add_option('-r','--repseqs',dest='repseqs',metavar='FeatureTable[Sequence]',default=False,
-			help='specify representive sequences file before mask and align')
+p.add_option('-r','--repseqs',dest='repseqs',metavar='FeatureData[Sequences]',default=False,
+			help='specify representive sequences file after mask and align')
 p.add_option('-o','--outdir',dest='outdir',metavar='[Directory]',default='./',
 			help='specify the output directory')
 p.add_option('-c','--cut',dest='cut',metavar='int',default=100,
@@ -44,9 +44,7 @@ os.system('Rscript tree.R')
 
 
 #######align and mask#####
-os.system("qiime alignment mafft   --i-sequences %s   --o-alignment %s/aligned-rep-seqs.qza&&\
-	qiime alignment mask   --i-alignment %s/aligned-rep-seqs.qza   --o-masked-alignment %s/masked-aligned-rep-seqs.qza&&\
-	qiime tools export  %s/masked-aligned-rep-seqs.qza --output-dir %s/"%(options.repseqs,options.outdir,options.outdir,options.outdir,options.outdir,options.outdir))
+os.system("qiime tools export  %s --output-dir %s/"%(options.repseqs,options.outdir))
 
 
 #######select rep-seqs####
@@ -85,7 +83,16 @@ library("ggtree")
 library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 tax<-otu_table[,dim(otu_table)[2]]
-groupInfo <- split(rownames(otu_table), str_extract(tax,"p__[^;]{1,100}"))
+
+
+groupInfo<-str_extract(tax,"p__[^;]{1,100}")
+groupInfo[is.na(groupInfo)]<-"Unclassfied_phylum"
+groupInfo <- split(rownames(otu_table), groupInfo)
+
+groupInfo1<-str_extract(tax,"g__[^;]{1,100}")
+groupInfo1[is.na(groupInfo1)]<-"Unclassfied_genus"
+groupInfo1 <- split(rownames(otu_table), groupInfo1)
+
 
 otu_table<-otu_table[,-dim(otu_table)[2]]
 metadata<-read.table("%s",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
@@ -100,13 +107,16 @@ mysum=function(x){
 
 data=t(apply(otu_table,2,mysum))
 tree <- read.tree("%s/tree.nwk")
-tree<- groupOTU(tree, groupInfo)
-p = ggtree(tree,aes(color=group))+geom_tiplab(size=0, align=TRUE, linesize=.1)
+tree<- groupOTU(tree, groupInfo,group_name = "Phylum")
+tree<- groupOTU(tree, groupInfo1,group_name = "taxa")
+pa1<-length(unique(metagroup))
+pa<-c(0,-0.26,-0.026,-0.01,0,0.01,0.01,0.01,0.01)
+p = ggtree(tree,aes(color=Phylum))+geom_tiplab(size=3, align=TRUE, linesize=.5,aes(label=taxa))
 pdf(file="%s/%s", width=10, height=10)
-gheatmap(p, data, offset = -0.2, width=1, hjust=-.3)+theme_tree2()+theme(legend.position = "right",text=element_text(size=15,face="bold"))
+gheatmap(p, data, offset = 0.1, width=1, hjust=-3,colnames_offset_y=-0.3,colnames_offset_x=pa[pa1])+theme_tree2()+theme(legend.position = "right",text=element_text(size=15,face="bold"))
 dev.off()
 '''
-% (options.input,options.metadata,options.group,options.outdir,options.outdir,options.group+'_PhylogeneticTreeHeatmap.pdf'),
+% (options.input,options.metadata,options.group,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),
 file = rscript)
 
 os.system('Rscript tree.R')

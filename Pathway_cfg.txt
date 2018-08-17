@@ -1,0 +1,76 @@
+Lib         == /System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/lib
+Bin         == /System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/bin
+Software    == /System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/software
+Database    == /System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/database
+Qiime       == /System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/software/Python-2.7.3/bin
+PUB         == /Database/MICRO
+
+## 0) The main module process and common contral tools:
+Data_filter     = perl Lib/01.BCQC/Data_filter_v1.1.pl
+Data_filter1.1.1     = perl Lib/01.BCQC/Data_filter_v1.1.1.pl
+Data_filter2    = perl Lib/01.BCQC/Data_filter_v1.2.pl
+Data_filter3    = perl Lib/01.BCQC/Data_filter_v1.3.pl
+combine_data    = perl Lib/01.BCQC/lib/combine_data.pl
+Frags_QC        = perl Lib/02.FragsQC/Frags_QC.pl
+Make_OTU        = perl Lib/03.OTU/Make_OTU.pl
+Diversity       = perl Lib/04.Diversity/Diversity_compair.pl
+get_result      = perl Lib/00.Commbin/get_result.pl
+super_worker    = perl Lib/00.Commbin/super_worker.pl --qalter
+sh_control      = perl Lib/00.Commbin/sh_contral.pl
+send_email      = perl Lib/00.Commbin/TriggerAgent.pl
+##-------------------new add----------------
+SVG_Lib         = Lib/00.Commbin/5.8.8
+B_dir           = Lib/00.Commbin/qsub
+NODE_text       = Lib/00.Commbin/compute-node.txt
+##-------------------end add----------------
+
+## 1) Barcode split, Flash chain and data stat
+
+## 2) Extend data QC
+Usearch         = /System/software/MICRO/Usearch/usearch7.0.1001_i86linux32
+Chime_16Sdb     = Database/16S/gold.fa
+Chime_itsdb     = Database/ITS/UNITE_public_from_15.10.13.fasta
+Qiime_exp       = source Lib/03.OTU/lib/biom_activate.sh
+Split_lib       = Qiime/split_libraries_fastq.py
+NG_QC           = Software/qc/qc/ng_QC
+LOGO            = Software/qc/logo.png
+
+## 3) Make OTU and OTU taxonomy and phylogeny
+FA_num          = perl Software/faID.pl
+BIOM_activate   = source Lib/04.Diversity/lib/biom_activate.sh
+CONVERT_BIOM    = Qiime/biom  convert
+CORE_SET_aligned   = Database/16S/align_seqs/85_otus.pynast.fasta
+S18_otu_tax        = Database/18S/18S.taxonomy.txt
+S18_refseq          = Database/18S/18S.fa
+ITS_refseq         = Database/ITS/ITS.fa
+ITS_OTU_tax        = Database/ITS/ITS.taxonomy.txt
+BAC_16S_refseq      = Database/16S/97_bac_otus.fasta
+BAC_16S_OTU_tax     = Database/16S/97_bac_otu_taxonomy.txt
+ARC_16S_refseq      = Database/16S/97_arc_otus.fasta
+ARC_16S_OTU_tax     = Database/16S/97_arc_otu_taxonomy.txt
+ITS_blast_db        = Database/ITS/ITS.fa
+ITS_blast_tax       = Database/ITS/ITS.taxonomy.txt
+SVG2XX             = Software/svg2xxx_release/svg2xxx -t png
+RDP_Classfier      = Software/rdp_classifier_2.2/rdp_classifier-2.2.jar
+KRONA              = Lib/03.OTU/lib/Krona
+MOTHUR              = Software/Mothur/mothur/mothur
+
+## 4) OTU and Tax diversity alalysis
+SORT_otu_tab       = Qiime/sort_otu_table.py
+OTU_heatmap        = Qiime/make_otu_heatmap_html.py
+TAXT_summayr       = Qiime/summarize_taxa.py
+ALPHA_rarefaction  = Qiime/alpha_rarefaction.py
+TAB2JSON           = perl Lib/00.Commbin/tab2json.pl
+UPGAM              = Qiime/jackknifed_beta_diversity.py
+PCOA               = Qiime/beta_diversity.py
+SUMM_TAXA_TP       = Qiime/summarize_taxa_through_plots.py
+#Rscript            = Software/R-3.1.0/bin/Rscript
+#R                  = Software/R-3.1.0/bin/R
+#R2                 = Software/R-3.1.0/bin/R
+Rscript            = Rscript
+R                  = R
+R2                 = Software/R-3.1.0/bin/R
+CONVERT            = /usr/bin/convert
+#LEFSE              = /System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/software/lefse
+LEFSE              = /System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/software/lefse/nsegata-lefse-1cd4f0f8e6cf
+## 5) make html report and get result
