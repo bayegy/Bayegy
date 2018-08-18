@@ -38,7 +38,7 @@ ll<-length(unig)
 
 com<-sum(d1==ll)
 com_spe<-data.frame(OTUID=colnames(tb1)[d1==ll],Taxonomy=taxonomy[d1==ll])
-write.table(com_spe,paste(group,"_common_species.xls",sep = ""),row.names = F,sep = "\t")
+write.table(com_spe,paste(out,"/",group,"_common_species.xls",sep = ""),row.names = F,sep = "\t")
 
 print(unig)
 flower_data<-c()
