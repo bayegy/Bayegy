@@ -209,7 +209,7 @@ organize_deliverable_structure() {
 	cp ../4-BetaDiversity/3-NMDS/${category_1}_unifrac_NMDS.pdf Figure3-10.pdf
 	cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/unweighted_unifrac-permanova-${category_1}-significance.qzv Figure3-11.qzv
 	#cp ../5-Phylogenetics/1-MajorPhylums/Bacteria.phylogeny.pdf Figure3-12.pdf
-	cp ../6-AssociationAnalysis/1-RDA/Genus/CCA_bacteria_location_plot.png Figure3-14.pdf
+	cp ../6-AssociationAnalysis/1-RDA/Genus/CCA_bacteria_location_plot.png Figure3-14.png
 	#cp ../6-AssociationAnalysis/permanova.pdf Figure3-15.pdf
 	cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure3-19.png
 	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure3-20.pdf
