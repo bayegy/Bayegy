@@ -47,7 +47,7 @@ mad.5 = head(norm[order(apply(norm,1,mad), decreasing=T),],n=6)
 otu.pca <- prcomp(t(mad.5))
 
 print(paste("Making PCA plots for", KEGG_function_txt, sep=" "))
-KEGG_function_txt<-str_replace(KEGG_function_txt,"txt","")
+KEGG_function_txt<-str_replace(KEGG_function_txt,"PCA.txt","")
 ###########The name is bad here use tools::file_path_sans_ext("ABCD.csv") to obtain the basename in the future.
 PCA_plot_outputpdfname <- paste(KEGG_function_txt, category_1,".PCA.pdf", sep="")
 pdf( PCA_plot_outputpdfname, width=6.6, height=6.6)

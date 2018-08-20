@@ -1,5 +1,4 @@
 #/bin/sh -S
-
 #########
 #Please address any bugs to Cheng. 
 #Date 2017.12.19
@@ -73,7 +72,7 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
 	./Result_AmpliconSequencing/8-FiguresTablesForReport 
 
-	group_1=$1 
+	
 
 	echo "Start organize the files for deliverables ..."
 	
@@ -189,41 +188,39 @@ organize_deliverable_structure() {
 	mv ./Result_AmpliconSequencing/1-QCStats/stats-dada2 ./Result_AmpliconSequencing/1-QCStats/2-Stats-dada2
 	mv ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2
 
-<<COMMENT2
 	#######################For 8-FiguresTablesForReport
 	cd ./Result_AmpliconSequencing/8-FiguresTablesForReport
 
-	cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/ANCOM.Genus/ANCOM.Genus.qzv Table3-1.qzv
+	cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Table3-1.qzv
 	cp ../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/collapsed-Species/collapsed-Species.qzv  Table3-2.qzv
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/alpha-summary.tsv Table3-3.txt
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/shannon-group-significance/shannon-group-significance.qzv Table3-4.qzv
-	cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${group_1}-significance/unweighted_unifrac-permanova-${group_1}-significance.qzv Table3-5.qzv
+	cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/unweighted_unifrac-permanova-${category_1}-significance.qzv Table3-5.qzv
 	
 	cp ../1-QCStats/1-Stats-demux/demux.qzv Figure2-1.qzv
 	cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure3-1.png
 	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2/taxa-bar-plots.qzv Figure3-2.qzv
-	cp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/table-Phylum.${number}/table-Phylum.${number}.qzv Figure3-3.qzv
-	cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/ANCOM.Genus/ANCOM.Genus.qzv Figure3-4.qzv
+	cp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/${category_1}-table-Phylum.${number}/${category_1}-table-Phylum.${number}.qzv Figure3-3.qzv
+	cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Figure3-4.qzv
 	cp ../3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction/alpha-rarefaction.qzv Figure3-6.qzv
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/shannon-group-significance/shannon-group-significance.qzv Figure3-7.qzv
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure3-8.png
 	cp ../4-BetaDiversity/2-PCoA/unweighted_unifrac_emperor/unweighted_unifrac_emperor.qzv Figure3-9.qzv
-	cp ../4-BetaDiversity/3-NMDS/unifrac_NMDS.pdf Figure3-10.pdf
-	cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${group_1}-significance/unweighted_unifrac-permanova-${group_1}-significance.qzv Figure3-11.qzv
+	cp ../4-BetaDiversity/3-NMDS/${category_1}_unifrac_NMDS.pdf Figure3-10.pdf
+	cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/unweighted_unifrac-permanova-${category_1}-significance.qzv Figure3-11.qzv
 	#cp ../5-Phylogenetics/1-MajorPhylums/Bacteria.phylogeny.pdf Figure3-12.pdf
-	cp ../6-AssociationAnalysis/1-RDA/Phylum/RDA_CCA_plot.pdf Figure3-14.pdf
-	cp ../6-AssociationAnalysis/permanova.pdf Figure3-15.pdf
+	cp ../6-AssociationAnalysis/1-RDA/Genus/CCA_bacteria_location_plot.png Figure3-14.pdf
+	#cp ../6-AssociationAnalysis/permanova.pdf Figure3-15.pdf
 	cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure3-19.png
-	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf Figure3-20.pdf
+	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure3-20.pdf
 	cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure3-21.png
-COMMENT2
+
 }
 
 MAIN() {
 
 	echo "##############################################################\n#Organize the Result folder"
-	organize_deliverable_structure $category_1
-
+	organize_deliverable_structure
 <<COMMENT1
 	echo "##############################################################\n#Organize the Essential folder ----- part1"
 	mkdir Essential

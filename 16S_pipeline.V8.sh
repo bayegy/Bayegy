@@ -1,19 +1,23 @@
 #/bin/sh -S
-
 #########
 #Please address any bugs to Cheng. 
 #Date 2017.12.19
 #########
-mapping_file=$1
+mapping_file=$(readlink -f $1)
 depth=$2
 min_freq=$3
 category_set=${4//,/ }
-reference_trained=$5
-close_reference_trained=$6
-manifest_file=$7
+category_report=($category_set)
+reference_trained=$(readlink -f $5)
+close_reference_trained=$(readlink -f $6)
+manifest_file=$(readlink -f $7)
 not_rda=$8
 echo "Check wheather your categories are the following:"
 for i in $category_set;do echo $i;done
+
+
+declare -A tax_aa
+tax_aa=([k]=Kingdom [p]=Phylum [c]=Class [o]=Order [f]=Family [g]=Genus [s]=Species)
 
 tax_levels["1"]="Kingdom"
 tax_levels["2"]="Phylum"
@@ -23,13 +27,13 @@ tax_levels["5"]="Family"
 tax_levels["6"]="Genus"
 tax_levels["7"]="Species"
 
-#tax_levels["k"]="Kingdom"
-#tax_levels["p"]="Phylum"
-#tax_levels["c"]="Class"
-#tax_levels["o"]="Order"
-#tax_levels["f"]="Family"
-#tax_levels["g"]="Genus"
-#tax_levels["s"]="Species"
+#tax_levels1["k"]="Kingdom"
+#tax_levels1["p"]="Phylum"
+#tax_levels1["c"]="Class"
+#tax_levels1["o"]="Order"
+#tax_levels1["f"]="Family"
+#tax_levels1["g"]="Genus"
+#tax_levels1["s"]="Species"
 
 
 if [ -z "$8" ]; then
@@ -42,13 +46,13 @@ if [ -z "$8" ]; then
 		  \n\n"
 
 	echo "Please provide following input parameters
-		1) Full path of the mapping file. (Accept both .csv or txt format.)
+		1) Path of the mapping file. (Accept both .csv or txt format.)
 		2) Depth of the for subsampleing. (Suggested value: 4000)
 		3) Mininum frequence for OTU to be selected. (Suggested value: 1000)
 		4) The name of categories in the mapping file seprated by commas.
-		5) Full path of the classifier for alignment.
-		6) Full path of the reference sequences for close reference alignment.
-		7) Full path of the manifest file.
+		5) Path of the classifier for alignment.
+		6) Path of the reference sequences for close reference alignment.
+		7) Path of the manifest file.
 		8) specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 
 		Sample Usage:
@@ -57,7 +61,7 @@ if [ -z "$8" ]; then
 	exit 0
 else
 	echo "################
-	Running: sh $0 $1 $2 $3 $4 $5 $6 $7"
+	Running: sh $0 $1 $2 $3 $4 $5 $6 $7 $8"
 fi
 
 check_file() {
@@ -104,12 +108,8 @@ MAIN() {
 
 
 	echo "##############################################################\n#Initiate directory name and set up the directory structure"
+
 	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-	RSCRIPTORIGINALPATH=${SCRIPTPATH}/RRelatedOutput.R
-	cp $RSCRIPTORIGINALPATH ./
-	READMEORIGINALPATH=${SCRIPTPATH}/Result_README.pdf
-	ITOLPERLPATH=${SCRIPTPATH}/generate_file_Itol.pl
-	CURRENTDIR=`echo $PWD`
 
 	#echo "##############################################################\n#Demultiplexing the single-end sequence file"
 	#qiime demux emp-single --i-seqs emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
@@ -127,7 +127,7 @@ MAIN() {
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
 	#single-end
 	#qiime demux emp-single --i-seqs emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza --p-rev-comp-mapping-barcodes
-	qiime demux emp-single --i-seqs ./database/emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
+	qiime demux emp-single --i-seqs ../database/emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred33
 	#paired-end
 	#qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --source-format PairedEndFastqManifestPhred33&&\
@@ -247,14 +247,14 @@ MAIN() {
 	perl ${SCRIPTPATH}/stat_otu_tab.pl -unif min exported/feature-table.taxonomy.txt -prefix exported/Relative/otu_table --even exported/Relative/otu_table.even.txt -spestat exported/Relative/classified_stat_relative.xls
 	perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/classified_stat_relative.xls -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > exported/Relative/Classified_stat_relative.svg
 
+	for key in ${!tax_aa[*]};do mv exported/Relative/otu_table.${key}.relative.mat exported/Relative/otu_table.${tax_aa[$key]}.relative.txt;done;
+		#mv exported/Relative/otu_table.p.relative.mat exported/Relative/otu_table.Phylum.relative.txt
+		#mv exported/Relative/otu_table.c.relative.mat exported/Relative/otu_table.Class.relative.txt
+		#mv exported/Relative/otu_table.o.relative.mat exported/Relative/otu_table.Order.relative.txt
+		#mv exported/Relative/otu_table.f.relative.mat exported/Relative/otu_table.Family.relative.txt
+		#mv exported/Relative/otu_table.g.relative.mat exported/Relative/otu_table.Genus.relative.txt
+		#mv exported/Relative/otu_table.s.relative.mat exported/Relative/otu_table.Species.relative.txt
 
-	mv exported/Relative/otu_table.k.relative.mat exported/Relative/otu_table.Kingdom.relative.txt
-	mv exported/Relative/otu_table.p.relative.mat exported/Relative/otu_table.Phylum.relative.txt
-	mv exported/Relative/otu_table.c.relative.mat exported/Relative/otu_table.Class.relative.txt
-	mv exported/Relative/otu_table.o.relative.mat exported/Relative/otu_table.Order.relative.txt
-	mv exported/Relative/otu_table.f.relative.mat exported/Relative/otu_table.Family.relative.txt
-	mv exported/Relative/otu_table.g.relative.mat exported/Relative/otu_table.Genus.relative.txt
-	mv exported/Relative/otu_table.s.relative.mat exported/Relative/otu_table.Species.relative.txt
 
 	for n7 in "Phylum" "Class" "Order" "Family" "Species"; 
 		do echo $n7; 
@@ -335,7 +335,7 @@ MAIN() {
 	biom convert -i phylogeny/feature-table.taxonomy.biom -o phylogeny/feature-table.taxonomy.txt --to-tsv --header-key taxonomy
 	qiime tools export phylogeny/dna-sequences.${min_freq}.rooted-tree.qza --output-dir phylogeny/
 	mv phylogeny/tree.nwk phylogeny/tree.rooted.nwk
-	perl $ITOLPERLPATH phylogeny/feature-table.taxonomy.txt 
+	perl ${SCRIPTPATH}/generate_file_Itol.pl phylogeny/feature-table.taxonomy.txt 
 
 
 	echo "##############################################################\n#export all qzv files into clickable folders"
@@ -367,7 +367,7 @@ MAIN() {
 			group_significance.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -m $mapping_file -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 
 			#group_significance.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -m $mapping_file -c $category_2 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_2}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap
-			python auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
+			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
 	source deactivate
@@ -411,19 +411,18 @@ MAIN() {
 	perl ${SCRIPTPATH}/stat_otu_tab.pl -unif min feature-table.taxonomy.txt --prefix Absolute/otu_table -nomat -abs -spestat Absolute/classified_stat.xls
 
 	cd Absolute
-	mv otu_table.k.absolute.mat otu_table.Kingdom.absolute.txt
-	mv otu_table.p.absolute.mat otu_table.Pylumn.absolute.txt
-	mv otu_table.c.absolute.mat otu_table.Class.absolute.txt
-	mv otu_table.o.absolute.mat otu_table.Order.absolute.txt
-	mv otu_table.f.absolute.mat otu_table.Family.absolute.txt
-	mv otu_table.g.absolute.mat otu_table.Genus.absolute.txt
-	mv otu_table.s.absolute.mat otu_table.Species.absolute.txt
-
-
+	for key in ${!tax_aa[*]};do mv otu_table.${key}.absolute.mat otu_table.${tax_aa[$key]}.absolute.txt;done;
+	#mv otu_table.k.absolute.mat otu_table.Kingdom.absolute.txt
+	#mv otu_table.p.absolute.mat otu_table.Pylumn.absolute.txt
+	#mv otu_table.c.absolute.mat otu_table.Class.absolute.txt
+	#mv otu_table.o.absolute.mat otu_table.Order.absolute.txt
+	#mv otu_table.f.absolute.mat otu_table.Family.absolute.txt
+	#mv otu_table.g.absolute.mat otu_table.Genus.absolute.txt
+	#mv otu_table.s.absolute.mat otu_table.Species.absolute.txt
 
 
 	mkdir RDA
-	for n6 in "Pylumn" "Class" "Order" "Family" "Genus" "Species";
+	for n6 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n6;
 		mkdir RDA/${n6}
 		cp otu_table.${n6}.absolute.txt RDA/${n6}
@@ -437,8 +436,8 @@ MAIN() {
 	mkdir 4-VennAndFlower
 	for category_1 in $category_set;
 		do echo $category_1;
-		Rscript venn_and_flower_plot.R  ./exported/feature-table.taxonomy.txt $mapping_file $category_1 ./4-VennAndFlower 0;
-		python phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -c 1000
+		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  ./exported/feature-table.taxonomy.txt $mapping_file $category_1 ./4-VennAndFlower 0;
+		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -c 1000
 		done;
 
 
@@ -465,7 +464,7 @@ MAIN() {
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
-	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file Group1 $READMEORIGINALPATH $min_freq
+	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH}/Result_README.pdf $min_freq
 
 }
 
