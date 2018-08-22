@@ -54,10 +54,12 @@ cor_allft_p<-cor_allft_p[-c(1:LEN),]
 cor_allft_p<-cor_allft_p[,-c(LEN+1:dim(cor_allft_p)[2])]
 
 
-sel<-(colSums(t(cor_allft_p<0.05))>=sort(colSums(t(cor_allft_p<0.05)),T)[opt$num])
-cor_allft_r<-cor_allft_r[sel,]
-cor_allft_p<-cor_allft_p[sel,]
-annotation_row<-annotation_row[sel]
+if(opt$num<dim(cor_allft_r)[1]){
+  sel<-(colSums(t(cor_allft_p<0.05))>=sort(colSums(t(cor_allft_p<0.05)),T)[opt$num])
+  cor_allft_r<-cor_allft_r[sel,]
+  cor_allft_p<-cor_allft_p[sel,]
+  annotation_row<-annotation_row[sel]
+}
 
 write.table(cor_allft_r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
 write.table(cor_allft_p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
@@ -79,8 +81,8 @@ annotation_row =data.frame(Phylum=annotation_row)
 rownames(annotation_row) = rownames(cor_allft_r) 
 ####corrlation plot
 pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=14,width=12)
-pheatmap(cor_allft_r,fontsize=15,annotation_row = annotation_row,border_color = "black",
-         display_numbers = heat_s,
+pheatmap(cor_allft_r,fontsize=20,annotation_row = annotation_row,border_color = "black",
+         display_numbers = heat_s,fontsize_row =20,
          cluster_rows=T,clustering_distance_rows="correlation",
          cluster_cols=T,clustering_distance_cols="euclidean",
          clustering_method="centroid")
