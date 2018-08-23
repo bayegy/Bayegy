@@ -427,7 +427,7 @@ MAIN() {
 		mkdir RDA/${n6}
 		cp otu_table.${n6}.absolute.txt RDA/${n6}
 		cd RDA/${n6}
-		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 15 -e $not_rda;done;
+		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 20 -e $not_rda;done;
 		cd ../../
 	done;
 	cd ../../
@@ -437,9 +437,16 @@ MAIN() {
 	for category_1 in $category_set;
 		do echo $category_1;
 		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  ./exported/feature-table.taxonomy.txt $mapping_file $category_1 ./4-VennAndFlower 0;
-		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -c 1000
+		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
 		done;
 
+	echo "##############################################################\nCorrelation analysis" 
+	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+		do echo $n7;
+			Rscript ${SCRIPTPATH}/network.R -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
+			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
+		done;
+	
 
 
 	echo "##############################################################\n#Run LEFSE for Group"
@@ -450,17 +457,18 @@ MAIN() {
 	mkdir Lefse/
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
-		mkdir Lefse/${n7}
-		cp otu_table.${n7}.relative.txt Lefse/${n7}
-		cd Lefse/${n7}	
-		for category_1 in $category_set;
-			do echo $category_1;
-				Rscript ${SCRIPTPATH}/write_data_for_lefse.R otu_table.${n7}.relative.txt $mapping_file $category_1 ${category_1}_${n7}_lefse.txt;
-				base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
-			done;
-		cd ../../
-	done;
+			mkdir Lefse/${n7}
+			cp otu_table.${n7}.relative.txt Lefse/${n7}
+			cd Lefse/${n7}	
+			for category_1 in $category_set;
+				do echo $category_1;
+					Rscript ${SCRIPTPATH}/write_data_for_lefse.R otu_table.${n7}.relative.txt $mapping_file $category_1 ${category_1}_${n7}_lefse.txt;
+					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+				done;
+			cd ../../
+		done;
 	cd ../../
+
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./

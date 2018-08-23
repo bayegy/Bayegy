@@ -38,7 +38,7 @@ dat=t(dat)[match(rownames(envdata),rownames(t(dat))),]
 
 
 ######correlation statics
-if(!dir.exists(opt$out)){dir.create(opt$out)}
+if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 
 LEN<-dim(envdata)[2]
 dat_for_cor<-data.frame(envdata,dat, row.names = NULL, check.rows = T, check.names = F, stringsAsFactors = default.stringsAsFactors())
@@ -55,7 +55,14 @@ cor_allft_p<-cor_allft_p[,-c(LEN+1:dim(cor_allft_p)[2])]
 
 
 if(opt$num<dim(cor_allft_r)[1]){
-  sel<-(colSums(t(cor_allft_p<0.05))>=sort(colSums(t(cor_allft_p<0.05)),T)[opt$num])
+  ifcor<-colSums(t(cor_allft_p<0.05))
+  sel<-(ifcor>=sort(ifcor,T)[opt$num]&ifcor>0)
+  cor_allft_r<-cor_allft_r[sel,]
+  cor_allft_p<-cor_allft_p[sel,]
+  annotation_row<-annotation_row[sel]
+}else{
+  ifcor<-colSums(t(cor_allft_p<0.05))
+  sel<-(ifcor>0)
   cor_allft_r<-cor_allft_r[sel,]
   cor_allft_p<-cor_allft_p[sel,]
   annotation_row<-annotation_row[sel]
@@ -80,7 +87,7 @@ rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
 annotation_row =data.frame(Phylum=annotation_row)
 rownames(annotation_row) = rownames(cor_allft_r) 
 ####corrlation plot
-pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=14,width=12)
+pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=2+0.6*dim(cor_allft_r)[1],width=2+0.7*dim(cor_allft_r)[2])
 pheatmap(cor_allft_r,fontsize=20,annotation_row = annotation_row,border_color = "black",
          display_numbers = heat_s,fontsize_row =20,
          cluster_rows=T,clustering_distance_rows="correlation",

@@ -17,13 +17,13 @@ p.add_option('-r','--repseqs',dest='repseqs',metavar='FeatureData[Sequences]',de
 			help='specify representive sequences file after mask and align')
 p.add_option('-o','--outdir',dest='outdir',metavar='[Directory]',default='./',
 			help='specify the output directory')
-p.add_option('-c','--cut',dest='cut',metavar='int',default=100,
-			help='give the threshold of N of reads for otu you want to show')
+p.add_option('-n','--number',dest='num',metavar='int',default=30,
+			help='How many most abundant species do you want to analyze')
 
 (options,args) = p.parse_args()
 
 
-os.system("if [ ! -d %s ];then mkdir %s;fi"%(options.outdir,options.outdir))
+os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
 
 
 ########select otu####
@@ -34,10 +34,11 @@ with open('tree.R', 'w') as rscript:
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 otu_table<-otu_table[,-dim(otu_table)[2]]
 otusum<-colSums(t(otu_table))
-out<-data.frame(rownames(otu_table)[otusum>as.numeric("%s")])
+hold<-sort(otusum,T)[%s]
+out<-data.frame(rownames(otu_table)[otusum>=hold])
 write.table(out,"%s/selected_features.txt",sep = "",row.names = F,col.names = F,quote = F)
 '''
-% (options.input,options.cut,options.outdir),
+% (options.input,options.num,options.outdir),
 file = rscript)
 os.system('Rscript tree.R')
 
@@ -109,11 +110,10 @@ data=t(apply(otu_table,2,mysum))
 tree <- read.tree("%s/tree.nwk")
 tree<- groupOTU(tree, groupInfo,group_name = "Phylum")
 tree<- groupOTU(tree, groupInfo1,group_name = "taxa")
-pa1<-length(unique(metagroup))
-pa<-c(0,-0.26,-0.026,-0.01,0,0.01,0.01,0.01,0.01)
-p = ggtree(tree,aes(color=Phylum))+geom_tiplab(size=3, align=TRUE, linesize=.5,aes(label=taxa))
+
+p = ggtree(tree,aes(color=Phylum))+geom_tiplab(size=4, align=TRUE, linesize=.5,aes(label=taxa))
 pdf(file="%s/%s", width=10, height=10)
-gheatmap(p, data, offset = 0.1, width=1, hjust=-3,colnames_offset_y=-0.3,colnames_offset_x=pa[pa1])+theme_tree2()+theme(legend.position = "right",text=element_text(size=15,face="bold"))
+gheatmap(p, data, offset = 0.2, width=0.7, hjust=0.5,colnames_offset_y=-0.3)+theme_tree2()+theme(legend.position = "right",text=element_text(size=20,face="bold"))
 dev.off()
 '''
 % (options.input,options.metadata,options.group,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),

@@ -1,20 +1,18 @@
 library(optparse)
-library(reshape)
 library(igraph)
 library(psych)
-require(RColorBrewer)
 library(stringr)
 
 option_list <- list( 
     make_option(c("-i", "--input"), dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
-    make_option(c("-n", "--number"), dest="num",help="The number of most abundant species you want to plot",default=20),
+    make_option(c("-n", "--number"), dest="num",help="The number of most abundant species you want to plot",default=50,type="integer"),
     make_option(c("-c", "--cut"),dest="cut", help="Specify the threshold of correlation coefficent",default=0.6),
     make_option(c("-o", "--output"),dest="out", help="Specify the path of output files",default="./")  
     )
 
 opt <- parse_args(OptionParser(option_list=option_list))
 
-
+if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 dat <- read.table(as.character(opt$otu),comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 dat<-dat[dat[,1]!="Others",]
 dat<-dat[!duplicated(dat[,1]),]
@@ -44,6 +42,11 @@ asign_rainbow_cor<-function(x){
 cor<-corr.test(dat,method = "spearman",adjust="fdr")
 p<-cor$p
 r<-cor$r
+
+write.table(r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
+write.table(p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
+
+
 r[cor$p>=0.05|abs(cor$r)<opt$cut] <- 0 
 igraph<-graph_from_adjacency_matrix(r,mode="undirected",weighted=TRUE,diag=FALSE)
 ss<-scale(colSums(dat))
@@ -59,15 +62,15 @@ V(igraph)$color<-asign_rainbow_cor(annotation_row)
 
 
 bad.vs<-V(igraph)[degree(igraph)==0]
-igraph<-delete.vertices(igraph,bad.vs)
+#igraph<-delete.vertices(igraph,bad.vs)
 
 
 
-if(!dir.exists(opt$out)){dir.create(opt$out)}
-pdf(paste(opt$out,"/","Correlation_network.pdf",sep = ""), height=8,width=8)
+
+pdf(paste(opt$out,"/","Correlation_network.pdf",sep = ""), height=12,width=12)
 plot(igraph,vertex.label.color="black",edge.width=1,layout=layout_on_grid,
-     edge.curved=F,margin=c(0,0,0,0.75),vertex.label.cex=1)
+     edge.curved=F,margin=c(0,0,0,0.4),vertex.label.cex=1)
 
-legend(title="Phylum",x="topright",y = "topright",col = rainbow(length(unig)),pt.bg = rainbow(length(unig)),pch = rep(16,length(unig)),pt.cex=2,legend = unig)
+legend(title="Phylum",x="right",y = "right",bty="n",col = rainbow(length(unig)),pt.bg = rainbow(length(unig)),pch = rep(16,length(unig)),pt.cex=2,legend = unig)
 dev.off()
 

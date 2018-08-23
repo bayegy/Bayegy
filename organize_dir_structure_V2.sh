@@ -176,7 +176,9 @@ organize_deliverable_structure() {
 	cp AdditionalPhylogeny/*.pdf ./Result_AmpliconSequencing/5-Phylogenetics/
 	cp -rp 4-VennAndFlower/ ./Result_AmpliconSequencing/3-AlphaDiversity/
 	rm ./Result_AmpliconSequencing/3-AlphaDiversity/4-VennAndFlower/*.log
-
+	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
+	cp -rp 2-CorrelationHeatmap/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
+	
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
 	cd ./Result_AmpliconSequencing/
 	for f in $(find . -type f -name "*qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); mv $f ${f}.exported; mv ${f}.exported ${dir}/${base}; done
