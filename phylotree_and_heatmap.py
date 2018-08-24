@@ -113,7 +113,7 @@ tree<- groupOTU(tree, groupInfo1,group_name = "taxa")
 
 p = ggtree(tree,aes(color=Phylum))+geom_tiplab(size=4, align=TRUE, linesize=.5,aes(label=taxa))
 pdf(file="%s/%s", width=10, height=10)
-gheatmap(p, data, offset = 0.2, width=0.7, hjust=0.5,colnames_offset_y=-0.3)+theme_tree2()+theme(legend.position = "right",text=element_text(size=20,face="bold"))
+gheatmap(p, data, offset = 0.2, width=1, hjust=0.5,colnames_offset_y=-0.3)+theme_tree2()+theme(legend.position = "right",text=element_text(size=20,face="bold"))
 dev.off()
 '''
 % (options.input,options.metadata,options.group,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),

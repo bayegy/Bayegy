@@ -87,7 +87,7 @@ rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
 annotation_row =data.frame(Phylum=annotation_row)
 rownames(annotation_row) = rownames(cor_allft_r) 
 ####corrlation plot
-pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=2+0.6*dim(cor_allft_r)[1],width=2+0.7*dim(cor_allft_r)[2])
+pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=5+0.5*dim(cor_allft_r)[1],width=8.5+0.3*dim(cor_allft_r)[2])
 pheatmap(cor_allft_r,fontsize=20,annotation_row = annotation_row,border_color = "black",
          display_numbers = heat_s,fontsize_row =20,
          cluster_rows=T,clustering_distance_rows="correlation",

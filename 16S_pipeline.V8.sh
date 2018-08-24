@@ -3,6 +3,9 @@
 #Please address any bugs to Cheng. 
 #Date 2017.12.19
 #########
+
+echo $(readlink -f $1)
+
 mapping_file=$(readlink -f $1)
 depth=$2
 min_freq=$3
@@ -120,28 +123,28 @@ MAIN() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 
-
+<<com1
 	source activate qiime2
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
 	#single-end
 	#qiime demux emp-single --i-seqs emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza --p-rev-comp-mapping-barcodes
-	qiime demux emp-single --i-seqs ../database/emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
+	#qiime demux emp-single --i-seqs ../database/emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred33
 	#paired-end
-	#qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --source-format PairedEndFastqManifestPhred33&&\
+	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --source-format PairedEndFastqManifestPhred33&&\
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 
 	echo "##############################################################\n#Use DADA2 for quality control and feature table construction"
 	#single-end
 	#qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 10 --p-trunc-len 265 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 0 --p-trunc-len 120 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	#qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 0 --p-trunc-len 120 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 
 	#paired-end
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 210 --p-trunc-len-r 210 --p-trim-left-f 24 --p-trim-left-r 25 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 250 --p-trim-left-f 10 --p-trim-left-r 10 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
+	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 270 --p-trunc-len-r 240 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 0 --p-trunc-len-r 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
 
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
@@ -439,11 +442,11 @@ MAIN() {
 		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  ./exported/feature-table.taxonomy.txt $mapping_file $category_1 ./4-VennAndFlower 0;
 		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
 		done;
-
+com1
 	echo "##############################################################\nCorrelation analysis" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
-			Rscript ${SCRIPTPATH}/network.R -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
+			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
 			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
 		done;
 	
@@ -463,7 +466,7 @@ MAIN() {
 			for category_1 in $category_set;
 				do echo $category_1;
 					Rscript ${SCRIPTPATH}/write_data_for_lefse.R otu_table.${n7}.relative.txt $mapping_file $category_1 ${category_1}_${n7}_lefse.txt;
-					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.4 --label_font_size 10;
 				done;
 			cd ../../
 		done;

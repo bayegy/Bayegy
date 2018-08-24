@@ -51,7 +51,7 @@ KEGG_function_txt<-str_replace(KEGG_function_txt,"PCA.txt","")
 ###########The name is bad here use tools::file_path_sans_ext("ABCD.csv") to obtain the basename in the future.
 PCA_plot_outputpdfname <- paste(KEGG_function_txt, category_1,".PCA.pdf", sep="")
 pdf( PCA_plot_outputpdfname, width=12, height=12)
-ggbiplot(otu.pca, obs.scale = 1, var.scale = 1, groups = sub_design[[category_1]], ellipse = TRUE,var.axes = T,varname.adjust=1,varname.size=3)+theme(text = element_text(size = 20))
+ggbiplot(otu.pca, obs.scale = 1, var.scale = 1, groups = sub_design[[category_1]], ellipse = TRUE,var.axes = T,varname.adjust=1,varname.size=3)
 print(plot)
 dev.off()
 
