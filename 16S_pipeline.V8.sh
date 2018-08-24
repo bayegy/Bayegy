@@ -434,7 +434,7 @@ MAIN() {
 		cd ../../
 	done;
 	cd ../../
-
+com1
 	echo "#############################################################\nAdditional plot"
 	mkdir 4-VennAndFlower
 	for category_1 in $category_set;
@@ -442,7 +442,7 @@ MAIN() {
 		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  ./exported/feature-table.taxonomy.txt $mapping_file $category_1 ./4-VennAndFlower 0;
 		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
 		done;
-com1
+
 	echo "##############################################################\nCorrelation analysis" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;

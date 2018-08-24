@@ -23,6 +23,7 @@ data<-read.table(otu,header = T,skip = 1,sep = "\t",
 
 taxonomy<-data[,dim(data)[2]]
 data<-data[,-dim(data)[2]]
+abdc<-colSums(t(data))
 
 meta<-t(meta)
 meta<-meta[,match(colnames(data),colnames(meta))]
@@ -37,7 +38,7 @@ d1<-colSums(tb1)
 ll<-length(unig)
 
 com<-sum(d1==ll)
-com_spe<-data.frame(OTUID=colnames(tb1)[d1==ll],Taxonomy=taxonomy[d1==ll])
+com_spe<-data.frame(OTUID=colnames(tb1)[d1==ll],Taxonomy=taxonomy[d1==ll],SUM_Abundance=abdc[d1==ll])
 write.table(com_spe,paste(out,"/",group,"_common_species.xls",sep = ""),row.names = F,sep = "\t")
 
 
@@ -45,7 +46,7 @@ flower_data<-c()
 for(i in 1:ll){
   is_uni<-(d1==1&tb1[i,]==1)
   flower_data[i]<-sum(is_uni)
-	uni_spe<-data.frame(OTUID=colnames(tb1)[is_uni],Taxonomy=taxonomy[is_uni])
+	uni_spe<-data.frame(OTUID=colnames(tb1)[is_uni],Taxonomy=taxonomy[is_uni],SUM_Abundance=abdc[is_uni])
   write.table(uni_spe,paste(out,"/",group,"_",unig[i],"_special_species.xls",sep = ""),row.names = F,sep = "\t")
 }
 
@@ -62,7 +63,7 @@ if(length(unig)>=3){
 flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,tax_pos=4,num_pos=2, 
                         ellipse_col, 
                         circle_col = rgb(0, 162, 214, max = 255),
-                        text_cex = 2) {
+                        text_cex = 1.6) {
   par( bty = "n", ann = F, xaxt = "n", yaxt = "n", mar = c(1,1,1,1))
   plot(c(0,10),c(0,10),type="n")
   n   <- length(sample)
@@ -82,7 +83,7 @@ flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,
       text(x = 5 + tax_pos * cos((start + deg * (t - 1)) * pi / 180),
            y = 5 + tax_pos * sin((start + deg * (t - 1)) * pi / 180),
            sample[t],
-           srt = deg * (t - 1) - start,
+           #srt = deg * (t - 1) - start,
            adj = 1,
            cex = text_cex
       )
@@ -91,7 +92,7 @@ flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,
       text(x = 5 + tax_pos * cos((start + deg * (t - 1)) * pi / 180),
            y = 5 + tax_pos * sin((start + deg * (t - 1)) * pi / 180),
            sample[t],
-           srt = deg * (t - 1) + start,
+           #srt = deg * (t - 1) + start,
            adj = 0,
            cex = text_cex
       )
@@ -106,9 +107,9 @@ flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,
 
 pdf(paste(out,"/",group,"_Flower_plot.pdf",sep = ""),width = 6,height = 6)
 flower_plot(sample=unig,value = flower_data,
-            a=0.8,b=2,start =90,common = com,tax_pos = 4.93,num_pos = 2.7,
+            a=0.65,b=1.8,start =90,common = com,tax_pos = 4.3,num_pos = 2.5,
             ellipse_col = rainbow(ll),
-            ell_pos = 2.7,circ_r = 1)
+            ell_pos = 2.5,circ_r = 0.9)
 dev.off()
 }
 
