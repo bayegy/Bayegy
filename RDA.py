@@ -147,7 +147,7 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
 
 
 p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) + 
@@ -190,7 +190,7 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
 
 
 p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) + 
