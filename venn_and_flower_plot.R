@@ -54,7 +54,7 @@ if(length(unig)<=5){
 ls1<-list()
 for(i in 1:ll){ls1[[i]]<-colnames(tb1)[tb1[i,]]}
 names(ls1)<-rownames(tb1)
-venn.diagram(ls1,filename = paste(out,"/",group,"_Venn_plot.pdf",sep = ""),alpha= 0.50,lwd =1.2,cat.cex=1.4,fill=rainbow(length(ls1)),margin=0.15)
+venn.diagram(ls1,filename = paste(out,"/",group,"_Venn_plot.png",sep = ""),imagetype="png",alpha= 0.50,lwd =1.2,cat.cex=1.4,fill=rainbow(length(ls1)),margin=0.15)
 
 }
 
