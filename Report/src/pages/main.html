@@ -28,9 +28,32 @@ a{ text-decoration:none; }
 
 <body>
 
+
+<blockquote>
+<div id="ee" style="position:fixed"><button id="myBtn" style="background:#FFB6C1">展开目录</button></div>
+<div id="emm" style="position:fixed"><button id="h" style="background:#FFB6C1">隐藏目录</button></div>
+</blockquote>
+<dd>&nbsp;</dd>
+
+
+<script>
+document.getElementById("myBtn").addEventListener("click", function()
+{
+	document.getElementById("nav").style.display=""
+	document.getElementById("emm").style.display=""
+});
+
+document.getElementById("h").addEventListener("click", function()
+{
+    document.getElementById("nav").style.display="none";
+	document.getElementById("emm").style.display="none";
+});
+</script>
+
+
+
+
 <div id="nav">
-
-
    <div class="AccordionPanel">
     <div class="AccordionPanelTab"><li><a href="#summary">一 概述</a></li></div>
   </div>
@@ -133,6 +156,10 @@ a{ text-decoration:none; }
 var Accordion1 = new Spry.Widget.Accordion("Accordion1");
 </script>
 </div>
+
+
+
+
 
 <div id="section">
 <h1 align="center"><strong>微生太扩增子_样本_结题报告</strong></h1>
