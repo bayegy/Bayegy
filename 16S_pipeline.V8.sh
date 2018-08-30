@@ -434,7 +434,7 @@ MAIN() {
 		cd ../../
 	done;
 	cd ../../
-com1
+
 	echo "#############################################################\nAdditional plot"
 	mkdir 4-VennAndFlower
 	for category_1 in $category_set;
@@ -472,10 +472,10 @@ com1
 		done;
 	cd ../../
 
-
+com1
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
-	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH}/Result_README.pdf $min_freq
+	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
 
 }
 

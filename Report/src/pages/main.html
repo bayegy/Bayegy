@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+<basefont color="#000000" size="6" />
+<meta charset="utf-8">
+<title>扩增子_样本_结题报告</title>
+<link href="../css/css.css" rel="stylesheet" type="text/css" />
+<script src="SpryAssets/SpryAccordion.js" type="text/javascript"></script>
+<link href="SpryAssets/SpryAccordion.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.noprint .menu .main_menu li a {
+	font-family: Verdana, Geneva, sans-serif;
+}
+.noprint .menu .main_menu li a {
+	font-family: Times New Roman, Times, serif;
+}
+body{width:1100px;}
+
+li {list-style-type:none;
+font-size:15px}
+
+a{ text-decoration:none; }
+
+</style>
+</head>
+
+
+<body>
+
+<div id="nav">
+
+
+   <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#summary">一 概述</a></li></div>
+  </div>
+  
+
+  <div class="AccordionPanel">
+   <div class="AccordionPanelTab"><li><a href="#flow">二 项目流程</a></li></div>
+         <div class="AccordionPanelContent">
+			<li><a href="#workflow_1">2.1 实验流程</a></li>
+			<li><a href="#workflow_2">2.2 信息分析流程</a></li>
+		  </div>
+   </div>
+   
+  <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">三 测序数据预处理</a></li></div>
+  </div>
+
+  <div id="Accordion1" class="Accordion" tabindex="0">
+  <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">四 物种的注释与评估</a></li></div>
+    <div class="AccordionPanelContent">
+      <li><a href="#a4.1">4.1 物种组成分析</a></li>
+      <li><a href="#a4.2">4.2 组间OTU差异显著性分析</a></li>
+	  <li><a href="#a4.3">4.3 样品共有物种分析</a></li>
+    </div>
+  </div>
+  
+  <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">五 Alpha多样性分析</a></li></div>
+    <div class="AccordionPanelContent">
+      <li><a href="#a5.1">5.1 Alpha多样性指数统计分析</a></li>
+      <li><a href="#a5.2">5.2 Alpha多样性指数组间差异检验</a></li>
+    </div>
+  </div>
+
+  <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">六 Beta多样性分析</a></li></div>
+    <div class="AccordionPanelContent">
+      <li><a href="#a6.1">6.1 Beta多样性指数统计分析</a></li>
+      <li><a href="#a6.2">6.2 基于Beta多样性指数的组间菌群结构比较</a></li>
+    </div>
+  </div>
+  
+   <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">七 系统进化分析</a></li></div>
+    <div class="AccordionPanelContent">
+      <li><a href="#a7.1">7.1 特定物种系统进化分析</a></li>
+    </div>
+  </div>
+  
+    <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">八 关联统计分析</a></li></div>
+    <div class="AccordionPanelContent">
+      <li><a href="#a8.1">8.1 CCA/RDA分析</a></li>
+      <li><a href="#a8.2">8.2 相关性热图分析</a></li>
+      <li><a href="#a8.3">8.3 物种相互作用网络分析</a></li>
+      <li><a href="#a8.4">8.4 Source tracker分析（VIP分析）</a></li>
+      <li><a href="#a8.5">8.5 AYASDI拓扑数据分析（VIP分析）</a></li>
+    </div>
+  </div>
+  
+  
+      <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">九 样品微生物组成功能预测分析</a></li></div>
+    <div class="AccordionPanelContent">
+      <li><a href="#a9.1">9.1 预测微生物群落功能</a></li>
+      <li><a href="#a9.2">9.2 预测功能PCA分析</a></li>
+      <li><a href="#a9.3">9.3 预测功能聚类分析</a></li>
+      <li><a href="#a9.4">9.4 组间功能差异性分析</a></li>
+    </div>
+  </div>
+ 
+  
+  
+  <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#analysis">十 分析方法及参考文献</a></li></div>
+        <div class="AccordionPanelContent">
+      <li><a href="#a10.1">10.1 测序数据预处理</a></li>
+      <li><a href="#a10.2">10.2 物种的注释与评估</a></li>
+      <li><a href="#a10.3">10.3 Alpha多样性分析</a></li>
+      <li><a href="#a10.4">10.4 Beta多样性分析</a></li>
+      <li><a href="#a10.5">10.5 系统进化分析</a></li>
+      <li><a href="#a10.6">10.6 关联统计分析</a></li>
+      <li><a href="#a10.7">10.7 样品微生物组成功能预测分析</a></li>
+    </div>
+  </div>
+
+  </div>
+  
+   <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#a11">十一 交付结果目录结构</a></li></div>
+  </div>
+  
+    <div class="AccordionPanel">
+    <div class="AccordionPanelTab"><li><a href="#a12">十二 联系我们</a></li></div>
+  </div>
+
+
+<script type="text/javascript">
+var Accordion1 = new Spry.Widget.Accordion("Accordion1");
+</script>
+</div>
+
+<div id="section">
+<h1 align="center"><strong>微生太扩增子_样本_结题报告</strong></h1>
+<blockquote style="line-height:28px"><h2><strong><a name="summary" id="summary">一</a> 概述 </strong></h2>
+ 微生物世界是分子多样性最大的天然资源库，基于菌株水平的传统分离培养技术为人们认识微生物多样性提供了可能，但是据估计自然界中超过99%的微生物不能通过传统的分离培养技术获得其纯培养，从而导致环境微生物中的多样性基因资源难以被发现。许多重要的微生物我们还不能识别，随着微生物活性产物的广泛研究和深入开发利用，从环境微生物中筛选到新活性物质的几率将逐步下降。而如何开拓利用环境微生物新资源是微生物研究的重要课题。为此研究者们开发了多种以特定环境微生物为研究对象的高通量测序方法。细菌基因组相对较小，通常仅有一条环状DNA和质粒，通过高通量测序，可以了解其全部遗传信息。这也已经成为微生物研究的重要手段之一，为细菌的遗传进化、疾病预防与治疗、疫苗与抗生素的开发等提供重要的信息。 <br>
+  16S rRNA 测序技术是最常用的高通量测序依赖的组学技术之一，该技术着眼于对肠道微生物群落菌种组成的分析。细菌16S rRNA基因具有保守区与可变区间隔排列的特征，其中的可变区一般具有菌种特异性，并且可以反映细菌间亲缘关系的远近，因此通过分析可变区的序列即可得到各细菌的分类学特征。16S rRNA 基因序列包括9个可变区和10个保守区。传统分子生物学方法中有时也应用 Sanger法对单一菌种的16S rRNA进行测序和鉴定，而 16S rRNA 测序技术通过结合高通量测序技术的高通量优势和16S rRNA基因的菌种鉴定优势，实现了对复杂样品中混合菌种的分类学鉴定和精确定量。16SrRNA 测序技术的基本流程通过提取实验样品的DNA，并扩增16S rDNA某个可变区，采用高通量测序仪Miseq或Hiseq对其进行测序，通过生物信息学分析可以获得特定实验样品中细菌或古菌物种组成、物种丰度、系统进化、群落比较等诸多信息。			  
+<h2><strong><a name="flow" id="flow">二</a> 项目流程 </strong></h2>
+  <h3><a name="workflow_1" id="workflow_1"></a>2.1 实验流程  </h3>
+  <p><img src="../image/2-1.jpg" width="808" height="144"></p>
+  <p align="center"><strong>2-1 实验工作流程图 </strong></p>
+  <h3 align="left"><a name="workflow_2">2.2 信息分析流程</a></h3>
+<p>为了保证OTU(Operational Taxonomic Units)聚类及后续分析的准确性，首先会对原始测序数据进行过滤处理，处理后的数据进行拼接、过滤，得到有效数据。然后基于有效数据进行OTU聚类/去噪和物种分类分析，形成OTU和其他物种分类等级的物种丰度谱。基于数据均一化后的OTU物种丰度谱，再对OTU进行丰度、多样性指数等分析，并对物种注释在各个分类水平上进行群落结构的统计分析。还可以在以上分析的基础上，进行一系列的基于OTU、物种组成的聚类分析和统计比较分析，挖掘样品之间的物种组成差异，结合环境及临床因子等进行关联统计分析，寻找与其显著相关的物种群落，进行微生物群路的功能预测分析。
+</p>
+<p><img src="../image/2-2.jpg" width="849" height="481"></p>
+<p align="center"><strong>图2-2 信息分析流程图 </strong></p>
+<h2><a name="analysis" id="analysis">三</a> 测序数据预处理 (<a href="../../../1-QCStats">1-QCStats目录</a>)</h2>
+<p>采用Illumina MiSeq/HiSeq测序平台得到的下机数据经过数据拆分、去引物序列、双端序列拼接、序列质量及长度过滤和截取以及去嵌合体后获得最终的有效序列信息</p>
+<p align="center"><a href="../../../1-QCStats/1-Stats-demux/Summary_请点此文件查看.html">点击此处查看具体的样本测序量统计及序列测序质量统计结果</a></p>
+<p align="left"> 结果目录：./ 1-QCStats/，存放样本的原始双端测序序列、拼接的序列、低质量及嵌合体过滤后的拆分后的序列以及相关的序列长度和数量的统计文件。目录下文件详细解释请参考./Result_README.pdf文件。重要：qzv文件是Qiime2的专属可视化文件格式，可以通过网页<a href="https://view.qiime2.org/">https://view.qiime2.org/</a>进行交互性查看，也可以直接点开相应的qzv解压缩文件夹通过网页形式直接点开HTML文件&ldquo;Summary_请点此文件查看.html&rdquo;查看（推荐）。本报告只提取了部分主要信息用于阅读，然而qzv文件中包含大量其他有用的交互式信息，请用户自行查看。</p>
+<h2 align="left">四 物种的注释与评估(<a href="../../../2-AbundanceAnalysis">2-AundanceAnalysis目录</a>)</h2>
+<h3 align="left"><a id="a4.1"></a>4.1 物种组成分析</h3>
+<p>为了研究样品物种组成及多样性信息，对所有样品的全部的有效序列进行聚类/去噪，形成OTU，也可以称特征序列(Feature Sequence)。相较QIIME1的UPARSE聚类方法，在本报告流程分析中使用QIIME2推荐的DADA2方法去噪去嵌合，不再按相似度聚类，结果比上一代分析结果更准确。选取OTU的代表性序列，与核糖体RNA数据库(Greengenes  Database [99%])进行比对获得物种注释信息。基于物种注释信息，去除注释为叶绿体、线粒体以及不能注释到界级别的OTU及其包含的序列。基于OTU的绝对丰度及注释信息，对每个样品在一共7个分类水平界门纲目科属种(Kingdom,Phylum,Class,Order,Family,Genus,Species)上的序列数目占总序列数的比例进行统计，可以有效的评估样本的物种注释分辨率（注释到属的比例越高表示样本的OTU注释效果越好）及样本的物种复杂度(注释到属的比例越低表示样本的物种复杂度越高)，图4-1同时统计了各分类水平的物种在每个样本中的相对丰度。</p>
+<p align="center"><a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2/Summary_请点此文件查看.html">点击此处查看各分类水平的物种相对分布情况</a></p>
+<p>更多完整的物种分布情况请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots">./ 2-AundanceAnalysis/1-AbundanceSummary/3-Barplots/</a>。</p>
+<p><img src="../../Figure4-1.png" width="800" height="400"></p>
+<p align="center"><strong>图 4-1 每个样品在各分类水平上的序列构成柱形图</strong></p>
+
+ <dd>说明：横坐标(Sample Name)是样品名，纵坐标(Sequence Number  Percent)表示注释到该水平的序列数目占总注释数据的比率，柱状图自上而下的颜色顺序对应于右侧的图例颜色顺序。每个分类水平最高值为1，代表100%的序列都得到了至少在这个级别的注释。</dd>
+ <dd>&nbsp;</dd>
+
+   <p>为了研究不同样品间的相似性，还可以通过对样品进行聚类分析从而构建样品的聚类树。选取关注分类水平的物种（默认选取物种绝对丰度大于1000）实现样品聚类（纵向聚类），以此考察不同样品或者分组间的相似或差异性（图3-3，此处为门水平分类的热图），并从分类信息和样品间差异两个层面进行横向聚类，寻找物种或样本的聚集规律。</p>
+   <p align="center"><a href="../../page4/Summary_请点此文件查看.html">点击此处查看门分类水平的热图聚类结果</a></p>
+   <p>其他分类等级完整的热图聚类结果请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/">./2-AundanceAnalysis/1-AbundanceSummary/4-Heatmaps/</a>。 </p>
+   <h3><a id="a4.2"></a>4.2 组间OTU差异显著性分析</h3>
+   <p>ANCOM(Analysis of composition of microbiomes)分析被用于比较物种在组间的显著性差异。从下面链接中我们可以得知在本实验中物种属水平分类在组间表现了丰度的显著差异，各个其他的分类水平也都用ANCOM方法进行了分析。</p>
+   <p align="center"><a href="../../page4-2/Summary_请点此文件查看.html">点击此处查看物种属水平分类的ANCOM丰度比较结果</a></p>
+   <dd>说明：在ANCOM分析中,W值是一个衡量组间差异显著性的统计量（类似F值，t值），W值越高，代表该物种在组间的差异显著性越高。组间差异显著的物种被列在顶部的表格中。底部的火山图中，的每一个点都代表了一个比较的物种。纵坐标代表W值。横坐标f_statistic值代表组间样品丰度的差异程度，数字越高代表差异越大。</dd>
+   <p>同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异，本报告中未详细介绍，更多完整信息请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。 </p>
+   <h3><a id="a4.3"></a>4.3 样品共有物种分析</h3>
+   <p>对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现环境样本在不同的分类水平上的组成相似性及重叠情况（图4-2）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../2-AbundanceAnalysis/3-VennAndFlower"> ./2-AbundanceAnalysis/3-VennAndFlower</a></p>
+   <p><img src="../../Figure4-2.png" width="600" height="600"></p>
+   <p align="center"><strong>图4-2 共有或特有物种Venn图展示</strong><strong></strong></p>
+  <dd>说明：venn图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。</dd>
+  <p>我们也提供了各分类水平的所有OTU在各个样本的分布情况：</p>
+  <p align="center"><a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/collapsed-Genus/Summary_请点此文件查看.html">点击此处查看属水平的所有OTU在各个样本的分布情况（Feature Detail）</a></p>
+  <p>更多完整信息请查看结果目录<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats">./2AundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/</a>。  </p>
+  <h2>五 Alpha多样性分析(<a href="../../../3-AlphaDiversity">3-AlphaDiversity目录</a>)</h2>
+  <h3><a id="a5.1"></a>5.1 Alpha多样性指数统计分析</h3>
+  <p>Alpha多样性指数是对某个样品中物种多样性的分析，包含样品中的物种组成的丰富度和均匀度两个因素，通常用<a></a><a>Observed </a>OTU，Shannon以及Faith&rsquo;s Phylogenetic Diversity等指数来评估某个样本的物种多样性，指数越高，表明样本的多样性越复杂。Observed OTU指数是指样本中实际测定得到的OTU数量，衡量样品中OTU丰富度的指数。Shannon指数,它的计算考虑到样品中的分类总数，和每个分类所占的比例。Faith&rsquo;s Phylogenetic Diversity是基于系统发生树来计算的一种多样性指数，它用各个样品中OTU的代表序列计算出构建系统发生树的距离，将某一样品中的所有代表序列的值加和，从而得到的数值。对不同的样本Alpha多样性指数进行统计总结结果<a href="../../../3-AlphaDiversity/1-AlphaDiversitySummary/alpha-summary.tsv">请点击此处查看</a>。 </p>
+  <p>Alpha多样性稀释曲线(Rarefaction Curve)是从样品中随机抽取一定测序量的数据，统计它们所代表物种数目或多样性指数，以数据量与物种多样性来构建的曲线，以用来说明样品的测序数据量是否合理，并间接反映样品中物种的丰富程度。稀释性曲线图中，当曲线趋向平坦时，说明测序数据量渐近合理。</p>
+  <p align="center"><a href="../../../3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction/Summary_请点此文件查看.html">点击此处查看各Alpha多样性指数的稀释性曲线</a></p>
+  <h3 align="left"><a id="a5.2"></a>5.2 Alpha多样性指数组间差异检验</h3>
+  <p>在得到整体的Alpha多样性指数之后，接下来结合分组信息来用Kruskal Wallis方法比较在各个样品分组之间Alpha多样性指数是否有显著性差异。<a>Alpha</a>多样性指数Kruskal Wallis方法比较结果文件为<a href="../../../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis">./3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/</a>目录下的相关文件。除了使用QIIME2推荐的Kruskal Wallis方法，分析还包括使用Wilcox Test去精确比较了各个组间的显著性差异并做图，图5-1显示了shannon指数的组间多重比较结果。</p>
+  <p><img src="../../Figure5-1.png" width="800" height="558"></p>
+  <p align="center"><strong>图5-1 shannon指数的组间多重比较</strong></p><dd>说明：*，**，***分别代表p&lt;0.05,p&lt;0.01,p&lt;0.001，上方p值为所有分组间差异的总p值
+  </dd>
+  <dd>&nbsp;</dd>
+  <p align="left">其他指数的完整信息请查看<a href="../../../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test">./3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test</a></p>
+  <h2 align="left">六 Beta多样性分析(<a href="../../../4-BetaDiversity">4-BetaDiversity目录</a>)</h2>
+  <h3><a id="a6.1"></a>6.1 Beta多样性指数统计分析</h3>
+  <p>Beta Diversity是对不同样品间的微生物群落构成进行比较。根据样本的OTU丰度信息计算Bray Curtis，Weighted  Unifrac和Unweighted Unifrac距离来评估不同样品间的微生物群落构差异。Bray Curtis距离是生态学上反应群落之间差异性最常用的指标，只考虑了物种的丰度信息。Unweighted Unifrac距离是基于物种系统进化关系进行计算的样本间的距离，只考虑了物种的有无。Weighted Unifrac距离是结合OTU的丰度信息和系统进化关系获得的样本间的距离。Unweighted Unifrac距离对稀有物种比较敏感，而Bray Curtis和Weighted  Unifrac距离则对丰度较高的物种更加敏感。Weighted Unifrac距离，<a>Unweighted Unifrac</a>距离及Bray Curtis距离作为Beta多样性距离是衡量两个样品间的相异系数的指标  ，其值越小，表示这两个样品在物种多样性方面存在的差异越小。图6-1为不同样品之间以上三种距离热图的展示。详细的数值可以查看结果目录<a href="../../../4-BetaDiversity/1-BetaDiversitySummary/">./4-BetaDiversity/1-BetaDiversitySummary/</a>。 </p>
+  <p><img src="../../Figure6-1.png" width="900" height="600"></p>
+  <p align="center"><strong>图6-1 Beta多样性指数热图</strong></p>
+<dd>说明：热图方格的颜色代表样品两两之间的相异系数，相异系数越小的两个样品，物种多样性的差异越小。从上到下，在热图中分别代表bray Curtis 我们基于Bray Curtis距离,Unweighted Unifrac距离和Weighted Unifrac距离。 </dd>
+<dd>&nbsp;</dd>
+<p>主坐标分析（PCoA），是一种与PCA类似的降维排序方法，从多维数据中提取出最主要元素和结构能够提取出最大程度反映样品间差异的三个坐标轴，从而将多维数据的差异反映在三维坐标图上，进而揭示复杂数据背景下的简单规律。区别在于PCA是基于样品的相似系数矩阵来寻找主坐标，而PCoA是基于距离矩阵来寻找主坐标。我们基于Bray Curtis距离、Weighted Unifrac距离和Unweighted Unifrac距离来进行PCoA分析，并选取贡献率最大的主坐标组合进行作图展示，图中样品的距离越接近，表示样品的物种组成结构越相似。分析结果文件夹分别提供了PCoA的2D和3D图，方便选择使用。 </p>
+<p align="center"><a href="../../../4-BetaDiversity/2-PCoA/bray_curtis_emperor/Summary_请点此文件查看.html">点击此处查看基于bray-curtis的PCoA 3D图（图片可拖动旋转，可调色）</a></p>
+<dd>说明：横坐标（Axis 1）表示第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标（Axis  2）表示第二主成分，百分比表示第二主成分对样品差异的贡献值；Axis 3坐标表示第三主成分，百分比表示第三主成分对样品差异的贡献值；图中的每个点表示一个样品，同一个组的样品使用同一种颜色表示。客户根据meta  data的分类信息可以个性化展示其他分类的距离关系。</dd>
+<dd>&nbsp;</dd> 
+<p>其他距离完整的PCoA展示见结果目录<a href="../../../4-BetaDiversity/2-PCoA/">./4-BetaDiversity/2-PCoA/</a></p>
+<p>无度量多维标定法（NMDS）统计是一种适用于生态学研究的排序方法，类似于PCoA，通过样本的分布，或者基因的分布，可以看出组间差异，组内差异等。NMDS包括一类排序方法，其设计目的是为了克服以前的排序方法（即线性模型，包括PCoA）的缺点，NMDS的模型是非线性的，能更好地反映生态学数据的非线性结构。非度量多维尺度法是一种将多维空间的研究对象(样本或变量)简化到低维空间进行定位、分析和归类, 同时又保留对象间原始关系的数据分析方法。适用于无法获得研究对象间精确的相似性或相异性数据，仅能得到他们之间等级关系数据的情形，图6-2为基于Unweighted Unifrac距离进行的NMDS分析。</p>
+<p>其他距离NMDS展示见结果目录<a href="../../../4-BetaDiversity/3-NMDS/">./4-BetaDiversity/3-NMDS/</a>。</p>
+<p>PLS-DA分析,即偏最小二乘法判别分析，是一种用于判别分析的多变量统计分析方法,根据观察或测量到的若干变量值,来判断研究对象如何分类。PLS-DA属于有监督的分析方法,需要将检测样本按照类别进行分组,在计算数学模型时把各组加以区分,忽略组内的随机差异,突出组间系统差异,在观测因子远大于样本数量时具有较好的样本区分表现。基于全OTU水平的PLS-DA分析(偏最小二乘法判别分析)的坐标图也给予了提供，请参见结果目录<a href="../../../4-BetaDiversity/4-PLS-DA">./4-BetaDiversity/5-PLS-DA/</a>。 </p>
+<p>&nbsp;</p>
+
+<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="720">
+<param name="SRC" value="..\..\Figure6-2.pdf" ><embed width="100%" height="720" fullscreen="yes" src="..\..\Figure6-2.pdf"><noembed></noembed></embed></object>
+
+<p align="center">图6-2 2D NMDS分析 </p>
+<dd>说明：图中的点代表样本，点与点之间的距离表示样本菌群差异程度。 </dd>
+<dd>&nbsp;</dd>
+<h3 align="left"><a id="a6.2"></a>6.2 基于Beta多样性指数的组间菌群结构比较</h3>
+<p>在得到整体的Beta多样性指数之后，接下来结合分组信息来用PERMANOVA方法和ANOSIM方法比较在各个样品分组之间的微生物组成结构是否有显著性差异。</p>
+<p align="center"><a href="../../page6-2/Summary_请点此文件查看.html">点击此处查看第一种分组方案基于Unweighted Unifrac距离进行的PERMANOVA分析</a></p>
+<dd>说明：上面的箱线图横向为分组信息，各个分组名字后面括号内的n值代表在组间的比较次数。纵向为比较的样品之间的距离。有多少个分组就会有多少个箱形图，以上图仅展示了所有分组对其中第一个分组的样品之间的距离绘制的箱形图，其他组的详细信息请查看结果文件。 下面的表格是箱线图详细数据说明表格，q值是校正过的p值，更具参考价值，q&lt;0.05可推断组间菌群结构存在显著差异。</dd>
+<p>基于其他距离的菌群结构差异显著性分析结果可以查看结果目录<a href="../../../4-BetaDiversity/5-GroupSignificance/">./4-BetaDiversity/6-GroupSignificance/</a>。 </p>
+<h2>七 系统进化分析(<a href="../../../5-Phylogenetics">5-Phylogenetics</a>目录)</h2>
+<h3><a id="a7.1"></a>7.1 特定物种系统进化分析</h3>
+<p><a></a><a>选取关注的</a>OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。此外，利用iTOL可以直观地展示研究环境中的物种群落组成多样性及其系统进化关系。如果需要也可以基于单个样品的物种分类结果，筛选特别关注的物种进行样本内和样本间的物种分类树及物种相对丰度统计展示。用户也可以使用<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a> 的文件用iTOL自行做图。</p>
+
+  <object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="900">
+     <param name="SRC" value="..\..\Figure7-1.pdf" >
+     <embed width="100%" height="900" fullscreen="yes" src="..\..\Figure7-1.pdf"><noembed></noembed></embed>
+   </object>
+   
+  <p align="center"><strong>图7-1 系统发育进化树及组间丰度分布热图</strong></p><dd>说明：左边为进化树，不同颜色的分支代表不同的门，每条末端的树枝代表一个OTU，末端注释了对应OTU所属的属分类，右边热图是标准化后的绝对丰度（序列条数）。
+</dd>
+  <h2 align="left">八 关联统计分析(<a href="../../../6-AssociationAnalysis">6-AssociationAnalysis目录</a>) </h2>
+<h2 style="color:#F00">注意：如果没有提供环境因子将没有相关性热图和RDA/CCA</h2>
+<h3 align="left"><a id="a8.1"></a>8.1 CCA/RDA分析</h3>
+<p>CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 </p>
+<p><img src="../../Figure8-1.png" width="800" height="800"></p>
+<h3 align="center">图8-1 属水平物种CCA/RDA排序图</h3>
+<dd>说明：在CCA/RDA物种排序图内，环境因子用箭头表示，箭头连线的长度代表某个环境因子与群落分布和种类分布间相关程度的大小（解释方差的大小），箭头越长，说明相关性越大，反之越小。箭头连线和排序轴的夹角代表某个环境因子与排序轴的相关性大小，夹角越小，相关性越高；反之越低。环境因子之间的夹角为锐角时表示两个环境因子之间呈正相关关系，钝角时呈负相关关系。每个点代表一个物种，点越大，对应物种丰度越高，灰色点代表丰度较低的物种，未在图中注释物种名称，将物种投影到各个环境因子，对应的值即为该物种倾向于存在的环境（喜欢的环境）。或者说，将物种点与原点连线，物种间，物种与环境因子间，环境因子间的夹角的余弦值近似于相关系数，至于有多近似，就要看RDA1/CCA1和RDA2/CCA2两个坐标轴的解释方差百分比有多大，越大越近似。对于样本排序图（请查看<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>），样本点之间的距离近似于菌群结构差异程度，样本点投影到环境因子对应的值近似于该样本真实的环境因子值。</dd>
+
+<h3 align="left"><a id="a8.2"></a>8.2 相关性热图分析 </h3>
+ <p>相关性热图可以用于分析环境因子或其他临床表型数据与微生物群落或物种之间是否显著相关，然后计算环境因子与微生物物种间的Spearman相关系数，并用热图展示（图8-2）。该分析可以挑选出与某种环境因子或疾病显著相关的物种，同时提供环境因子的数据，比如 pH值、温度值、临床因子等。 </p>
+
+   <object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="720">
+     <param name="SRC" value="..\..\Figure8-2.pdf" >
+     <embed width="100%" height="1200" fullscreen="yes" src="..\..\Figure8-2.pdf"><noembed></noembed></embed>
+ </object>
+ 
+ <p align="center"><strong>图8-2 属水平微生物物种与表型之间的相互关系热图</strong></p>
+<dd>说明：X轴上为环境因子，Y轴为物种。通过计算获得R值（秩相关）和校正错误发现率的P值。R值在图中以不同颜色展示，P值若小于0.05则用 * 号标出，右侧图例是不同R值的颜色区间，同时，左边的色条标注了物种所属门分类。* 0.01≤ P  &lt;0.05，** 0.001≤P  &lt; 0.01，*** P  &lt;  0.001。</dd>
+<p>其他分类水平的相关性热图请查看<a href="../../../6-AssociationAnalysis/2-CorrelationHeatmap">./6-AssociationAnalysis/2-CorrelationHeatmap</a></p>
+<h3><a id="a8.3"></a>8.3 物种相互作用网络分析</h3>
+<p><a></a><a>基于物种样本间的相对丰度进行Spearman或者基于成分数据的相关系数（CCLasso/SPARCC）计算，获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建</a>（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。</p>
+<p><object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="720">
+     <param name="SRC" value="..\..\Figure8-3.pdf" >
+     <embed width="100%" height="720" fullscreen="yes" src="..\..\Figure8-3.pdf"><noembed></noembed></embed>
+   </object>
+</p>
+<p align="center"><strong>图8-3 属分类水平物种相互作用网络图</strong></p>
+<dd>说明：  样本组各自富集的物种的相互作用network图的比较，圆圈代表一个物种，大小代表其相对丰度，不同的颜色代表不同的物种门分类，圆圈之间的线条代表这两个物种间的相关性显著（校正错误发现率的秩相关的p值小于0.05），线条颜色红色代表正相关，蓝色代表负相关，线条越粗，相关系数绝对值越大。 </dd>
+<p>其它分类水平的相关网络图请查看<a href="../../../6-AssociationAnalysis/3-NetworkAnalysis">./6-AssociationAnalysis/3-NetworkAnalysis</a></p>
+<h3 align="left"><a name="a8.4" id="a8.4"></a><a></a><a></a><a>8.4 Source tracker </a>分析（VIP分析）</h3>
+<p>使用基于贝叶斯算法的Source  tracker分析，可以寻找样本中的微生物可能来源及其在样本中分布的比例，该方法适用于寻找环境样本或微生物感染的临床样本的微生物物种来源，需要采集可能会影响样本微生物组成的相关联的环境样本（图8-4）。 </p>
+<p><img src="../image/Figure8-4.jpg" width="685" height="392"></p>
+<p align="center"><strong>图</strong><strong>8-4 </strong><strong>样本微生物来源分析示例图片</strong></p>
+<dd>说明：图中从上到下依次展示了样本的肠道、口腔、皮肤、土壤等微生物源</dd>
+<h3 align="left"><a id="a8.5"></a>8.5 AYASDI拓扑数据分析（VIP分析）</h3>
+<p>拓扑数据分析是把拓扑学与数据分析结合的一种分析方法，研究的是复杂的高维数据的几何性质。相比于主成分分析、聚类分析这些常用的方法，拓扑数据分析不仅可以有效地捕捉高维数据空间的拓扑信息，而且擅长发现一些用传统方法无法发现的小分类。AYASDI是一个拓扑数据分析的机器智能平台（付费）。它包括许多统计数据以及有监督和无监督的机器学习算法，并且可以扩展到包括特定类别分析所需的任何算法。它将拓扑数据分析作为一个统一的分析框架，自动计算大型和高维数据集的分组和相似性，生成网络图，极大地帮助理解数据集群和哪些变量的相关性。 </p>
+<p><img src="../image/Figure8-5.jpg" width="800" height="450"></p>
+<p align="center"><strong>图</strong><strong>8-5 AYASDI</strong><strong>分析用于区别发现更细致的分类关系</strong><strong>（示例图片） </strong></p>
+<dd>说明：  AYASDI拓扑图中每个点分别代表样品，颜色代表在选择的该变量信息下的分布（最大值为深红色，最小值为深蓝色）。在图A，所示为根据样品微生物多样性信息在实验组（红）和对照组（蓝）中显示了两个截然不同的分组，证明了仅微生物多样性信息即可以区分实验组和对照组。但是在利用到其他元数据变量信息（这是用的是样品采集人的年龄）的时候（图B）发现在实验组和对照组中分别有一组紧密相关联的样品分集（实验组的最右端的样品和对照组的右下方的样本）与同实验/对照组中的其他样品呈现颜色上显著的差异，暗示在年龄在实验组和对照组中都起到了重要的调控作用，很可能因此发现更细致的可能的分组情况，同时该结果也可以继续引导用户使用AYASDI用机器学习方法去解释年龄是如何影响到样品的生物学意义。 </dd>
+<dd>&nbsp;</dd>
+<h2 align="left">九 样品微生物组成功能预测分析(<a href="../../../7-FunctionAnalysis">7-FunctionAnalysis目录</a>)</h2>
+<h3><a id="a9.1"></a>9.1 预测微生物群落功能</h3>
+<p>PICRUSt的原理是基于已测细菌基因组的16S rRNA序列，推断它们的共同祖先的基因功能谱，对Greengenes数据库中其它未测物种的基因功能谱进行推断，构建古菌和细菌域全谱系的基因功能预测谱，最后，将测序得到的菌群组成映射到数据库中，对菌群代谢功能进行预测。KEGG功能根据注释深度可以分为三级，图9-1展示的是产生的L1级别功能预测组成的柱形图。其他注释等级可查看目录<a href="../../../7-FunctionAnalysis/1-KEGG_Pathway/">./7-FunctionAnalysis/1-KEGG_Pathway/</a>。 </p>
+<p><img src="../../Figure9-1.png" width="900" height="400"></p>
+<p align="center"><strong>图9-1 KEGG L1微生物群落功能预测组成柱形图 </strong></p>
+<dd>说明：从上至下依次为KEGG结果展示，纵轴表示注释到某类型的功能的相对比例；横轴表示样品名称；各颜色区块对应的功能类别见右侧图例。</dd>
+<h3><a id="a9.2"></a>9.2 预测功能PCA分析</h3>
+<p>基于已知物种的16S物种信息和KEGG功能信息，可以获得环境样本的KEGG功能种类及其相对丰度信息。基于KEGG功能及其代谢途径相对丰度，可以进行样本间KEGG代谢途径PCA分析，图9-2是基于KEGG 功能级别的功能PCA图。其他注释等级的PCA图可查看目录<a href="../../../7-FunctionAnalysis/2-PCAPlots/">/7-FunctionAnalysis/2-PCAPlots/</a>。 </p>
+
+<p>
+  <object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="720">
+    <param name="SRC" value="..\..\Figure9-2.pdf" >
+    <embed width="100%" height="720" fullscreen="yes" src="..\..\Figure9-2.pdf"><noembed></noembed></embed>
+  </object>
+  
+  
+  
+</p>
+<p align="center"><strong>图9-2 基于KEGG L1水平的PCA分析结果展示</strong></p>
+<dd>说明：横坐标（x）表示第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标（y）表示第二主成分，百分比表示第二主成分对样品差异的贡献值；图中的每个点表示一个样品，同一个组的样品使用同一种颜色表示。箭头方向和长度代表该预测功能在该方向的样本/组别中的主导能力程度，长度约长代表主导的能力越大。 </dd>
+<h3 align="left"><a id="a9.3"></a>9.3 预测功能聚类分析 </h3>
+<p>为了研究不同样品间的Bray  Curtis相似性，还可以通过对样品进行聚类分析，构建样品的聚类树。从基因在各样品中的丰度表出发，以Bray  Curtis矩阵进行样品间聚类分析（图9-3）。其他注释等级的聚类树图可查看目录<a href="../../../7-FunctionAnalysis/3-TreeBasedPlots/">/ 7-FunctionAnalysis/3-TreeBasedPlots/</a>。 </p>
+<p align="left"><img src="../../Figure9-3.png" width="800" height="800"></p>
+<p align="center"><strong>图9-3 基于Bray Curtis距离的第一层级聚类树</strong></p>
+<dd>说明：中心是Bray Curtis距离聚类树结构，外圈各层是各样品在第一层级上的功能相对丰度分布，各颜色区块对应的功能类别见左上角图例。</dd>
+<dd>&nbsp;</dd>
+<h3><a id="a9.4"></a>9.4 组间功能差异性分析</h3>
+<p>在得到KEGG功能注释后，结合分组信息，STAMP软件在这里被用于分析在微生物群落在不同组间的功能是否有显著性差异。为了方便用户是个性化地做比较分析，分析结果中给用户提供了STAMP软件的输入文件<a href="../../../7-FunctionAnalysis/1-KEGG_Pathway/feature-table.metagenome.KEGG_Pathways.STAMP.txt">./7-FunctionAnalysis/1-KEGG_Pathway/feature-table.metagenome.KEGG_Pathways.STAMP.txt</a>。</p>
+<h2>十 分析方法及参考文献</h2>
+<h3><a id="a10.1"></a>10.1 <strong>测序数据预处理</strong><strong> </strong></h3>
+<p><strong>10.1.1 分析方法</strong></p>
+<p>采用Illumina  MiSeq/HiSeq测序平台得到的下机数据存在一定的低质量数据，会干扰分析的结果，因此在进一步分析前，需要对下机数据进行预处理，具体处理步骤如下： <br>
+  1）数据拆分：使用Perl脚本，根据Barcode序列将下机数据拆分为不同样品数据，并截去Barcode序列和PCR扩增引物序列； <br>
+  2）PE Reads拼接：根据质量过滤序列尾部质量值30以下的碱基；根据双端测序序列之间的长度关系，将成对双端测序序列拼接成一条序列，最小重复区域长度为20bp。 </p>
+<p><strong>10.1.2 参考文献</strong></p>
+<p>1.    Bokulich,  N. A. et al. Quality-filtering vastly improves diversity estimates from  Illumina amplicon sequencing. Nat. Methods 10, 57–59 (2012).<br>
+  2.    Caporaso,  J. G. et al. QIIME allows analysis of high-throughput community sequencing  data. Nat. Methods 7, 335–6 (2010).<br>
+  3.    Magoč, T. &amp; Salzberg, S. L. FLASH: fast  length adjustment of short reads to improve genome assemblies. Bioinformatics  27, 2957–63 (2011).<br>
+  4.    Edgar,  R. C., Haas, B. J., Clemente, J. C., Quince, C. &amp; Knight, R. UCHIME  improves sensitivity and speed of chimera detection. Bioinformatics 27,  2194–200 (2011).<br>
+  5.    Haas,  B. J. et al. Chimeric 16S rRNA sequence formation and detection in Sanger and  454-pyrosequenced PCR amplicons. Genome Res. 21, 494–504 (2011).</p>
+<h3><a id="a10.2"></a>10.2 <strong>物种的注释与评估</strong><strong> </strong></h3>
+<p><strong>10.2.1 分析方法</strong></p>
+<p>1）OTU去噪/聚类：使用Qiime2软件中的DADA2插件对所有样品的全部有效序列进行质量控制并去噪(纠正测序错误的序列)去嵌合，形成OTU； <br>
+  2）OTU注释：选取OTU代表序列，使用Qiime2软件中的feature-classifier插件对Greengenes数据库(99%)， 进行比对获得物种注释信息； <br>
+  3）OTU聚类及物种注释统计：使用Perl脚本进行每个样品的有效序列数据，低频数的序列数据、序列注释数据、注释为叶绿体及线粒体数据及每个样本获得的OTU数量等信息进行统计；同时使用R软件进行OTU各个分类等级的注释比例和各个分类等级物种相对丰度的统计； <br>
+  4）组间群落结构差异显著性分析：基于均一化的OTU丰度表，使用Qiime2  composition ancom插件进行ANCOM分析显著性差异OTU。样品共有OTU分析：基于均一化的OTU丰度表，使用Qiime2 feature-table summarize进行共有OTU分析，用MetaCoMET来对分组间共有OTU绘制Venn图。 <br>
+  5）物种群落结构分析：使用Qiime2和R软件进行OTU各个分类水平的相对丰度热图绘制，同时进行样本间和物种间的聚类分析。 </p>
+<p><strong>10.2.2 参考文献</strong></p>
+<p>1.    Wang,  Q., Garrity, G. M., Tiedje, J. M. &amp; Cole, J. R. Naive Bayesian classifier  for rapid assignment of rRNA sequences into the new bacterial taxonomy. Appl.  Environ. Microbiol. 73, 5261–7 (2007).<br>
+  2.    DeSantis,  T. Z. et al. Greengenes, a chimera-checked 16S rRNA gene database and workbench  compatible with ARB. Appl. Environ. Microbiol. 72, 5069–72 (2006).<br>
+  3.    Cole,  J. R. et al. The Ribosomal Database Project: improved alignments and new tools  for rRNA analysis. Nucleic Acids Res. 37, D141-5 (2009).<br>
+  4.    Quast,  C. et al. The SILVA ribosomal RNA gene database project: improved data  processing and web-based tools. Nucleic Acids Res. 41, D590-6 (2013).<br>
+  5.    Kõljalg,  U. et al. Towards a unified paradigm for sequence-based identification of  fungi. Mol. Ecol. 22, 5271–7 (2013).<br>
+  6.    Mandal,  S. et al. Analysis of composition of microbiomes: a novel method for studying  microbial composition. Microb. Ecol. Health Dis. 26, 27663 (2015).<br>
+  7.    White,  J. R., Nagarajan, N. &amp; Pop, M. Statistical methods for detecting  differentially abundant features in clinical metagenomic samples. PLoS Comput.  Biol. 5, e1000352 (2009).<br>
+  8.    Segata,  N. et al. Metagenomic biomarker discovery and explanation. Genome Biol. 12, R60  (2011).<br>
+  9. Wang, Y. et al. MetaCoMET: A web platform for  discovery and visualization of the core microbiome. Bioinformatics. 32, btw507  (2016).   <br>
+  10.  Callahan,  B. J. et al. DADA2: High-resolution sample inference from Illumina amplicon  data. Nat. Methods 13, 581–3 (2016).</p>
+<h3><a id="a10.3"></a>10.3 <strong>Alpha</strong><strong>多样性分析</strong><strong> </strong></h3>
+<p><strong>10.3.1 分析方法</strong></p>
+<p>1）Alpha Diversity指数统计分析：使用QIIME2  diversity core-metrics-phylogenetic插件对OTU丰度表进行四种多样性指数（Observed OTUs, Shannon, PD whole tree和chao1指数）的计算，并用QIIME2  diversity alpha-rarefaction插件进行四种多样性指数的稀释曲线数据计算及构图。 <br>
+  2）组间比较Alpha  Diversity指数统计：使用diversity alpha-group-significance插件对感兴趣的分组进行比较分析。  </p>
+<p><strong>10.3.2 参考文献</strong></p>
+<p>1.    Wang,  Y. et al. Comparison of the levels of bacterial diversity in freshwater,  intertidal wetland, and marine sediments by using millions of illumina tags.  Appl. Environ. Microbiol. 78, 8264–71 (2012).<br>
+  2.    Human  Microbiome Project Consortium. Structure, function and diversity of the healthy  human microbiome. Nature 486, 207–14 (2012).<br>
+  3.    Tuomisto,  H. A consistent terminology for quantifying species diversity? Yes, it does  exist. Oecologia 164, 853–60 (2010).</p>
+<h3><a id="a10.4"></a>10.4 <strong>Beta多样性分析</strong></h3>
+<p><strong>10.4.1 分析方法</strong></p>
+<p>1）Beta Diversity指数统计分析：使用QIIME2  diversity core-metrics-phylogenetic插件对OTU丰度表进行四种距离指数（Jaccard  distance, Bray Curtis distance, unweighted UniFrac distance和weighted UniFrac distance）的计算。 <br>
+  2）组间比较Beta  Diversity指数统计：使用Qiime2 emperor插件对感兴趣的分组进行比较分析。  </p>
+<p><strong>10.4.2 参考文献</strong></p>
+<p>1.    Lozupone,  C. &amp; Knight, R. UniFrac: a new phylogenetic method for comparing microbial  communities. Appl. Environ. Microbiol. 71, 8228–35 (2005).<br>
+  2.    Chen,  J. et al. Associating microbiome composition with environmental covariates  using generalized UniFrac distances. Bioinformatics 28, 2106–13 (2012).<br>
+  3.    Vázquez-Baeza,  Y., Pirrung, M., Gonzalez, A. &amp; Knight, R. EMPeror: a tool for visualizing  high-throughput microbial community data. Gigascience 2, 16 (2013).<br>
+  4.    Tuomisto,  H. A diversity of beta diversities: straightening up a concept gone awry. Part  1. Defining beta diversity as a function of alpha and gamma diversity.  Ecography (Cop.). 33, 2–22 (2010).<br>
+  5.    Adams,  D. C. &amp; Collyer, M. L. Permutation tests for phylogenetic comparative  analyses of high-dimensional shape data: what you shuffle matters. Evolution  69, 823–9 (2015).<br>
+  6.    Anderson,  M. J. &amp; Walsh, D. C. I. PERMANOVA, ANOSIM, and the Mantel test in the face  of heterogeneous dispersions: What null hypothesis are you testing? Ecol.  Monogr. 83, 557–574 (2013).<br>
+  7.    Kelly,  B. J. et al. Power and sample-size estimation for microbiome studies using  pairwise distances and PERMANOVA. Bioinformatics 31, 2461–8 (2015).</p>
+<h3><a id="a10.5"></a>10.5 <strong>系统进化分析</strong><strong> </strong></h3>
+<p><strong>10.5.1 分析方法</strong></p>
+<p>1）用PhyloSeq读取Qiime2生成的BIOM文件，OTU代表序列和有根树，结合分组信息对所关注样本的物种注释结果进行可视化，所用的R脚本也被保存在结果文件夹，用户如果需要，可以根据自己的需求来自定义需要的分析。 <br>
+  2）用Qiime2对样品中主要的OTU进行系统进化树构建，然后使用Perl脚本，生成iTOL可读的注视文件，并在iTOL网页展示主要的OTU的进化关系和分布情况。</p>
+<p>3）我们提供的进化树图是筛选丰度最高的30个OTU,使用R ggtree包据有根进化树所画。</p>
+<p><strong>10.5.2 参考文献</strong></p>
+<p>1.    McMurdie,  P. J. &amp; Holmes, S. phyloseq: an R package for reproducible interactive  analysis and graphics of microbiome census data. PLoS One 8, e61217 (2013).<br>
+  2.    Letunic,  I. &amp; Bork, P. Interactive Tree Of Life v2: online annotation and display of  phylogenetic trees made easy. Nucleic Acids Res. 39, W475-8 (2011).</p>
+<h3><a id="a10.6"></a>10.6 <strong>关</strong><strong>联统计</strong><strong>分析</strong><strong> </strong></h3>
+<p><strong>10.6.1 分析方法</strong></p>
+<p>1）CCA/RDA 分析：<a></a><a>基于均一化的各个物种等</a>级的丰度表，以及环境因子数据，首先使用<a></a><a>R</a>软件进行去趋势对应分析，即DCA(Detrended  correspondence analysis)分析，根据梯度值确定线性模型（RDA）和单峰模型(CCA)哪个最合适（DCA分析结果中Axis length的前4个轴中最大的值如果大于4.0，应该选CCA，如果3.0-4.0之间，选RDA和CCA均可，如果小于3.0，RDA的结果要好于CCA），然后使用进行cca或rda（vegan包）分析并绘图； <br>
+  2）相关性分析：基于均一化的OTU丰度表，以及环境因子数据，计算秩相关及校正FDR算p值，使用R软件进行群落结构与各个环境因子之间的关联分析并绘制热图展示。 <br>
+  3）物种相互作用network分析：基于物种样本间的相对丰度,使用R软件进行相关系数计算，得出样本内或样本组内的物种之间的相互关系，然后使用igraph包进行物种间相互作用 network关系构建及展示，要求每组样本至少10个样本； <br>
+  4）Source tracker分析：基于均一化的OTU丰度表，使用sourcetracker软件寻找样本中的微生物可能来源及其在样本中分布的比例，该方法适用于寻找环境样本或微生物感染的临床样本的微生物物种来源，需要采集可能会影响样本微生物组成的其他样本； <br>
+  5）AYASDI分析拓扑数据分析：AYASDI是一个拓扑数据分析的机器智能平台。它包括许多统计数据以及有监督和无监督的机器学习算法，并且可以扩展到包括特定类别分析所需的任何算法。它将拓扑数据分析作为一个统一的分析框架，自动计算大型和高维数据集的分组和相似性，生成网络图，极大地帮助理解数据集群和哪些变量的相关性。 </p>
+<p><strong>10.6.2 参考文献</strong></p>
+<p>1）Hill M, Gauch H. (1980) Detrended  correspondence analysis: an improved ordination technique. Vegetatio. 42,  47-58.<br>
+  2）Oksanen J, Minchin P. (1997)  Instability of ordination results under changes in input data order:  explanations and remedies. Journal of Vegetation Science. 8, 447-454.<br>
+  3）Legendre P, Legendre L. (2012)  Numerical Ecology. 3rd English ed. Elsevier.<br>
+  4）McCune B. (1997) Influence of noisy  environmental data on canonical correspondence analysis. Ecology. 78,  2617-2623.<br>
+  5）Palmer M. (1993) Putting things in even  better order: The advantages of canonical correspondence analysis. Ecology.  74,2215-2230.<br>
+  6）TerBraak C. (1986) Canonical  Correspondence Analysis: a new eigenvector technique for multivariate direct  gradient analysis. Ecology. 67, 1167-1179.<br>
+  7）Clarke K. (1993) Non-parametric  multivariate analysis of changes in community structure. Australian Journal of  Ecology. 18, 117-143.<br>
+  8）Warton D, Wright T,Wang Y. (2012)  Distance-based multivariate analyses confound location and dispersion effects.  Methods in Ecology and Evolution. 3, 89-101.<br>
+  9）Zapala M, Schork N. (2006) Multivariate  regression analysis of distance matrices for testing associations between gene  expression patterns and related variables. Proceedings of the National Academy  of Sciences. 103:19430-19435.<br>
+  <a>10</a>）Qin J, Li Y, Cai Z, et al. (2012) A  metagenome-wide association study of gut microbiota in type 2 diabetes. Nature.  490: 55-60. <br>
+  11）Feng et al.  (2015) Gut microbiome development along the colorectal adenoma-carcinoma  sequence. Nature communications 6: 6528. <br>
+  12）<a href="https://www.ayasdi.com/">https://www.ayasdi.com/</a></p>
+<h3><a id="a10.7"></a>10.7 <strong>样品微生物组成功能预测分析</strong></h3>
+<p><strong>10.7.1 分析方法</strong></p>
+<p>1）预测微生物群落功能：用Qiime2 vsearch插件获得close reference OTU之后，用PICRUSt所带的脚本normalize_by_copy_number.py标准化所得的OTU表格，并用predict_metagenomes.py根据KEGG数据库预测宏基因组功能，然后再用categorize_by_function.py对多预测功能按照级别分类汇总，生成L1，L2和L3三个结果文件。 <br>
+  2）组间功能差异性分析：使用microbiome_helper功能包的biom_to_stamp.py脚本将所得的BIOM文件修改成STAMP接受的文件格式。用STAMP读入该文件和分组信息文件来对数据进行组间功能差异性分析。 </p>
+<p><strong>10.7.2 参考文献</strong></p>
+<p>1.    Langille,  M. G. I. et al. Predictive functional profiling of microbial communities using  16S rRNA marker gene sequences. Nat. Biotechnol. 31, 814–821 (2013).<br>
+  2.    Comeau,  A. M., Douglas, G. M. &amp; Langille, M. G. I. Microbiome Helper: a Custom and  Streamlined Workflow for Microbiome Research. mSystems 2, e00127-16 (2017).<br>
+  3.    Parks,  D. H., Tyson, G. W., Hugenholtz, P. &amp; Beiko, R. G. STAMP: statistical  analysis of taxonomic and functional profiles. Bioinformatics 30, 3123–4  (2014).<br>
+  4.    Rognes,  T., Flouri, T., Nichols, B., Quince, C. &amp; Mahé, F. VSEARCH: a versatile  open source tool for metagenomics. PeerJ 4, e2584 (2016).</p>
+<h2><a id="a11"></a>十一 交付结果目录结构 </h2>
+<p>交付数据分为若干个子目录。详情可查看交付目录下的Result_README.pdf。 </p>
+<p><strong>|</strong><strong>Result_AmpliconSequencing/  </strong><strong>[</strong><strong>主要的结果文件</strong><strong>]</strong><br>
+  |-- 1-QCStats / [拆分后数据主要相关信息]<br>
+  |-- 2-AundanceAnalysis / [整体物种的注释与评估主要相关信息]<br>
+  |-- 3-AlphaDiversity / [Alpha多样性分析结果主要相关信息]<br>
+  |-- 4-BetaDiversity / [Beta多样性分析分析结果主要相关信息]<br>
+  |-- 5-Phylogenetics / [系统进化分析结果主要相关信息]<br>
+  |-- 6-AssociationAnalysis / [关联统计分析主要相关信息]<br>
+  |-- 7-FunctionAnalysis / [样品微生物组成功能预测分析主要相关信息]<br>
+  |-- 8-FiguresTablesForReport / [本报告的图表文件夹]</p>
+<h2><a id="a12"></a>十二 联系我们</h2>
+<p>地址：广东省深圳市南山区南海大道3688号 <br>
+  邮编：518060<br>
+  邮箱：技术支持tech1@microeco.tech<br>
+  微信联系：微生态助理：18124193057或者微生太（微信公众号） </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+ </blockquote>
+</div> 
+
+
+</body>
+</html>
