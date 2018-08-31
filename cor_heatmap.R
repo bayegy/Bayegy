@@ -9,6 +9,7 @@ option_list <- list(
     make_option(c("-m", "--map"),dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-e", "--exclude"),dest="ex", help="Specify the numeric variables excluded from plot and seprated by commas in mapping file",default="none"),
     make_option(c("-n", "--number"), dest="num",help="The number of most related species you want to plot",default=20),
+    make_option(c("-r", "--min-cor"), dest="minr",help="Min correlation coefficent to label significance",default=0.4),
     make_option(c("-o", "--output"),dest="out", help="Specify the path of output files",default="./")
     )
 
@@ -73,7 +74,7 @@ write.table(cor_allft_p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep 
 
 
 heat_s<-cor_allft_p
-
+cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
 for(i in 1:dim(cor_allft_p)[1]){
   for(j in 1:dim(cor_allft_p)[2]){
     ifelse(cor_allft_p[i,j]<0.05,
@@ -87,9 +88,10 @@ rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
 annotation_row =data.frame(Phylum=annotation_row)
 rownames(annotation_row) = rownames(cor_allft_r) 
 ####corrlation plot
-pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=5+0.5*dim(cor_allft_r)[1],width=8.5+0.3*dim(cor_allft_r)[2])
-pheatmap(cor_allft_r,fontsize=20,annotation_row = annotation_row,border_color = "black",
-         display_numbers = heat_s,fontsize_row =20,
+pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=5+0.5*dim(cor_allft_r)[1],width=7+0.3*dim(cor_allft_r)[2])
+pheatmap(cor_allft_r,fontsize=12,annotation_row = annotation_row,border_color = "black",
+         display_numbers = heat_s,fontsize_row =17,fontsize_col = 17,
+         fontsize_number = 22,
          cluster_rows=T,clustering_distance_rows="correlation",
          cluster_cols=T,clustering_distance_cols="euclidean",
          clustering_method="centroid")

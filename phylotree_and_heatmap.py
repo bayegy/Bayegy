@@ -83,12 +83,25 @@ with open('tree.R', 'w') as rscript:
 library("ggtree")
 library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
-tax<-otu_table[,dim(otu_table)[2]]
 
+
+otu<-otu_table[,-dim(otu_table)[2]]
+otusum<-colSums(t(otu))
+hold<-sort(otusum,T)[%s]
+
+
+otu_table<-otu_table[otusum>=hold,]
+
+
+
+tax<-otu_table[,dim(otu_table)[2]]
 
 groupInfo<-str_extract(tax,"p__[^;]{1,100}")
 groupInfo[is.na(groupInfo)]<-"Unclassfied_phylum"
+leg<-as.factor(groupInfo)
 groupInfo <- split(rownames(otu_table), groupInfo)
+
+
 
 groupInfo1<-str_extract(tax,"g__[^;]{1,100}")
 groupInfo1[is.na(groupInfo1)]<-"Unclassfied_genus"
@@ -111,12 +124,22 @@ tree <- read.tree("%s/tree.nwk")
 tree<- groupOTU(tree, groupInfo,group_name = "Phylum")
 tree<- groupOTU(tree, groupInfo1,group_name = "taxa")
 
-p = ggtree(tree,aes(color=Phylum))+geom_tiplab(size=4, align=TRUE, linesize=.5,aes(label=taxa))
+
+
+t<-levels(leg)
+p = ggtree(tree,aes(color=Phylum))+
+	scale_color_discrete(breaks = t,name="Phylum")+
+	geom_tiplab(size=4, align=TRUE, linesize=.5,aes(label=taxa))
+
+
 pdf(file="%s/%s", width=10, height=10)
-gheatmap(p, data, offset = 0.2, width=1, hjust=0.5,colnames_offset_y=-0.3)+theme_tree2()+theme(legend.position = "right",text=element_text(size=20,face="bold"))
+
+
+gheatmap(p, data, offset = 0.22, width=1, hjust=0.5,colnames_offset_y=-0.3)+theme(legend.position = "right",text=element_text(size=17),axis.ticks=element_blank())
+
 dev.off()
 '''
-% (options.input,options.metadata,options.group,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),
+% (options.input,options.num,options.metadata,options.group,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),
 file = rscript)
 
 os.system('Rscript tree.R')
