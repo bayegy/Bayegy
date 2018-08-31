@@ -30,19 +30,13 @@
 
 
 #section {
-    min-width: 800px;
-    max-width: 950px;
+    min-width: 950px;
+    max-width: 1200px;
     margin-left: 320px;
     margin-top: 20px;
     float:left;
 }
-#footer {
-    background-color:black;
-    color:white;
-    clear:both;
-    text-align:center;
-    padding:5px; 
-}
+
 
 
 </style>
