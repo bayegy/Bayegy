@@ -4,7 +4,6 @@ from __future__ import print_function
 from optparse import OptionParser
 import re,sys,os
 
-#*********************************************************************** 青年才俊红凡凡 *********************************************************************************
 #argument:
 usage = '%prog -[i]'
 p = OptionParser(usage = usage)
@@ -20,8 +19,10 @@ p.add_option('-l', '--level', dest = 'level', metavar = 'level', default = 'Genu
 with open(options.metadata,'r') as infile:
 	ln=1
 	g=[]
+
 	for line in infile:
 		line=re.sub('\n$','',line)
+		#print(line)
 		line=re.split('\t',line)
 		if ln==1:
 			for i in range(len(line)):
@@ -37,4 +38,6 @@ unig.sort()
 for i in range(len(unig)):
 	for j in range(len(unig)):
 		if i<j:
+			print(unig[i])
+			print(unig[j])
 			os.system('differential_abundance.py -i exported/DiffAbundance/tax/otu_table.even_%s.taxonomy.biom -o exported/DiffAbundance/DESeq2_%s_Between_%s_and_%s_DiffAbundance_%s.txt  -a DESeq2_nbinom -m %s -c %s -x %s -y %s -d'%(options.level,options.group,unig[i],unig[j],options.level,options.metadata,options.group,unig[i],unig[j]))

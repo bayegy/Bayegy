@@ -4,7 +4,8 @@ library("phyloseq")
 library("ggplot2")
 library("gplots")
 library("vegan")
-library(ggrepel)
+library("ggrepel")
+library("pheatmap")
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -26,6 +27,8 @@ category1=args[2]
 
 this.dir <- getwd()
 new.dir <- paste(this.dir, "/R_output", sep="")
+#this.dir <- paste("~/Desktop/WST/16S-pipeline/", "", sep="")
+
 
 setwd(new.dir)
 
@@ -98,12 +101,20 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
 print("#calculate distance")
 for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
   beta_heatmap_outputpdfname <- paste(distance_matrix, "_betadiversity_summary.pdf", sep="")
-  pdf(beta_heatmap_outputpdfname)
+  #pdf(beta_heatmap_outputpdfname)
   Dist <- distance(qiimedata, method=distance_matrix)
-  heatmap.2(as.matrix(Dist), main=distance_matrix)
-  dev.off()
+
   beta_outputtxtname <- paste(distance_matrix, "_matrix.txt", sep="")
   write.table(as.matrix(Dist), beta_outputtxtname , quote=FALSE, col.names=NA, sep="\t")
+  
+  Dist_read<-read.table(beta_outputtxtname, head=T)
+  pdf(beta_heatmap_outputpdfname)
+  pheatmap(Dist_read,fontsize=10,border_color = "black",fontsize_row =10,
+           cluster_rows=T,clustering_distance_rows="euclidean",
+           cluster_cols=T,clustering_distance_cols="euclidean",
+           clustering_method="centroid")
+  dev.off()
+  
 }
 
 
@@ -131,7 +142,7 @@ Y = A[category1][,1]
 pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
 #pca.srbct #outputs the explained variance per component
 plot(pca.srbct)  # screeplot of the eingenvalues (explained variance per component)
-pdf(paste(category1,"_","PCA_plot.pdf",sep = ""), width = 6.6, height = 6.6)
+pdf(paste(category1,"_","PCA_plot.pdf",sep=""), width = 6.6, height = 6.6)
 plotIndiv(pca.srbct, group = Y, ind.names = FALSE, legend = TRUE, ellipse = TRUE, title = 'PCA plot')
 dev.off()
 #write.table(as.matrix(pca.srbct), “PCA_ord.txt”, quote=FALSE, col.names=NA, sep="\t")
@@ -141,11 +152,11 @@ srbct.plsda <- plsda(tX, Y)  # set ncomp to 10 for performance assessment later
 plsda.vip <- vip(srbct.plsda)
 write.csv(plsda.vip,paste(category1,"_","PLSDA_Variable_importance_in_projection.txt"))
 
-pdf(paste(category1,"_","PLSDA_AUC_plot.pdf"), width = 5, height = 4)
+pdf(paste(category1,"_","PLSDA_AUC_plot.pdf",sep=""), width = 5, height = 4)
 auroc(srbct.plsda, roc.comp = 2)
 dev.off()
 
-pdf(paste(category1,"_","PLSDA_comp_plot.pdf"), width = 6, height = 6)
+pdf(paste(category1,"_","PLSDA_comp_plot.pdf",sep=""), width = 6, height = 6)
 plotIndiv(srbct.plsda , comp = 1:2, group = Y, ellipse.level = 0.75,size.xlabel = 15, size.ylabel = 15,size.axis = 15,size.legend = 15,size.legend.title = 15,ind.names = FALSE, title = "Supervised PLS-DA on OTUs",abline = T,legend = TRUE,ellipse = T)
 dev.off()
 #write.table(as.matrix(srbct.plsda), “PLSDA_ord.txt”, quote=FALSE, col.names=NA, sep="\t")
