@@ -131,13 +131,16 @@ library(mixOmics)
 
 ## ------------------------------------------------------------------------
 #srbct <- load("/Users/chengguo/Downloads/PLSDA_SRBCT/result-SRBCT-sPLSDA.RData")
-X = read.table(plsdatxt, head=TRUE,comment.char = "",row.names = 1,sep = "\t")
+X = read.table(plsdatxt, head=TRUE,comment.char = "",row.names = 1,sep = "\t",check.names=F)
 #head(X)
 tX<-t(X)
+#rownames(tX)<-colnames(X)
 #head(tX)
-A = read.table(map, header = T,row.names = 1,comment.char = "",sep = "\t")
+A = read.table(map, header = T,row.names = 1,comment.char = "",sep = "\t",check.names = F)
 A=A[match(rownames(tX),rownames(A)),]
 Y = A[category1][,1]
+
+
 
 pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
 #pca.srbct #outputs the explained variance per component

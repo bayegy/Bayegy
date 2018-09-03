@@ -7,7 +7,7 @@ KEGG_function_txt = args[1]
 meta_txt = args[2]
 category_1=args[3]
 
-this.dir <- dirname(parent.frame(2)$KEGG_function_txt)
+this.dir <- getwd()
 setwd(this.dir)
 
 #setwd("~/Desktop")
@@ -15,10 +15,10 @@ setwd(this.dir)
 #meta_txt = "sample-metadata.tsv"
 #category_1= "Group1"
 
-design = read.table(meta_txt, header=T, row.names= 1, sep="\t") 
+design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F) 
 
 # 读取OTU表
-otu_table = read.delim(KEGG_function_txt, row.names= 1,  header=T, sep="\t")
+otu_table = read.delim(KEGG_function_txt, row.names= 1,  header=T, sep="\t",check.names=F)
 otu_table[otu_table == 0] = 0.0001
 #otu_table
 
@@ -37,14 +37,25 @@ count = otu_table[, rownames(sub_design)]
 # 显著高丰度菌的影响
 
 # 转换原始数据为百分比
+
+
+
 norm = t(t(count)/colSums(count,na=T)) * 100 # normalization to total 100
 
+
+#colnames(norm)<-colnames(count)
+#rownames(norm)<-rownames(count)
 # 筛选mad值大于0.5的OTU
 mad.5 = norm[apply(norm,1,mad)>0.5,]
 # 另一种方法：按mad值排序取前6波动最大的OTUs
 mad.5 = head(norm[order(apply(norm,1,mad), decreasing=T),],n=6)
 # 计算PCA和菌与菌轴的相关性
-otu.pca <- prcomp(t(mad.5))
+tmad<-t(mad.5)
+#colnames(tmad)<-rownames(mad.5)
+#rownames(tmad)<-colnames(mad.5)
+
+
+otu.pca <- prcomp(tmad)
 
 print(paste("Making PCA plots for", KEGG_function_txt, sep=" "))
 KEGG_function_txt<-str_replace(KEGG_function_txt,"PCA.txt","")

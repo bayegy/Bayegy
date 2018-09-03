@@ -123,8 +123,9 @@ MAIN() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 
+	source activate qiime2-2018.8
+
 <<com1
-	source activate qiime2
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -133,7 +134,7 @@ MAIN() {
 	#qiime demux emp-single --i-seqs ../database/emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred33
 	#paired-end
-	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --source-format PairedEndFastqManifestPhred33&&\
+	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 
@@ -144,7 +145,7 @@ MAIN() {
 
 	#paired-end
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 210 --p-trunc-len-r 210 --p-trim-left-f 24 --p-trim-left-r 25 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 270 --p-trunc-len-r 240 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 256 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 0 --p-trunc-len-r 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
 
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
@@ -214,18 +215,18 @@ MAIN() {
 	qiime diversity alpha --i-table table.qza --p-metric shannon --output-dir alpha/shannon
 	qiime diversity alpha --i-table table.qza --p-metric observed_otus --output-dir alpha/observed_otus
 	qiime diversity alpha-phylogenetic --i-table table.qza --i-phylogeny rooted-tree.qza --p-metric faith_pd --output-dir alpha/faith_pd
- 	qiime tools export alpha/chao1/alpha_diversity.qza --output-dir alpha/chao1/
- 	qiime tools export alpha/shannon/alpha_diversity.qza --output-dir alpha/shannon/
- 	qiime tools export alpha/observed_otus/alpha_diversity.qza --output-dir alpha/observed_otus/
- 	qiime tools export alpha/faith_pd/alpha_diversity.qza --output-dir alpha/faith_pd/
+ 	qiime tools export --input-path alpha/chao1/alpha_diversity.qza --output-path alpha/chao1/
+ 	qiime tools export --input-path alpha/shannon/alpha_diversity.qza --output-path alpha/shannon/
+ 	qiime tools export --input-path alpha/observed_otus/alpha_diversity.qza --output-path alpha/observed_otus/
+ 	qiime tools export --input-path alpha/faith_pd/alpha_diversity.qza --output-path alpha/faith_pd/
  	paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8}' >  alpha/alpha-summary.tsv
 
 	echo "##############################################################\n#Export necessary files for future analysis"
-	for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export $f --output-dir exported; done
-	for f in alpha-rarefaction.qzv table.qzv taxa-bar-plots.qzv; do echo $f; qiime tools export $f --output-dir exported_qzv; done
-	qiime tools export rooted-tree.qza --output-dir exported/
+	for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
+	for f in alpha-rarefaction.qzv table.qzv taxa-bar-plots.qzv; do echo $f; qiime tools export --input-path $f --output-path exported_qzv; done
+	qiime tools export --input-path rooted-tree.qza --output-path exported/
 	mv exported/tree.nwk exported/tree.rooted.nwk 
-	qiime tools export unrooted-tree.qza --output-dir exported/
+	qiime tools export --input-path unrooted-tree.qza --output-path exported/
 	mv exported/tree.nwk exported/tree.unrooted.nwk 
 	biom add-metadata -i exported/feature-table.biom -o exported/feature-table.taxonomy.biom --observation-metadata-fp exported/taxonomy.tsv --observation-header OTUID,taxonomy,confidence
 	biom convert -i exported/feature-table.taxonomy.biom -o exported/feature-table.taxonomy.txt --to-tsv --header-key taxonomy
@@ -245,6 +246,7 @@ MAIN() {
 		for category_1 in $category_set;do echo $category_1;qiime feature-table heatmap --i-table exported/${min_freq}/table-${tax_levels[${n}]}.${min_freq}.qza --m-metadata-file $mapping_file --m-metadata-column $category_1 --o-visualization exported/${min_freq}/${category_1}-table-${tax_levels[${n}]}.${min_freq}.qzv;done;
 	done;
 
+	source deactivate
 	source activate qm2
 	echo "##############################################################\n#Generate the figure for the percentage of annotated level"
 	perl ${SCRIPTPATH}/stat_otu_tab.pl -unif min exported/feature-table.taxonomy.txt -prefix exported/Relative/otu_table --even exported/Relative/otu_table.even.txt -spestat exported/Relative/classified_stat_relative.xls
@@ -273,7 +275,8 @@ MAIN() {
 
 
 
-
+	source deactivate
+	source activate qiime2-2018.8
 	echo "ANCOM analaysis for differential OTU"
 	mkdir exported/ANCOM
 	for n2 in 2 3 4 5 6 7;
@@ -288,10 +291,12 @@ MAIN() {
 	qiime vsearch cluster-features-closed-reference --i-sequences rep-seqs.qza --i-table table.qza --i-reference-sequences $close_reference_trained --p-perc-identity 0.97 --p-threads 0 --output-dir closedRef_forPICRUSt
 	qiime feature-table summarize --i-table closedRef_forPICRUSt/clustered_table.qza --o-visualization closedRef_forPICRUSt/clustered_table.qzv --m-sample-metadata-file $mapping_file
 	qiime feature-table tabulate-seqs   --i-data closedRef_forPICRUSt/unmatched_sequences.qza   --o-visualization closedRef_forPICRUSt/unmatched_sequences.qzv
-	qiime tools export closedRef_forPICRUSt/clustered_table.qza --output-dir closedRef_forPICRUSt/
+	qiime tools export --input-path closedRef_forPICRUSt/clustered_table.qza --output-path closedRef_forPICRUSt/
 	biom convert -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.txt --to-tsv
 
 
+	source deactivate
+	source activate qm2
 	normalize_by_copy_number.py -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.normalized.biom
 	predict_metagenomes.py -i closedRef_forPICRUSt/feature-table.normalized.biom -o closedRef_forPICRUSt/feature-table.metagenome.biom
 	categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L1.txt -c KEGG_Pathways -l 1 -f
@@ -319,11 +324,12 @@ MAIN() {
 
 	cd ..
 
-
+	source deactivate
+	source activate qiime2-2018.8
 	echo "##############################################################\n#Make phylogenetic trees for ITOL"
 	mkdir phylogeny
 	qiime feature-table filter-features --i-table table.qza --p-min-frequency $min_freq --o-filtered-table phylogeny/table.${min_freq}.qza
-	qiime tools export phylogeny/table.${min_freq}.qza --output-dir phylogeny
+	qiime tools export --input-path phylogeny/table.${min_freq}.qza --output-path phylogeny
 	biom convert -i phylogeny/feature-table.biom -o phylogeny/feature-table.txt --to-tsv
 	cut -f1 phylogeny/feature-table.txt | tail -n +3 > phylogeny/feature-table.list
 	seqtk subseq exported/dna-sequences.fasta phylogeny/feature-table.list > phylogeny/dna-sequences.${min_freq}.fasta
@@ -336,14 +342,14 @@ MAIN() {
 
 	biom add-metadata -i phylogeny/feature-table.biom -o phylogeny/feature-table.taxonomy.biom --observation-metadata-fp exported/taxonomy.tsv --observation-header OTUID,taxonomy,confidence
 	biom convert -i phylogeny/feature-table.taxonomy.biom -o phylogeny/feature-table.taxonomy.txt --to-tsv --header-key taxonomy
-	qiime tools export phylogeny/dna-sequences.${min_freq}.rooted-tree.qza --output-dir phylogeny/
+	qiime tools export --input-path phylogeny/dna-sequences.${min_freq}.rooted-tree.qza --output-path phylogeny/
 	mv phylogeny/tree.nwk phylogeny/tree.rooted.nwk
 	perl ${SCRIPTPATH}/generate_file_Itol.pl phylogeny/feature-table.taxonomy.txt 
 
 
 	echo "##############################################################\n#export all qzv files into clickable folders"
 	#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
-	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export $f --output-dir ${new}.qzv.exported; done 
+	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
 
 
 	echo "##############################################################\n#Run Qiime1 for differOTU analysis"
@@ -373,10 +379,10 @@ MAIN() {
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-	source deactivate
-
+com1
 
 	echo "##############################################################\n#Run R script for additional R related figure generation"
+	source deactivate
 	source activate qm2
 	mkdir R_output
 	#Change format of meta-data file for Rscript of PLSDA analysis
@@ -424,6 +430,8 @@ MAIN() {
 	#mv otu_table.s.absolute.mat otu_table.Species.absolute.txt
 
 
+
+
 	mkdir RDA
 	for n6 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n6;
@@ -434,7 +442,7 @@ MAIN() {
 		cd ../../
 	done;
 	cd ../../
-com1
+
 	echo "#############################################################\nAdditional plot"
 	mkdir 4-VennAndFlower
 	for category_1 in $category_set;
@@ -442,7 +450,7 @@ com1
 		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  ./exported/feature-table.taxonomy.txt $mapping_file $category_1 ./4-VennAndFlower 0;
 		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
 		done;
-<<com2
+
 	echo "##############################################################\nCorrelation analysis" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
@@ -453,7 +461,6 @@ com1
 
 
 	echo "##############################################################\n#Run LEFSE for Group"
-	source deactivate
 	source deactivate
 	source activate LEFSE
 	cd exported/Relative
@@ -476,7 +483,7 @@ com1
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
-com2
+
 }
 
 MAIN;
