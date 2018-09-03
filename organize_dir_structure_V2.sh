@@ -201,9 +201,12 @@ organize_deliverable_structure() {
 	cp -rp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/${category_1}-table-Phylum.${number}/ page4
 	cp -rp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/ page4-2
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
+	cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
 	cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
-	cp ../2-AbundanceAnalysis/3-VennAndFlower/${category_1}_Venn_plot.png Figure4-2.png
-	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-1.png
+	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/otu_table.Phylum.relative.png Figure4-2.png
+	cp ../2-AbundanceAnalysis/3-VennAndFlower/${category_1}_Venn_plot.png Figure4-3.png
+	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/Group_alpha_diversity_shannon.boxplot.pdf Figure5-1.png
+	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure6-1.png
 	cp ../4-BetaDiversity/3-NMDS/${category_1}_unifrac_NMDS.pdf Figure6-2.pdf
 	cp ../5-Phylogenetics/${category_1}_phylogenetic_tree_heatmap.pdf Figure7-1.pdf
