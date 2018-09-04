@@ -59,7 +59,7 @@ if [ -z "$8" ]; then
 		8) specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 
 		Sample Usage:
-		bash 16S_pipeline.V8.sh ~/16S_pipline_testfile/database/sample-metadata.tsv 1000 10 Group1,Group2 ~/16S_pipline_testfile/database/gg-13-8-99-515-806-nb-classifier.qza ~/16S_pipline_testfile/database/gg_13_5_97_v4_ref-seqs.qza N Month,Day
+		bash ~/github/Bayegy/16S_pipeline.V8.sh ../data/sample-metadata.tsv 20000 1000 Group1,Group2,Group3 ~/database_16S/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none
 		"
 	exit 0
 else
@@ -137,7 +137,7 @@ MAIN() {
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
-
+com1
 	echo "##############################################################\n#Use DADA2 for quality control and feature table construction"
 	#single-end
 	#qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 10 --p-trunc-len 265 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
@@ -145,7 +145,7 @@ MAIN() {
 
 	#paired-end
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 210 --p-trunc-len-r 210 --p-trim-left-f 24 --p-trim-left-r 25 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 256 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 226 --p-trim-left-f 17 --p-trim-left-r 19 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 0 --p-trunc-len-r 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
 
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
@@ -379,7 +379,7 @@ MAIN() {
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-com1
+
 
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
