@@ -136,7 +136,7 @@ MAIN() {
 	#paired-end
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-
+com1
 
 	echo "##############################################################\n#Use DADA2 for quality control and feature table construction"
 	#single-end
@@ -479,7 +479,7 @@ MAIN() {
 		done;
 	cd ../../
 
-com1
+
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
