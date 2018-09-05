@@ -18,19 +18,16 @@ if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 ####clean procedure
 dat <- read.table(opt$m,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings=opt$a)
 
-otu <- read.table(opt$i,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings=opt$a)
-
-
 group<-dat[opt$g]
 rownames(group)<-dat[,1]
 sel<-(!is.na(group))
 dat<-dat[sel,]
-
-
-sel1<-sel[match(colnames(otu),rownames(group))]
-sel1<-(is.na(sel1)|sel1)
-otu<-otu[,sel1]
-
+if(!is.null(opt$i)){
+    otu <- read.table(opt$i,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings=opt$a)
+    sel1<-sel[match(colnames(otu),rownames(group))]
+    sel1<-(is.na(sel1)|sel1)
+    otu<-otu[,sel1]
+    write.table(otu,file = paste(opt$out,"/","cleaned_table.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
+}
 
 write.table(dat,file = paste(opt$out,"/","cleaned_map.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
-write.table(otu,file = paste(opt$out,"/","cleaned_table.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)

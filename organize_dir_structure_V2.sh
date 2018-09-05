@@ -204,7 +204,8 @@ organize_deliverable_structure() {
 	cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
 	cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
 	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/otu_table.Phylum.relative.png Figure4-2.png
-	cp ../2-AbundanceAnalysis/3-VennAndFlower/${category_1}_Venn_plot.png Figure4-3.png
+	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Phylum/${category_1}_Phylum_lefse.png Figure4-3.png
+	cp ../2-AbundanceAnalysis/3-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure6-1.png

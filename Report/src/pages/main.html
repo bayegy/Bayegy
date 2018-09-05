@@ -199,7 +199,7 @@ var Accordion1 = new Spry.Widget.Accordion("Accordion1");
    <p>ANCOM(Analysis of composition of microbiomes)分析被用于比较物种在组间的显著性差异。从下面链接中我们可以得知在本实验中物种属水平分类在组间表现了丰度的显著差异，各个其他的分类水平也都用ANCOM方法进行了分析。</p>
    <p align="center"><a href="../../page4-2/Summary_请点此文件查看.html">点击此处查看物种属水平分类的ANCOM丰度比较结果</a></p>
    <dd>说明：在ANCOM分析中,W值是一个衡量组间差异显著性的统计量（类似F值，t值），W值越高，代表该物种在组间的差异显著性越高。组间差异显著的物种被列在顶部的表格中。底部的火山图中，的每一个点都代表了一个比较的物种。纵坐标代表W值。横坐标f_statistic值代表组间样品丰度的差异程度，数字越高代表差异越大。</dd>
-   <p>同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异，本报告中未详细介绍，更多完整信息请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。 </p>
+   <p>同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异，Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验，提供总的p值，校正p值，但不提供多重比较的结果，ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe和DESeq2方法也是非参数检验，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（默认为LDA>4的微生物），也就是在这个组中丰度较高的微生物；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。更多完整信息请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。 </p>
    <h3><a id="a4.3"></a>4.3 样品共有物种分析</h3>
    <p>对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现环境样本在不同的分类水平上的组成相似性及重叠情况（图4-2）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../2-AbundanceAnalysis/3-VennAndFlower"> ./2-AbundanceAnalysis/3-VennAndFlower</a></p>
    <p><img src="../../Figure4-2.png" width="600" height="600"></p>
