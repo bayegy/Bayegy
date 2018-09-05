@@ -3,7 +3,7 @@ library(optparse)
 #######arguments
 option_list <- list( 
     make_option(c("-i", "--input"), dest="i",help="the files needed to clean na. Sample id must be the column name. All the columns not in sample ID will be saved",default=NULL),
-    make_option(c("-d", "--distance-matrix"), dest="d",help="the distance matrix needed to clean na.",default=NULL),
+    make_option(c("-d", "--distance-matrix"), dest="d",help="the .qza distance matrix needed to clean na.",default=NULL),
     make_option(c("-m", "--map"),dest="m", help="Specify the path of mapping file with the Sample ID at the first column",default=NULL),
     make_option(c("-g", "--group"),dest="g", help="Specify group name according to which the map and input files will be cleaned",default="none"),
     make_option(c("-o", "--output"),dest="out", help="Specify the path of output files",default="./"),
@@ -34,11 +34,16 @@ if(!is.null(opt$i)){
 }
 
 if(!is.null(opt$d)){
-    distance <- read.table(opt$d,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, row.names=1,sep = "\t")
+    system(sprintf("qiime tools export --input-path %s --output-path %s",opt$d,opt$out))
+    distance <- read.table(sprintf("%s/distance-matrix.tsv",opt$out),comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, row.names=1,sep = "\t")
     selc<-sel[match(colnames(distance),rownames(group))]
     selr<-sel[match(rownames(distance),rownames(group))]
     distance<-distance[selr,selc]
-    write.table(distance,file = paste(opt$out,"/","cleaned_distance.txt",sep = ""),row.names = T,col.names = T,quote = F,sep = "\t",append = F)
+    distance<-data.frame(s=rownames(distance),distance,check.names=F)
+    colnames(distance)[1]<-""
+    write.table(distance,file = paste(opt$out,"/","cleaned_distance.tsv",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
+    system(sprintf("qiime tools import --type DistanceMatrix --input-path %s/cleaned_distance.tsv  --output-path %s/cleaned_distance.qza",opt$out,opt$out))
+
 }
 
 
