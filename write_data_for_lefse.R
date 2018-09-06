@@ -9,12 +9,12 @@ if(length(ag)<3){
 3.column name in mapping file of group seprated by ','
 4.full path of out file")
 }else{
-  meta<-read.table(ag[2],row.names=1,header = T,sep = "\t",comment.char = "",check.names = F,stringsAsFactors = F)
+  meta<-read.table(ag[2],na.strings="",row.names=1,header = T,sep = "\t",comment.char = "",check.names = F,stringsAsFactors = F)
   group<-str_split(ag[3],",")[[1]]
   if(length(group)==1){
-    meta<-meta[group]
+    meta<-na.omit(meta[group])
   }else{
-    meta<-meta[,colnames(meta)%in%group]
+    meta<-na.omit(meta[,colnames(meta)%in%group])
   }
   meta<-data.frame(Subject=rownames(meta),meta)
   data<-read.table(ag[1],header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)

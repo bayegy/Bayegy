@@ -2,12 +2,13 @@ library(optparse)
 
 #######arguments
 option_list <- list( 
-    make_option(c("-i", "--input"), dest="i",help="the files needed to clean na. Sample id must be the column name. All the columns not in sample ID will be saved",default=NULL),
+    make_option(c("-m", "--map"),dest="m", help="Specify the path of mapping file with the Sample ID at the first column [Required]",default=NULL),
+    make_option(c("-g", "--group"),dest="g", help="Specify group name according to which the map and input files will be cleaned [Required]",default=NULL),
+    make_option(c("-t", "--table-qza"), dest="t",help="qza otu table needed to clean na.",default=NULL),
+    make_option(c("-i", "--input"), dest="i",help="the otu table needed to clean na. Sample id must be the column name. All the columns not in sample ID will be saved",default=NULL),
     make_option(c("-d", "--distance-matrix"), dest="d",help="the .qza distance matrix needed to clean na.",default=NULL),
-    make_option(c("-m", "--map"),dest="m", help="Specify the path of mapping file with the Sample ID at the first column",default=NULL),
-    make_option(c("-g", "--group"),dest="g", help="Specify group name according to which the map and input files will be cleaned",default="none"),
     make_option(c("-o", "--output"),dest="out", help="Specify the path of output files",default="./"),
-    make_option(c("-a", "--na-string"),dest="a", help="Specify the character representing the missing values",default="NA")
+    make_option(c("-a", "--na-string"),dest="a", help="Specify the character representing the missing values.Default is ''",default="")
     )
 
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -30,7 +31,7 @@ if(!is.null(opt$i)){
     sel1<-sel[match(colnames(otu),rownames(group))]
     sel1<-(is.na(sel1)|sel1)
     otu<-otu[,sel1]
-    write.table(otu,file = paste(opt$out,"/","cleaned_species.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
+    write.table(otu,file = paste(opt$out,"/","cleaned_feature_table.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
 }
 
 if(!is.null(opt$d)){
@@ -46,4 +47,6 @@ if(!is.null(opt$d)){
 
 }
 
-
+if(!is.null(opt$t)){
+    system(sprintf("qiime feature-table filter-samples --i-table %s --m-metadata-file %s/cleaned_map.txt --o-filtered-table %s/filtered_feature_table.qza",opt$t,opt$out,opt$out))
+}

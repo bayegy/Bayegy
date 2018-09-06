@@ -180,30 +180,29 @@ MAIN() {
 	qiime feature-table summarize --i-table table.qza --o-visualization table.qzv --m-sample-metadata-file $mapping_file
 	qiime feature-table tabulate-seqs   --i-data rep-seqs.qza   --o-visualization rep-seqs.qzv	
 	qiime taxa barplot   --i-table table.qza   --i-taxonomy taxonomy.qza   --m-metadata-file $mapping_file  --o-visualization taxa-bar-plots.qzv
-com1
+
 	echo "##############################################################\n#Core alpha and beta diversity analysis"
 	qiime diversity core-metrics-phylogenetic   --i-phylogeny rooted-tree.qza   --i-table table.qza   --p-sampling-depth $depth   --m-metadata-file $mapping_file  --output-dir core-metrics-results
+
 	qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/faith_pd_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/faith-pd-group-significance.qzv
 	qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/evenness_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/evenness-group-significance.qzv
 	qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/shannon_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/shannon-group-significance.qzv
 	qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/observed_otus_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/observed_otus-group-significance.qzv
 	for category_1 in $category_set;
 	do echo $category_1;
-		Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -d core-metrics-results/unweighted_unifrac_distance_matrix.qza -o media_files
-
-		qiime diversity beta-group-significance   --i-distance-matrix media_files/cleaned_distance.qza   --m-metadata-file media_files/cleaned_map.txt  --p-method anosim --m-metadata-column $category_1   --o-visualization 'core-metrics-results/unweighted_unifrac-anosim-'$category_1'-significance.qzv'  --p-pairwise;
-		qiime diversity beta-group-significance   --i-distance-matrix media_files/cleaned_distance.qza   --m-metadata-file media_files/cleaned_map.txt  --p-method permanova --m-metadata-column $category_1   --o-visualization 'core-metrics-results/unweighted_unifrac-permanova-'$category_1'-significance.qzv'  --p-pairwise;
+		qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method permanova --m-metadata-column $category_1   --o-visualization 'core-metrics-results/unweighted_unifrac-permanova-'$category_1'-significance.qzv'  --p-pairwise;
 		#qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method permanova --m-metadata-column $category_2   --o-visualization 'core-metrics-results/unweighted_unifrac-permanova-'$category_2'-significance.qzv'  --p-pairwise
-		Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -d core-metrics-results/weighted_unifrac_distance_matrix.qza -o media_files
-		qiime diversity beta-group-significance   --i-distance-matrix media_files/cleaned_distance.qza   --m-metadata-file media_files/cleaned_map.txt  --p-method anosim --m-metadata-column $category_1   --o-visualization 'core-metrics-results/weighted_unifrac-anosim-'$category_1'-significance.qzv'  --p-pairwise;
-		qiime diversity beta-group-significance   --i-distance-matrix media_files/cleaned_distance.qza   --m-metadata-file media_files/cleaned_map.txt  --p-method permanova --m-metadata-column $category_1   --o-visualization 'core-metrics-results/weighted_unifrac-permanova-'$category_1'-significance.qzv'  --p-pairwise;
+		qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method permanova --m-metadata-column $category_1   --o-visualization 'core-metrics-results/weighted_unifrac-permanova-'$category_1'-significance.qzv'  --p-pairwise;
 		#qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method permanova --m-metadata-column $category_2   --o-visualization 'core-metrics-results/weighted_unifrac-permanova-'$category_2'-significance.qzv'  --p-pairwise
-		Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -d core-metrics-results/bray_curtis_distance_matrix.qza -o media_files
-		qiime diversity beta-group-significance   --i-distance-matrix media_files/cleaned_distance.qza   --m-metadata-file media_files/cleaned_map.txt  --p-method permanova --m-metadata-column $category_1   --o-visualization 'core-metrics-results/bray_curtis-permanova-'$category_1'-significance.qzv'  --p-pairwise;
-		qiime diversity beta-group-significance   --i-distance-matrix media_files/cleaned_distance.qza   --m-metadata-file media_files/cleaned_map.txt  --p-method anosim --m-metadata-column $category_1   --o-visualization 'core-metrics-results/bray_curtis-anosim-'$category_1'-significance.qzv'  --p-pairwise;
+		qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method permanova --m-metadata-column $category_1   --o-visualization 'core-metrics-results/bray_curtis-permanova-'$category_1'-significance.qzv'  --p-pairwise;
+		#qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method permanova --m-metadata-column $category_2   --o-visualization 'core-metrics-results/bray_curtis-permanova-'$category_2'-significance.qzv'  --p-pairwise
+		qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method anosim --m-metadata-column $category_1   --o-visualization 'core-metrics-results/unweighted_unifrac-anosim-'$category_1'-significance.qzv'  --p-pairwise;
+		#qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method anosim --m-metadata-column $category_2   --o-visualization 'core-metrics-results/unweighted_unifrac-anosim-'$category_2'-significance.qzv'  --p-pairwise
+		qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method anosim --m-metadata-column $category_1   --o-visualization 'core-metrics-results/weighted_unifrac-anosim-'$category_1'-significance.qzv'  --p-pairwise;
+		#qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method anosim --m-metadata-column $category_2   --o-visualization 'core-metrics-results/weighted_unifrac-anosim-'$category_2'-significance.qzv'  --p-pairwise
+		qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method anosim --m-metadata-column $category_1   --o-visualization 'core-metrics-results/bray_curtis-anosim-'$category_1'-significance.qzv'  --p-pairwise;
 	done;
 
-<<com2
 	#qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method anosim --m-metadata-column $category_2   --o-visualization 'core-metrics-results/bray_curtis-anosim-'$category_2'-significance.qzv'  --p-pairwise
 	qiime diversity alpha-rarefaction   --i-table table.qza   --i-phylogeny rooted-tree.qza   --p-max-depth $depth  --m-metadata-file $mapping_file  --o-visualization alpha-rarefaction.qzv   --p-steps 50
 	##These following two commands work only for column with numeric values:
@@ -237,6 +236,7 @@ com1
 
 
 
+
 	echo "##############################################################\n#Generate heatmaps for top OTUs with different levels with minimum frequence reads supported"
 	mkdir exported/collapsed
 	mkdir exported/${min_freq}
@@ -245,9 +245,14 @@ com1
 		qiime taxa collapse   --i-table table.qza   --i-taxonomy taxonomy.qza   --p-level $n   --o-collapsed-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza;
 		qiime feature-table summarize --i-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza --o-visualization exported/collapsed/collapsed-${tax_levels[${n}]}.qzv '--m-sample-metadata-file' $mapping_file;
 		qiime feature-table filter-features   --i-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza --p-min-frequency $min_freq  --o-filtered-table exported/${min_freq}/table-${tax_levels[${n}]}.${min_freq}.qza; 
-		for category_1 in $category_set;do echo $category_1;qiime feature-table heatmap --i-table exported/${min_freq}/table-${tax_levels[${n}]}.${min_freq}.qza --m-metadata-file $mapping_file --m-metadata-column $category_1 --o-visualization exported/${min_freq}/${category_1}-table-${tax_levels[${n}]}.${min_freq}.qzv;done;
+		for category_1 in $category_set;
+			do echo $category_1;
+				Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -t exported/${min_freq}/table-${tax_levels[${n}]}.${min_freq}.qza -o media_files
+				qiime feature-table heatmap --i-table media_files/filtered_feature_table.qza  --m-metadata-file media_files/cleaned_map.txt --m-metadata-column $category_1 --o-visualization exported/${min_freq}/${category_1}-table-${tax_levels[${n}]}.${min_freq}.qzv;
+			done;
 	done;
 
+	
 	source deactivate
 	source activate qm2
 	echo "##############################################################\n#Generate the figure for the percentage of annotated level"
@@ -283,9 +288,13 @@ com1
 	mkdir exported/ANCOM
 	for n2 in 2 3 4 5 6 7;
 		do echo $n2;
-		qiime composition add-pseudocount   --i-table exported/collapsed/collapsed-${tax_levels[${n2}]}.qza --o-composition-table exported/ANCOM/composition.${tax_levels[${n2}]}.qza;
-		for category_1 in $category_set;do echo $category_1;qiime composition ancom  --i-table exported/ANCOM/composition.${tax_levels[${n2}]}.qza --m-metadata-file $mapping_file --m-metadata-column $category_1 --o-visualization exported/ANCOM/${category_1}.ANCOM.${tax_levels[${n2}]}.qzv;done;
-		#qiime composition ancom  --i-table exported/ANCOM/composition.${tax_levels[${n2}]}.qza --m-metadata-file $mapping_file --m-metadata-column $category_2 --o-visualization exported/ANCOM/SecondaryGroup/ANCOM.${tax_levels[${n2}]}.qzv;
+		for category_1 in $category_set;
+			do echo $category_1;
+				Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -t exported/collapsed/collapsed-${tax_levels[${n2}]}.qza -o media_files
+				qiime composition add-pseudocount   --i-table media_files/filtered_feature_table.qza  --o-composition-table exported/ANCOM/composition.${tax_levels[${n2}]}.qza;
+				qiime composition ancom  --i-table exported/ANCOM/composition.${tax_levels[${n2}]}.qza --m-metadata-file media_files/cleaned_map.txt --m-metadata-column $category_1 --o-visualization exported/ANCOM/${category_1}.ANCOM.${tax_levels[${n2}]}.qzv;
+			done;
+			#qiime composition ancom  --i-table exported/ANCOM/composition.${tax_levels[${n2}]}.qza --m-metadata-file $mapping_file --m-metadata-column $category_2 --o-visualization exported/ANCOM/SecondaryGroup/ANCOM.${tax_levels[${n2}]}.qzv;
 	done;
 
 
@@ -322,8 +331,6 @@ com1
 	done;
 	for svg_file in *svg; do echo $svg_file; base=$(basename $svg_file .svg); rsvg-convert -h 3200 $svg_file > ${base}.png; done
 
-
-
 	cd ..
 
 	source deactivate
@@ -353,7 +360,6 @@ com1
 	#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
 
-
 	echo "##############################################################\n#Run Qiime1 for differOTU analysis"
 	source deactivate
 	source activate qm1
@@ -382,7 +388,7 @@ com1
 			done;
 		done;
 
-
+com1
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -398,7 +404,8 @@ com1
 
 	for category_1 in $category_set;
 		do echo $category_1;
-			Rscript ${SCRIPTPATH}/RRelatedOutput.R $mapping_file $category_1;
+			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files			
+			Rscript ${SCRIPTPATH}/RRelatedOutput.R media_files/cleaned_map.txt $category_1;
 			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R ./alpha/sample-metadata_alphadiversity.txt $category_1 ./alpha/alpha-summary.tsv ./alpha/;
 		done;
 
@@ -475,7 +482,7 @@ com1
 			for category_1 in $category_set;
 				do echo $category_1;
 					Rscript ${SCRIPTPATH}/write_data_for_lefse.R otu_table.${n7}.relative.txt $mapping_file $category_1 ${category_1}_${n7}_lefse.txt;
-					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.4 --label_font_size 10;
+					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 3;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.4 --label_font_size 10;
 				done;
 			cd ../../
 		done;
@@ -486,7 +493,6 @@ com1
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
 
-com2
 }
 
 MAIN;

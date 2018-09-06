@@ -15,10 +15,19 @@ setwd(this.dir)
 #meta_txt = "sample-metadata.tsv"
 #category_1= "Group1"
 
-design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F) 
+design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F,na.strings = "") 
 
 # 读取OTU表
 otu_table = read.delim(KEGG_function_txt, row.names= 1,  header=T, sep="\t",check.names=F)
+
+######################################################clean na zhangguoxing
+sel<-(!is.na(design[category_1]))
+sel1<-sel[match(colnames(otu_table),rownames(design))]
+sel1<-(is.na(sel1)|sel1)
+otu_table<-otu_table[,sel1]
+design<-design[sel,]
+
+
 otu_table[otu_table == 0] = 0.0001
 #otu_table
 

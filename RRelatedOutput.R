@@ -136,10 +136,16 @@ X = read.table(plsdatxt, head=TRUE,comment.char = "",row.names = 1,sep = "\t",ch
 tX<-t(X)
 #rownames(tX)<-colnames(X)
 #head(tX)
-A = read.table(map, header = T,row.names = 1,comment.char = "",sep = "\t",check.names = F)
-A=A[match(rownames(tX),rownames(A)),]
+A = read.table(map, header = T,row.names = 1,comment.char = "",sep = "\t",check.names = F,na.strings = "")
+
+tX=tX[match(rownames(A),rownames(tX)),]
 Y = A[category1][,1]
 
+
+###clean na
+sel<-(!is.na(Y))
+tX<-tX[sel,]
+Y<-Y[sel,]
 
 
 pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)

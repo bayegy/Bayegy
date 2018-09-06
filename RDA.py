@@ -43,12 +43,25 @@ library(ggrepel)
 library(ggplot2)
 library(RColorBrewer)
 ex<-str_split("%s",",")[[1]]
-dat <- read.table("%s", header = TRUE, sep = "\\t")
+dat <- read.table("%s", header = TRUE, sep = "\\t",comment.char = "",check.names = F)
 dat<-dat[!duplicated(dat[,1]),]
 
 rownames(dat)=dat[,1]
-map<-read.table("%s",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
+map<-read.table("%s",header = T,na.strings="",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 groups<-map["%s"]
+
+
+
+####clean na
+sel<-(!is.na(groups))
+map<-map[sel,]
+sel1<-sel[match(colnames(dat),rownames(groups))]
+sel1<-(is.na(sel1)|sel1)
+dat<-dat[,sel1]
+groups<-groups[sel,]
+
+
+
 notstr=c()
 for(i in 1:length(map)){
 	notstr[i]=!is.character(map[,i])

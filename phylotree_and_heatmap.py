@@ -109,7 +109,7 @@ groupInfo1 <- split(rownames(otu_table), groupInfo1)
 
 
 otu_table<-otu_table[,-dim(otu_table)[2]]
-metadata<-read.table("%s",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
+metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-metadata["%s"]
 metagroup<-metadata[,1][match(colnames(otu_table),rownames(metadata))]
 otu_table=scale(t(otu_table))
