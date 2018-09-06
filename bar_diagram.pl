@@ -117,7 +117,8 @@ my ($height,$width, $flank_x,$flank_y, $size_x,$micro_scale,
     $ranks,$grid,$rotate,$single,$log,$show_data,$rotate2,$pair,
     $vice,$y_title2,$y_mun2,$add_xblock,$add_yblock,$scale_extend,
     $end_mask,$ordercols,$opacity,$zoom,$cluster,$grid2,$aa_flank_x,
-    $endmask,$textup,$width_lim,$colsel,$avg,$scalrate,$rev_sym,$sr
+    $endmask,$textup,$width_lim,$colsel,$avg,$scalrate,$rev_sym,$sr,
+    $percentage
 );
 my @add_line;
 GetOptions(
@@ -155,7 +156,7 @@ GetOptions(
            "textup"   => \$textup,          "width_lim:i"   => \$width_lim,
            "colsel:s" => \$colsel,          "avg"           => \$avg,
            "scalrate:f" => \$scalrate,      "rev_sym"       => \$rev_sym,
-           "sr:f"       => \$sr
+           "sr:f"       => \$sr,            "percentage"    => \$percentage
 );
 $help && (die `pod2text $0`);
 if (@ARGV != 1 || $h){
@@ -865,6 +866,7 @@ sub axis{
     $min_value = $min_value * 10**$mag;
     my $value_number = int($maxv / $min_value);  # the number of value show in y axis
     ($maxv > $value_number * $min_value) && ($value_number++);
+    #print STDERR "AAAAAAAAAAAAA\n";
     ($min_value, $value_number);
 }
 
@@ -917,7 +919,14 @@ sub draw_y_axis{
         my $flank_y2 = $vice ? $flank_y : $flank_y + $height;
         push @group,('text-anchor', 'middle');
         for (0 .. $yvalue_number) {
-            ($ylab_x, $ylab_y, $ylab) = ($flank_x + $yalia_unit * $_,$flank_y2 + $ss,$_ * $yvalue_min);
+
+            if ($percentage){
+                #put y axis into percentage
+                ($ylab_x, $ylab_y, $ylab) = ($flank_x + $yalia_unit * $_,$flank_y2 + $ss,$_ * $yvalue_min * 100);
+            }else{
+                ($ylab_x, $ylab_y, $ylab) = ($flank_x + $yalia_unit * $_,$flank_y2 + $ss,$_ * $yvalue_min);
+            }
+           
 #           ($grid && $_ == $yvalue_number) && next;
             $log && ($ylab = $log ** $ylab);
             $svg->text('x',$ylab_x, 'y',$ylab_y,'-cdata',$ylab,@group);
@@ -940,7 +949,12 @@ sub draw_y_axis{
         my $flank_x2 = $vice ? $flank_x + $width : $flank_x;
         $vice || (push @group,('text-anchor','end'));
         for (0 .. $yvalue_number){
-            ($ylab_x, $ylab_y, $ylab) = ($flank_x2 - $ss / 2,$flank_y + $height - $yalia_unit * $_,$_ * $yvalue_min);
+            if ($percentage){
+                #put y axis into percentage
+                ($ylab_x, $ylab_y, $ylab) = ($flank_x2 - $ss / 2,$flank_y + $height - $yalia_unit * $_,$_ * $yvalue_min * 100);
+            }else{
+                ($ylab_x, $ylab_y, $ylab) = ($flank_x2 - $ss / 2,$flank_y + $height - $yalia_unit * $_,$_ * $yvalue_min);
+            }
             $log && ($ylab = $log ** $ylab);
             $svg->text('x',$ylab_x,'y',$ylab_y + $size_scale / 3,'-cdata',$ylab,@group);
             $svg->line('x1', $flank_x2, 'y1', $ylab_y, 'x2',$flank_x2 - $ss / 3,'y2', $ylab_y, 'stroke', 'black', 'stroke-width', 2);
