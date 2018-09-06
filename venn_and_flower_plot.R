@@ -14,7 +14,7 @@ map<-ag[2]
 group<-ag[3]
 out<-ag[4]
 thresh<-ag[5]
-meta<-read.table(map,row.names=1,header = T,sep = "\t",comment.char = "",check.names = F,stringsAsFactors = F)
+meta<-read.table(map,na.strings="",row.names=1,header = T,sep = "\t",comment.char = "",check.names = F,stringsAsFactors = F)
 
 meta<-meta[group]
 

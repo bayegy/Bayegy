@@ -21,9 +21,9 @@ library(ggsignif)
 #output="~/Desktop/plot.png"
 
   
-map<-read.table(ag[1],header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
+map<-read.table(ag[1],header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "",na.strings="")
 adiv<-read.table(ag[3],header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
-  
+
 
 a<-colnames(adiv)
 
@@ -39,6 +39,8 @@ rowname_join<-function(x,y)
 }
 
 joinedtab<-rowname_join(map,adiv)
+
+joinedtab<-joinedtab[!is.na(joinedtab["Group"]),]
 meltab<-melt(joinedtab,id.vars = "Group")
 anno_dfa = compare_means(value ~ Group, group.by = "variable", data = meltab) %>% mutate(p.adj = format.pval(p.adj, digits = 2))
 write.table(as.matrix(anno_dfa), paste(ag[4],"/","alpha_",ag[2],"_wilcox_compare_results.txt",sep=""), quote=FALSE, col.names=NA, sep="\t")

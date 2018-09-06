@@ -34,6 +34,8 @@ with open(options.metadata,'r') as infile:
 
 unig=list(set(g))
 unig.sort()
+if '' in unig:
+	unig.remove("")
 
 for i in range(len(unig)):
 	for j in range(len(unig)):

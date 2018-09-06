@@ -47,14 +47,14 @@
 		{
 			document.getElementById("nav").style.display=""
 			document.getElementById("emm").style.display=""
-			document.getElementById("section").style.margin="20px 320px"
+			document.getElementById("section").style.margin="20px 20px 20px 340px"
 		});
 
 		document.getElementById("h").addEventListener("click", function()
 		{
 			document.getElementById("nav").style.display="none";
 			document.getElementById("emm").style.display="none";
-			document.getElementById("section").style.margin="0 auto"
+			document.getElementById("section").style.margin="20px"
 		});
 		</script>
 
@@ -281,17 +281,21 @@
 			<p align="center"><a href="../../page4-2/Summary_请点此文件查看.html">点击此处查看物种属水平分类的ANCOM丰度比较结果</a></p>
 			
 			<dd>
-				说明：在ANCOM分析中,W值是一个衡量组间差异显著性的统计量（类似F值，t值），W值越高，代表该物种在组间的差异显著性越高。组间差异显著的物种被列在顶部的表格中。底部的火山图中，的每一个点都代表了一个比较的物种。纵坐标代表W值。横坐标f_statistic值代表组间样品丰度的差异程度，数字越高代表差异越大。
+				说明：在ANCOM分析中,W值是一个衡量组间差异显著性的统计量（类似F值，t值），W值越高，代表该物种在组间的差异显著性越高。顶部的图中的每一个点都代表了一个比较的物种。纵坐标代表W值。横坐标clr值代表组间样品丰度的差异程度，数字越高代表差异越大。组间差异显著的物种被列在下面的表格中。
 			</dd>
 				
 			<p>
-				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异，本报告中未详细介绍，更多完整信息请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。 
+				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异，ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验，Kruskal Wallis和ANOVA提供总的p值，校正p值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe和DESeq2方法也是非参数检验，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（默认为LDA>4的微生物），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。完整分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
 			</p>
-			
+
+			<p align="center"><img src="../../Figure4-3.png" width="800" height="600"></p>
+			<p align="center"><strong>图4-3 LEfSe分析LDA柱形图</strong></p>
+			<dd>说明：每一根柱子代表一个物种，柱子的长度对应LDA值，LDA越高，差异越大。柱子的颜色对应该物种是哪个分组的特征微生物，特征微生物表示在对应分组中的丰度较高。</dd>
+		 
 			<h3><a id="a4.3"></a>4.3 样品共有物种分析</h3>
 			<p>对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现环境样本在不同的分类水平上的组成相似性及重叠情况（图4-3）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../2-AbundanceAnalysis/3-VennAndFlower"> ./2-AbundanceAnalysis/3-VennAndFlower</a></p>
-			<p align="center"><img src="../../Figure4-3.png" width="600" height="600"></p>
-			<p align="center"><strong>图4-3 共有或特有物种Venn图展示</strong></p>
+			<p align="center"><img src="../../Figure4-4.png" width="600" height="600"></p>
+			<p align="center"><strong>图4-4 共有或特有物种Venn图展示</strong></p>
 			<dd>说明：venn图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。</dd>
 			
 			<p>我们也提供了各分类水平的所有OTU在各个样本的分布情况：</p>
@@ -311,11 +315,11 @@
 
 			<p>
 				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="720">
-					<param name="SRC" value="..\..\Figure8-3.pdf" >
+					<param name="SRC" value="..\..\Figure5-1.pdf" >
 					<embed width="100%" height="360" fullscreen="yes" src="..\..\Figure5-1.pdf"><noembed></noembed></embed>
 				</object>
 			</p>
-			<p align="center"><strong>图3-1 Shannon指数的箱型图</strong></p>
+			<p align="center"><strong>图5-1 Shannon指数的箱型图</strong></p>
 			<dd>
 				说明：不同颜色代表不同的分组。其他Alpha多样性指数的箱型图请参见结果部分<a href="../../../3-AlphaDiversity/1-AlphaDiversitySummary/">./ 3-AlphaDiversity/1-AlphaDiversitySummary/</a>。
 			</dd>
