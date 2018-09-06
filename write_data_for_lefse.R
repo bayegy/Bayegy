@@ -25,7 +25,7 @@ if(length(ag)<3){
   #data<-data[-dim(data)[1],]
   
   meta<-t(meta)
-  meta<-meta[,match(colnames(data)[-1],meta[1,])]
+  data<-data[,c(1,match(meta[1,],colnames(data)))]
   write.table(meta,file = ag[4],row.names = T,col.names = F,quote = F,sep = "\t",append = F)
   write.table(data,file = ag[4],row.names = F,col.names = F,quote = F,sep = "\t",append = T)
   

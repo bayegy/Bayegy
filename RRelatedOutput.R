@@ -134,19 +134,15 @@ library(mixOmics)
 X = read.table(plsdatxt, head=TRUE,comment.char = "",row.names = 1,sep = "\t",check.names=F)
 #head(X)
 tX<-t(X)
+
+
 #rownames(tX)<-colnames(X)
 #head(tX)
 A = read.table(map, header = T,row.names = 1,comment.char = "",sep = "\t",check.names = F,na.strings = "")
-
-tX=tX[match(rownames(A),rownames(tX)),]
 Y = A[category1][,1]
 
-
-###clean na
-sel<-(!is.na(Y))
-tX<-tX[sel,]
-Y<-Y[sel,]
-
+tX<-tX[match(rownames(A),rownames(tX)),]
+tX<-tX[,colSums(tX)>0]
 
 pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
 #pca.srbct #outputs the explained variance per component

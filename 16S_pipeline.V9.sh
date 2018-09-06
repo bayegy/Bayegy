@@ -122,10 +122,10 @@ MAIN() {
 	#qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
-
+<<com1
 	source activate qiime2-2018.8
 
-<<com1
+
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -314,6 +314,7 @@ MAIN() {
 	categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L2.txt -c KEGG_Pathways -l 2 -f
 	categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L3.txt -c KEGG_Pathways -l 3 -f
 
+
 	cd closedRef_forPICRUSt
 
 	for n3 in 1 2 3;
@@ -332,6 +333,7 @@ MAIN() {
 	for svg_file in *svg; do echo $svg_file; base=$(basename $svg_file .svg); rsvg-convert -h 3200 $svg_file > ${base}.png; done
 
 	cd ..
+
 
 	source deactivate
 	source activate qiime2-2018.8
@@ -388,7 +390,7 @@ MAIN() {
 			done;
 		done;
 
-com1
+
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -404,12 +406,13 @@ com1
 
 	for category_1 in $category_set;
 		do echo $category_1;
-			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files			
-			Rscript ${SCRIPTPATH}/RRelatedOutput.R media_files/cleaned_map.txt $category_1;
+			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
+			map=$(readlink -f ./media_files/cleaned_map.txt)		
+			Rscript ${SCRIPTPATH}/RRelatedOutput.R $map $category_1;
 			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R ./alpha/sample-metadata_alphadiversity.txt $category_1 ./alpha/alpha-summary.tsv ./alpha/;
 		done;
 
-
+	source activate qm2
 	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_matrix.txt R_output/wunifrac_matrix.txt R_output/unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 
 	rsvg-convert -h 3200 R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
@@ -418,6 +421,7 @@ com1
 		do echo $n5;
 		for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/Function_PCA.r ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt ${PWD}/closedRef_forPICRUSt//sample-metadata.PCA.txt $category_1;done;
 	done;
+
 
 
 
@@ -450,6 +454,7 @@ com1
 		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 20 -e $not_rda;done;
 		cd ../../
 	done;
+
 	cd ../../
 
 	echo "#############################################################\nAdditional plot"
@@ -464,9 +469,9 @@ com1
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
-			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
+			#Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
 		done;
-	
+com1
 
 
 	echo "##############################################################\n#Run LEFSE for Group"
@@ -488,11 +493,11 @@ com1
 		done;
 	cd ../../
 
-
+<<com2
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
-
+com2
 }
 
 MAIN;
