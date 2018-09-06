@@ -58,11 +58,14 @@ if(!$nomat){
 $unif ||= 'med';
 my %samp_spe_num;
 
-#generate the %matrix with the max() function correctly but I am not totally follow the script.
+#generate the %matrix with the max() function correctly.
 open IN,$otu_tab || die$!;
 while(<IN>){
     chomp;
     my @l = /\t/ ? split /\t/ : split;
+    #In case the taxonomy contains a space, which may cause problem in other analysis later.
+    $l[-1] =~ s/\s//g;
+    #print "AAAAAAAAAAAAA", $l[-1], "\n";
     #print "BBBBBBBBBBBBBBBB", $_, "\n";
     if(!@spe_name){
         /^#OTU/ || next;
@@ -165,9 +168,11 @@ for my $level(keys %matrix){
             $tol_tax[$i] = $tag_num[$i] - $tol_tax[$i];
         }
     }else{
-        for(@tol_tax){$_ = 1 - $_;$_=0 if($_<0);} #add for Others' relative abundance =0 if <0, 2014-10-16,chen
+        #add for Others' relative abundance =0 if <0
+        for(@tol_tax){$_ = 1 - $_;$_=0 if($_<0);}
     }
-    print OUT join("\t","Others",@tol_tax,"Others\n");
+    # This is not the same as the "Unclassified" in the regex of get_table_head2.pl.
+    print OUT join("\t","unclassified",@tol_tax,"unclassified\n");
     close OUT;
 }
 
