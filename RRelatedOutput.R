@@ -47,11 +47,11 @@ print(rs)
 qiimedata = import_qiime(txt, map, tre, rs)
 
 gpt <- subset_taxa(qiimedata, Kingdom=="Bacteria")
-gpt <- prune_taxa(names(sort(taxa_sums(gpt),TRUE)[1:30]), gpt)
+#gpt <- prune_taxa(names(sort(taxa_sums(gpt),TRUE)[1:30]), gpt)
 gpt <- prune_taxa(names(sort(taxa_sums(gpt),TRUE)), gpt)
 
-head(tax_table(gpt)[,2])
-head(tax_table(gpt)[1,])
+#head(tax_table(gpt)[,2])
+#head(tax_table(gpt)[1,])
 
 
 # print("#Generate phylogenetic trees for common phylums")
