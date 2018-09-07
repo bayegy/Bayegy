@@ -6,6 +6,7 @@ library("gplots")
 library("vegan")
 library("ggrepel")
 library("pheatmap")
+library("scatterplot3d")
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -76,11 +77,20 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
   GP.ord <- ordinate(gpt, "NMDS", distance_matrix)
   NMDS_outputpdfname <- paste(category1,"_",distance_matrix, "_NMDS.pdf", sep="")
   NMDS_ordtxtname <- paste(distance_matrix, "_NMDS.ord.txt", sep="")
-  pdf(NMDS_outputpdfname, width=6.6, height=6.6)
-  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
+  pdf(NMDS_outputpdfname, width=7.6, height=6.6)
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
   print(p3 + ggtitle(distance_matrix))
   dev.off()
+
+  ####without names and ellipse
+  pdf(paste(category1,"_",distance_matrix, "_NMDS_without_labels.pdf", sep=""), width=7.6, height=6.6)
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
+  p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))
+  print(p3 + ggtitle(distance_matrix))
+  dev.off()
+
+
   write.table(as.matrix(GP.ord), NMDS_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
 }
 
@@ -89,12 +99,41 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
   GP.ord <- ordinate(gpt, "PCoA", distance_matrix)
   PCoA_outputpdfname <- paste(category1,"_",distance_matrix, "_PCoA_2D.pdf", sep="")
   PCoA_ordtxtname <- paste(distance_matrix, "_PCoA_2D.ord.txt", sep="")
-  pdf(PCoA_outputpdfname, width=6.6, height=6.6)
-  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
+
+
+  pdf(PCoA_outputpdfname, width=7.6, height=6.6)
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
   print(p3 + ggtitle(distance_matrix))
   dev.off()
+
+  ######without names and ellipse
+  pdf(paste(category1,"_",distance_matrix, "_PCoA_2D_without_labels.pdf", sep=""), width=7.6, height=6.6)
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
+  p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))
+  print(p3 + ggtitle(distance_matrix))
+  dev.off()
+
+  ######pcoa 3d plot
+  asign_rainbow_cor<-function(x){
+    unig<-unique(x)
+    color_out<-x
+    for (i in 1:length(unig)) {
+      color_out[color_out==unig[i]]<-rainbow(length(unig))[i]
+    }
+    return(color_out)
+  }
+
+  gp<-as.character(data.frame(sample_data(gpt))[category1][,1])
+  tdata<-GP.ord$vectors[,1:3]
+  eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
+  lab<-paste(rep("PC",3),c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
+  pdf(paste(category1,"_",distance_matrix, "_PCoA_3D.pdf", sep=""), width=6.6, height=6.6)
+  scatterplot3d(tdata,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
+  legend("top", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = TRUE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)
+  dev.off()
   write.table(as.matrix(GP.ord), PCoA_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
+
 }
 
 

@@ -103,8 +103,8 @@ groupInfo <- split(rownames(otu_table), groupInfo)
 
 
 
-groupInfo1<-str_extract(tax,"g__[^;]{1,100}")
-groupInfo1[is.na(groupInfo1)]<-"Unclassfied_genus"
+groupInfo1<-str_extract(tax,"f__[^;]{1,100}")
+groupInfo1[is.na(groupInfo1)]<-"Unclassfied_family"
 groupInfo1 <- split(rownames(otu_table), groupInfo1)
 
 
@@ -117,6 +117,8 @@ otu_table=scale(t(otu_table))
 mysum=function(x){
 	return(tapply(x,INDEX = metagroup,FUN = sum))
 }
+
+par1<-length(unique(metagroup))
 
 
 data=t(apply(otu_table,2,mysum))
@@ -135,7 +137,7 @@ p = ggtree(tree,aes(color=Phylum))+
 pdf(file="%s/%s", width=10, height=10)
 
 
-gheatmap(p, data, offset = 0.22, width=1, hjust=0.5,colnames_offset_y=-0.3)+theme(legend.position = "right",text=element_text(size=17),axis.ticks=element_blank())
+gheatmap(p, data, offset = 0.22, width=0.8+par1*0.1, hjust=0.5,colnames_offset_y=-0.3)+theme(legend.position = "right",text=element_text(size=17),axis.ticks=element_blank())
 
 dev.off()
 '''
