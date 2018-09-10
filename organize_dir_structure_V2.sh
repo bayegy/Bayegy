@@ -70,7 +70,9 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/ \
 	./Result_AmpliconSequencing/7-FunctionAnalysis/3-TreeBasedPlots/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
-	./Result_AmpliconSequencing/8-FiguresTablesForReport 
+	./Result_AmpliconSequencing/8-FiguresTablesForReport \
+ 	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-PCoA-Plots-from-R \
+	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-PCoA-Plots-from-QIIME2
 
 	
 
@@ -131,21 +133,23 @@ organize_deliverable_structure() {
 
 	cp -r R_output/*matrix.txt R_output/BetaDiversity_heatmap.png ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
 
-	cp -r R_output/bray*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
-	cp -r core-metrics-results/bray*_emperor.qzv* R_output/*bray*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/
-	cp -r R_output/*bray*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
-	cp -r core-metrics-results/bray*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
+	cp -r R_output/*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
+	cp -r core-metrics-results/*_emperor.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-PCoA-Plots-from-QIIME2
+	cp -r R_output/*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-PCoA-Plots-from-R
+	cp -r R_output/*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
+	cp -r core-metrics-results/*permanova*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
+	cp -r core-metrics-results/*anosim*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 
-	cp -r R_output/unifrac*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
-	cp -r core-metrics-results/unweighted*_emperor.qzv* R_output/*unifrac*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/
-	cp -r R_output/*unifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
-	cp -r core-metrics-results/unweighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
+	#cp -r R_output/unifrac*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
+	#cp -r core-metrics-results/unweighted*_emperor.qzv* R_output/*unifrac*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/
+	#cp -r R_output/*unifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
+	#cp -r core-metrics-results/unweighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 
-	cp -r R_output/wunifrac*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
-	cp -r core-metrics-results/weighted*_emperor.qzv* R_output/*wunifrac*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/
-	cp -r R_output/*wunifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
+	#cp -r R_output/wunifrac*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
+	#cp -r core-metrics-results/weighted*_emperor.qzv* R_output/*wunifrac*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/
+	#cp -r R_output/*wunifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
 	cp -r R_output/*PCA* R_output/*PLSDA* ./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/
-	cp -r core-metrics-results/weighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
+	#cp -r core-metrics-results/weighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 	
 	#cp -r R_output/Bacteria.phylogeny.pdf ./Result_AmpliconSequencing/5-Phylogenetics/1-MajorPhylums/
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/2-MajorOTUs/
@@ -178,6 +182,7 @@ organize_deliverable_structure() {
 	rm ./Result_AmpliconSequencing/2-AbundanceAnalysis/3-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
 	cp -rp 2-CorrelationHeatmap/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
+	cp -rp 2-alpha-rarefaction-from-R/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
 	
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
 	cd ./Result_AmpliconSequencing/
@@ -185,11 +190,17 @@ organize_deliverable_structure() {
 	for f in $(find . -type f -name "index.html") ; do echo $f; base=$(basename $f .html); dir=$(dirname $f); new=${dir}/Summary_请点此文件查看.html; mv $f $new; done
 	cd ../
 
+
+
 	#minor adjustment of file structure
 	mv ./Result_AmpliconSequencing/1-QCStats/demux/ ./Result_AmpliconSequencing/1-QCStats/1-Stats-demux
 	mv ./Result_AmpliconSequencing/1-QCStats/stats-dada2 ./Result_AmpliconSequencing/1-QCStats/2-Stats-dada2
 	mv ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2
-
+	mv ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/1-alpha-rarefaction-from-QIIME2
+	rm -r ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-PCoA-Plots-from-QIIME2/jaccard_emperor
+	###rename the pcoa results
+	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*emperor* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-Plots-from-QIIME2
+	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-Plots-from-R
 	#######################For 8-FiguresTablesForReport
 
 	cp -rp ${SCRIPTPATH}/Report/src Result_AmpliconSequencing/8-FiguresTablesForReport/
@@ -209,7 +220,7 @@ organize_deliverable_structure() {
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure6-1.png
-	cp ../4-BetaDiversity/3-NMDS/${category_1}_unifrac_NMDS.pdf Figure6-2.pdf
+	cp ../4-BetaDiversity/3-NMDS/${category_1}_unweighted_unifrac_NMDS.pdf Figure6-2.pdf
 	cp ../5-Phylogenetics/${category_1}_phylogenetic_tree_heatmap.pdf Figure7-1.pdf
 	cp ../6-AssociationAnalysis/1-RDA/Genus/*_bacteria_location_plot.png Figure8-1.png
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/Correlation_heatmap.pdf Figure8-2.pdf

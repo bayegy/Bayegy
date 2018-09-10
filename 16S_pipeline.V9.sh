@@ -252,7 +252,7 @@ MAIN() {
 			done;
 	done;
 
-com1
+
 	source deactivate
 	source activate qm2
 	echo "##############################################################\n#Generate the figure for the percentage of annotated level"
@@ -282,7 +282,7 @@ com1
 	for svg_file in exported/Relative/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > exported/Relative/${n}.png; done
 
 
-<<com2
+
 	source deactivate
 	source activate qiime2-2018.8
 	echo "ANCOM analaysis for differential OTU"
@@ -390,33 +390,34 @@ com1
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-
+com1
 
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
 	mkdir R_output
 	#Change format of meta-data file for Rscript of PLSDA analysis
-	cp $mapping_file ./R_output/sample-metadata.txt
-	tail -n +2 exported/feature-table.txt > ./R_output/feature-table.PLSDA.txt
-	perl -p -i.bak -e 's/#OTU ID//' ./R_output/feature-table.PLSDA.txt
-	sort ./R_output/sample-metadata.txt > ./R_output/sample-metadata.PLSDA.txt
+	#cp $mapping_file ./R_output/sample-metadata.txt
+	#tail -n +2 exported/feature-table.txt > ./R_output/feature-table.PLSDA.txt
+	#perl -p -i.bak -e 's/#OTU ID//' ./R_output/feature-table.PLSDA.txt
+	#sort ./R_output/sample-metadata.txt > ./R_output/sample-metadata.PLSDA.txt
 	#Change format of meta-data file for Rscript of alpha diversity analysis
-	cp $mapping_file ./alpha/sample-metadata_alphadiversity.txt
-	perl -p -i.bak -e 's/#SampleID//' ./alpha/sample-metadata_alphadiversity.txt
+	#cp $mapping_file ./alpha/sample-metadata_alphadiversity.txt
+	#perl -p -i.bak -e 's/#SampleID//' ./alpha/sample-metadata_alphadiversity.txt
 
 	for category_1 in $category_set;
 		do echo $category_1;
 			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
 			map=$(readlink -f ./media_files/cleaned_map.txt)		
 			Rscript ${SCRIPTPATH}/RRelatedOutput.R $map $category_1;
-			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R ./alpha/sample-metadata_alphadiversity.txt $category_1 ./alpha/alpha-summary.tsv ./alpha/;
+			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R $map $category_1 ./alpha/alpha-summary.tsv ./alpha/;
 		done;
 
 	source activate qm2
-	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_matrix.txt R_output/wunifrac_matrix.txt R_output/unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
+	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.txt R_output/weighted_unifrac_matrix.txt R_output/unweighted_unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 
 	rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
+<<com2
 	python2 ${SCRIPTPATH}/biom_to_stamp.py -m KEGG_Pathways closedRef_forPICRUSt/feature-table.metagenome.biom > closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt
 	for n5 in 1 2 3;
 		do echo $n5;
@@ -472,9 +473,12 @@ com1
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
 			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
 		done;
+com2
+	##########alpha rarefacation
+	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o 2-alpha-rarefaction-from-R
 
 
-
+<<com3
 	echo "##############################################################\n#Run LEFSE for Group"
 	source deactivate
 	source activate LEFSE
@@ -493,8 +497,8 @@ com1
 			cd ../../
 		done;
 	cd ../../
+com3
 
-com2
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq

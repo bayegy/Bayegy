@@ -79,21 +79,21 @@ gpt <- prune_taxa(names(sort(taxa_sums(gpt),TRUE)), gpt)
 
 
 print("#Generate the NMDS plot for betadiversity")
-for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
-  GP.ord <- ordinate(gpt, "NMDS", distance_matrix)
-  NMDS_outputpdfname <- paste(category1,"_",distance_matrix, "_NMDS.pdf", sep="")
-  NMDS_ordtxtname <- paste(distance_matrix, "_NMDS.ord.txt", sep="")
+for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
+  GP.ord <- ordinate(gpt, "NMDS", distance_matrix[1])
+  NMDS_outputpdfname <- paste(category1,"_",distance_matrix[2], "_NMDS.pdf", sep="")
+  NMDS_ordtxtname <- paste(distance_matrix[2], "_NMDS.ord.txt", sep="")
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
-  print(p3 + ggtitle(distance_matrix))
+  print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
   ####without names and ellipse
-  pdf(paste(category1,"_",distance_matrix, "_NMDS_without_labels.pdf", sep=""), width=7.6, height=6.6)
+  pdf(paste(category1,"_",distance_matrix[2], "_NMDS_without_labels.pdf", sep=""), width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
   p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))
-  print(p3 + ggtitle(distance_matrix))
+  print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
 
@@ -101,23 +101,23 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
 }
 
 print("#Generate the PCoA 2D plot for betadiversity")
-for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
-  GP.ord <- ordinate(gpt, "PCoA", distance_matrix)
-  PCoA_outputpdfname <- paste(category1,"_",distance_matrix, "_PCoA_2D.pdf", sep="")
-  PCoA_ordtxtname <- paste(distance_matrix, "_PCoA_2D.ord.txt", sep="")
+for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
+  GP.ord <- ordinate(gpt, "PCoA", distance_matrix[1])
+  PCoA_outputpdfname <- paste(category1,"_",distance_matrix[2], "_PCoA_2D.pdf", sep="")
+  PCoA_ordtxtname <- paste(distance_matrix[2], "_PCoA_2D.ord.txt", sep="")
 
 
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
-  print(p3 + ggtitle(distance_matrix))
+  print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
   ######without names and ellipse
-  pdf(paste(category1,"_",distance_matrix, "_PCoA_2D_without_labels.pdf", sep=""), width=7.6, height=6.6)
+  pdf(paste(category1,"_",distance_matrix[2], "_PCoA_2D_without_labels.pdf", sep=""), width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
   p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))
-  print(p3 + ggtitle(distance_matrix))
+  print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
   ######pcoa 3d plot
@@ -134,7 +134,7 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
   tdata<-GP.ord$vectors[,1:3]
   eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
   lab<-paste("PC",c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
-  pdf(paste(category1,"_",distance_matrix, "_PCoA_3D.pdf", sep=""), width=6.6, height=6.6)
+  pdf(paste(category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=6.6, height=6.6)
   scatterplot3d(tdata,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
   legend("top", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = TRUE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)
   dev.off()
@@ -144,12 +144,12 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
 
 
 print("#calculate distance")
-for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
-  beta_heatmap_outputpdfname <- paste(distance_matrix, "_betadiversity_summary.pdf", sep="")
+for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
+  beta_heatmap_outputpdfname <- paste(distance_matrix[2], "_betadiversity_summary.pdf", sep="")
   #pdf(beta_heatmap_outputpdfname)
-  Dist <- distance(qiimedata, method=distance_matrix)
+  Dist <- distance(qiimedata, method=distance_matrix[1])
 
-  beta_outputtxtname <- paste(distance_matrix, "_matrix.txt", sep="")
+  beta_outputtxtname <- paste(distance_matrix[2], "_matrix.txt", sep="")
   write.table(as.matrix(Dist), beta_outputtxtname , quote=FALSE, col.names=NA, sep="\t")
   
   Dist_read<-read.table(beta_outputtxtname, head=T)
@@ -164,7 +164,7 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
 
 
 ####################Using mixOmics for PLS-DA plot
-plsdatxt = paste(this.dir, "/R_output/feature-table.PLSDA.txt", sep="")
+#plsdatxt = paste(this.dir, "/R_output/feature-table.PLSDA.txt", sep="")
 
 
 library(knitr)
@@ -176,7 +176,9 @@ library(mixOmics)
 
 ## ------------------------------------------------------------------------
 #srbct <- load("/Users/chengguo/Downloads/PLSDA_SRBCT/result-SRBCT-sPLSDA.RData")
-X = read.table(plsdatxt, head=TRUE,comment.char = "",row.names = 1,sep = "\t",check.names=F)
+X = read.table(txt,skip=1, head=TRUE,comment.char = "",row.names = 1,sep = "\t",check.names=F)
+taxonomy<-X[,length(X)]
+X<-X[,-length(X)]
 #head(X)
 tX<-t(X)
 
@@ -187,7 +189,12 @@ A = read.table(map, header = T,row.names = 1,comment.char = "",sep = "\t",check.
 Y = A[category1][,1]
 
 tX<-tX[match(rownames(A),rownames(tX)),]
+taxonomy<-taxonomy[colSums(tX)>0]
 tX<-tX[,colSums(tX)>0]
+
+#print(dim(tX)[2])
+#print(length(taxonomy))
+
 
 pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
 #pca.srbct #outputs the explained variance per component
@@ -200,7 +207,7 @@ dev.off()
 
 srbct.plsda <- plsda(tX, Y)  # set ncomp to 10 for performance assessment later
 plsda.vip <- vip(srbct.plsda)
-write.csv(plsda.vip,paste(category1,"_","PLSDA_Variable_importance_in_projection.txt"))
+write.table(data.frame(OTUID=rownames(plsda.vip),plsda.vip,Taxonomy=taxonomy),paste(category1,"_","PLSDA_Variable_importance_in_projection.txt"),row.names = F,sep="\t")
 
 pdf(paste(category1,"_","PLSDA_AUC_plot.pdf",sep=""), width = 5, height = 4)
 auroc(srbct.plsda, roc.comp = 2)
