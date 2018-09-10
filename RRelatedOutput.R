@@ -37,6 +37,12 @@ txt = paste(this.dir, "/exported/feature-table.ConsensusLineage.txt", sep="")
 tre = paste(this.dir, "/exported/tree.rooted.nwk", sep="")
 rs = paste(this.dir, "/exported/dna-sequences.fasta", sep="")
 
+##mao
+#txt = paste(this.dir, "/feature-table.ConsensusLineage.txt", sep="")
+#tre = paste(this.dir, "/tree.rooted.nwk", sep="")
+#rs = paste(this.dir, "/dna-sequences.fasta", sep="")
+
+
 print("#Start reading realted files with Phyloseq")
 print(map)
 print(txt)
@@ -127,7 +133,7 @@ for (distance_matrix in c('bray', 'unifrac', 'jaccard', 'wunifrac')){
   gp<-as.character(data.frame(sample_data(gpt))[category1][,1])
   tdata<-GP.ord$vectors[,1:3]
   eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
-  lab<-paste(rep("PC",3),c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
+  lab<-paste("PC",c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
   pdf(paste(category1,"_",distance_matrix, "_PCoA_3D.pdf", sep=""), width=6.6, height=6.6)
   scatterplot3d(tdata,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
   legend("top", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = TRUE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)

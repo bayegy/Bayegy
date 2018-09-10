@@ -32,13 +32,23 @@ os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
 with open('tree.R', 'w') as rscript:
 	print ('''
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
+metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
+metadata<-metadata["%s"]
+
+####clean na
+sel<-(!is.na(metadata))
+sel1<-sel[match(colnames(otu_table),rownames(metadata))]
+sel1<-(is.na(sel1)|sel1)
+otu_table<-otu_table[,sel1]
+
+
 otu_table<-otu_table[,-dim(otu_table)[2]]
 otusum<-colSums(t(otu_table))
 hold<-sort(otusum,T)[%s]
 out<-data.frame(rownames(otu_table)[otusum>=hold])
 write.table(out,"%s/selected_features.txt",sep = "",row.names = F,col.names = F,quote = F)
 '''
-% (options.input,options.num,options.outdir),
+% (options.input,options.metadata,options.group,options.num,options.outdir),
 file = rscript)
 os.system('Rscript tree.R')
 
@@ -83,16 +93,26 @@ with open('tree.R', 'w') as rscript:
 library("ggtree")
 library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
+metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
+metadata<-metadata["%s"]
+
+
+
+####clean na
+sel<-(!is.na(metadata))
+sel1<-sel[match(colnames(otu_table),rownames(metadata))]
+sel1<-(is.na(sel1)|sel1)
+otu_table<-otu_table[,sel1]
+metadata<-metadata[sel,]
+
+
 
 
 otu<-otu_table[,-dim(otu_table)[2]]
 otusum<-colSums(t(otu))
 hold<-sort(otusum,T)[%s]
 
-
 otu_table<-otu_table[otusum>=hold,]
-
-
 
 tax<-otu_table[,dim(otu_table)[2]]
 
@@ -109,8 +129,8 @@ groupInfo1 <- split(rownames(otu_table), groupInfo1)
 
 
 otu_table<-otu_table[,-dim(otu_table)[2]]
-metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
-metadata<-metadata["%s"]
+
+###meta
 metagroup<-metadata[,1][match(colnames(otu_table),rownames(metadata))]
 otu_table=scale(t(otu_table))
 
@@ -141,7 +161,7 @@ gheatmap(p, data, offset = 0.22, width=0.8+par1*0.1, hjust=0.5,colnames_offset_y
 
 dev.off()
 '''
-% (options.input,options.num,options.metadata,options.group,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),
+% (options.input,options.metadata,options.group,options.num,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),
 file = rscript)
 
 os.system('Rscript tree.R')

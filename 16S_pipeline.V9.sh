@@ -121,7 +121,7 @@ MAIN() {
 	#echo "##############################################################\n#Demultiplexing the paired-end sequence file"
 	#qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-
+<<com1
 
 	source activate qiime2-2018.8
 
@@ -252,7 +252,7 @@ MAIN() {
 			done;
 	done;
 
-
+com1
 	source deactivate
 	source activate qm2
 	echo "##############################################################\n#Generate the figure for the percentage of annotated level"
@@ -282,7 +282,7 @@ MAIN() {
 	for svg_file in exported/Relative/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > exported/Relative/${n}.png; done
 
 
-
+<<com2
 	source deactivate
 	source activate qiime2-2018.8
 	echo "ANCOM analaysis for differential OTU"
@@ -494,7 +494,7 @@ MAIN() {
 		done;
 	cd ../../
 
-
+com2
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq

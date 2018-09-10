@@ -21,6 +21,18 @@ meta<-meta[group]
 data<-read.table(otu,header = T,skip = 1,sep = "\t",
                  comment.char = "",stringsAsFactors = F,check.names = F,row.names = 1)
 
+
+####clean na
+sel<-(!is.na(meta))
+sel1<-sel[match(colnames(data),rownames(meta))]
+sel1<-(is.na(sel1)|sel1)
+data<-data[,sel1]
+meta<-meta[sel,]
+
+
+
+
+
 taxonomy<-data[,dim(data)[2]]
 data<-data[,-dim(data)[2]]
 abdc<-colSums(t(data))
