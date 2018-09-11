@@ -50,18 +50,6 @@ rownames(dat)=dat[,1]
 map<-read.table("%s",header = T,na.strings="",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 groups<-map["%s"]
 
-
-
-####clean na
-sel<-(!is.na(groups))
-map<-map[sel,]
-sel1<-sel[match(colnames(dat),rownames(groups))]
-sel1<-(is.na(sel1)|sel1)
-dat<-dat[,sel1]
-groups<-groups[sel,]
-
-
-
 notstr=c()
 for(i in 1:length(map)){
 	notstr[i]=!is.character(map[,i])
@@ -72,14 +60,11 @@ if(ex[1]!="none"){envdata<-envdata[,!colnames(envdata)%%in%%ex]}
 dat=dat[,-c(1,length(dat))]
 dat=t(dat)[match(rownames(groups),rownames(t(dat))),]
 
-rowname_join<-function(x,y)
-{
-  ya<-data.frame(y[match(rownames(x),rownames(y)),])
-  colnames(ya)<-colnames(y)
-  colnames(ya)[colnames(ya)%%in%%colnames(x)]<-paste(colnames(ya)[colnames(ya)%%in%%colnames(x)],"_y",sep = "")
-  out<-data.frame(x,ya,check.rows = T,check.names = F)
-  return(out)
-}
+#clean na
+groups<-groups[!is.na(groups),]
+dat<-dat[!is.na(groups),]
+envdata<-envdata[!is.na(groups),]
+
 
 dca <- decorana(veg = dat)
 dcam <- max(dca$rproj)
@@ -107,7 +92,7 @@ new<-cca$CCA
 #samples=data.frame(ccascore$sites)
 samples=data.frame(new$u)
 samples$id=rownames(samples)
-samples=rowname_join(samples,groups)
+samples=data.frame(samples,%s=groups)
 
 
 #species=data.frame(ccascore$species)
@@ -228,7 +213,7 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
 ggsave(paste(path,"/",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
 '''
-% (options.exclude,options.input,options.meta, options.group,options.output,options.number,options.group,options.group,options.group,options.group,options.group,options.group),
+% (options.exclude,options.input,options.meta, options.group,options.output,options.group,options.number,options.group,options.group,options.group,options.group,options.group,options.group),
 file = rscript)
 
 rscript.close()

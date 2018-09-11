@@ -27,11 +27,12 @@ dat<-dat[sel,]
 write.table(dat,file = paste(opt$out,"/","cleaned_map.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
 
 if(!is.null(opt$i)){
-    otu <- read.table(opt$i,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings=opt$a)
+    otu <- read.table(opt$i,skip=1,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings=opt$a)
     sel1<-sel[match(colnames(otu),rownames(group))]
     sel1<-(is.na(sel1)|sel1)
     otu<-otu[,sel1]
-    write.table(otu,file = paste(opt$out,"/","cleaned_feature_table.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
+    write.table("# Constructed from biom file",file = paste(opt$out,"/","cleaned_feature_table.txt",sep = ""),row.names = F,col.names = F,quote = F,sep = "\t",append = F)
+    write.table(otu,file = paste(opt$out,"/","cleaned_feature_table.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = T)
 }
 
 if(!is.null(opt$d)){

@@ -34,6 +34,7 @@ new.dir <- paste(this.dir, "/R_output", sep="")
 setwd(new.dir)
 
 txt = paste(this.dir, "/exported/feature-table.ConsensusLineage.txt", sep="")
+#txt = args[3]
 tre = paste(this.dir, "/exported/tree.rooted.nwk", sep="")
 rs = paste(this.dir, "/exported/dna-sequences.fasta", sep="")
 
@@ -82,7 +83,7 @@ print("#Generate the NMDS plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
   GP.ord <- ordinate(gpt, "NMDS", distance_matrix[1])
   NMDS_outputpdfname <- paste(category1,"_",distance_matrix[2], "_NMDS.pdf", sep="")
-  NMDS_ordtxtname <- paste(distance_matrix[2], "_NMDS.ord.txt", sep="")
+  NMDS_ordtxtname <- paste(category1,"_",distance_matrix[2], "_NMDS.ord.txt", sep="")
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
@@ -104,7 +105,7 @@ print("#Generate the PCoA 2D plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
   GP.ord <- ordinate(gpt, "PCoA", distance_matrix[1])
   PCoA_outputpdfname <- paste(category1,"_",distance_matrix[2], "_PCoA_2D.pdf", sep="")
-  PCoA_ordtxtname <- paste(distance_matrix[2], "_PCoA_2D.ord.txt", sep="")
+  PCoA_ordtxtname <- paste(category1,"_",distance_matrix[2], "_PCoA_2D.ord.txt", sep="")
 
 
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)
@@ -224,12 +225,12 @@ dev.off()
 library("ggplot2") # load related packages
 #read files.
 alphadatxt = paste(this.dir, "/alpha/alpha-summary.tsv", sep="")
-alphameta = paste(this.dir, "/alpha/sample-metadata_alphadiversity.txt", sep="")
-design = read.table(alphameta, header=T, row.names= 1, sep="\t") 
+#alphameta = paste(this.dir, "/alpha/sample-metadata_alphadiversity.txt", sep="")
+design = read.table(map, header=T,row.names= 1,comment.char="", check.names=F,sep="\t",stringsAsFactors = F,na.strings = "") 
 alpha = read.table(alphadatxt, header=T, row.names= 1, sep="\t")
 
 # merge information for script
-index = cbind(alpha, design[match(rownames(alpha), rownames(design)), ]) 
+index = cbind(design, alpha[match(rownames(design), rownames(alpha)), ]) 
 # run shannon, observed_otus, faith_pd separately as the aes function is not accepting variables!!! Hard coded for Group1 as well. Really bad script.
 p = ggplot(index, aes_string(x=category1, y="observed_otus", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="observed_otus index")
 ggsave(paste(category1,"_","alpha_diversity_observed_otus.boxplot.pdf", sep=""), p, width = 5, height = 3)

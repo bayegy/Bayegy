@@ -71,10 +71,10 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/7-FunctionAnalysis/3-TreeBasedPlots/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
 	./Result_AmpliconSequencing/8-FiguresTablesForReport \
- 	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-PCoA-Plots-from-R \
-	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-PCoA-Plots-from-QIIME2
+ 	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Phyloseq \
+	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2 \
+	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20 
 
-	
 
 	echo "Start organize the files for deliverables ..."
 	
@@ -105,7 +105,8 @@ organize_deliverable_structure() {
 
 	cp -r ./rep-seqs.qzv* ./exported/*nwk ./exported/dna-sequences.fasta ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-RepresentiveSequence/
 
-	cp -r taxa-bar-plots.qzv* exported/Relative/*relative.txt exported/Relative/otu*png ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/
+	cp -r taxa-bar-plots.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/
+	cp -r exported/Relative/*relative.txt exported/Relative/otu*png ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20
 
 	cp -r exported/${number}/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/
 
@@ -134,8 +135,8 @@ organize_deliverable_structure() {
 	cp -r R_output/*matrix.txt R_output/BetaDiversity_heatmap.png ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
 
 	cp -r R_output/*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
-	cp -r core-metrics-results/*_emperor.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-PCoA-Plots-from-QIIME2
-	cp -r R_output/*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-PCoA-Plots-from-R
+	cp -r core-metrics-results/*_emperor.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2
+	cp -r R_output/*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Phyloseq
 	cp -r R_output/*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
 	cp -r core-metrics-results/*permanova*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 	cp -r core-metrics-results/*anosim*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
@@ -182,7 +183,7 @@ organize_deliverable_structure() {
 	rm ./Result_AmpliconSequencing/2-AbundanceAnalysis/3-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
 	cp -rp 2-CorrelationHeatmap/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
-	cp -rp 2-alpha-rarefaction-from-R/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
+	cp -rp alpha-rarefaction-ggplot2/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
 	
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
 	cd ./Result_AmpliconSequencing/
@@ -196,8 +197,8 @@ organize_deliverable_structure() {
 	mv ./Result_AmpliconSequencing/1-QCStats/demux/ ./Result_AmpliconSequencing/1-QCStats/1-Stats-demux
 	mv ./Result_AmpliconSequencing/1-QCStats/stats-dada2 ./Result_AmpliconSequencing/1-QCStats/2-Stats-dada2
 	mv ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2
-	mv ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/1-alpha-rarefaction-from-QIIME2
-	rm -r ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-PCoA-Plots-from-QIIME2/jaccard_emperor
+	mv ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction-Qiime2
+	rm -r ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2/jaccard_emperor
 	###rename the pcoa results
 	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*emperor* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-Plots-from-QIIME2
 	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-Plots-from-R
@@ -214,7 +215,7 @@ organize_deliverable_structure() {
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
 	cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
 	cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
-	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/otu_table.Phylum.relative.png Figure4-2.png
+	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20/otu_table.Phylum.relative.png Figure4-2.png
 	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Phylum/${category_1}_Phylum_lefse.png Figure4-3.png
 	cp ../2-AbundanceAnalysis/3-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf

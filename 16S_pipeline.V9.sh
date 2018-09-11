@@ -251,7 +251,8 @@ MAIN() {
 				qiime feature-table heatmap --i-table media_files/filtered_feature_table.qza  --m-metadata-file media_files/cleaned_map.txt --m-metadata-column $category_1 --o-visualization exported/${min_freq}/${category_1}-table-${tax_levels[${n}]}.${min_freq}.qzv;
 			done;
 	done;
-
+com1
+<<com4
 
 	source deactivate
 	source activate qm2
@@ -280,7 +281,6 @@ MAIN() {
 		perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/otu_table.${n7}.relative.lastcolumn.trans -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent (%)" -right -textup -rotate='-45' --y_mun 0.2,5 --micro_scale --percentage > exported/Relative/otu_table.${n7}.relative.svg
 	done;
 	for svg_file in exported/Relative/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > exported/Relative/${n}.png; done
-
 
 
 	source deactivate
@@ -390,8 +390,7 @@ MAIN() {
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-com1
-
+com4
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -407,17 +406,18 @@ com1
 
 	for category_1 in $category_set;
 		do echo $category_1;
-			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
-			map=$(readlink -f ./media_files/cleaned_map.txt)		
+			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files		
+			map=$(readlink -f ./media_files/cleaned_map.txt)
+			#otu=$(readlink -f ./media_files/cleaned_feature_table.txt)
 			Rscript ${SCRIPTPATH}/RRelatedOutput.R $map $category_1;
 			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R $map $category_1 ./alpha/alpha-summary.tsv ./alpha/;
 		done;
-
+<<com3
 	source activate qm2
 	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.txt R_output/weighted_unifrac_matrix.txt R_output/unweighted_unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 
 	rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
-<<com2
+
 	python2 ${SCRIPTPATH}/biom_to_stamp.py -m KEGG_Pathways closedRef_forPICRUSt/feature-table.metagenome.biom > closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt
 	for n5 in 1 2 3;
 		do echo $n5;
@@ -443,7 +443,6 @@ com1
 	#mv otu_table.f.absolute.mat otu_table.Family.absolute.txt
 	#mv otu_table.g.absolute.mat otu_table.Genus.absolute.txt
 	#mv otu_table.s.absolute.mat otu_table.Species.absolute.txt
-
 
 
 
@@ -473,12 +472,12 @@ com1
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
 			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
 		done;
-com2
+
 	##########alpha rarefacation
-	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o 2-alpha-rarefaction-from-R
+	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
 
 
-<<com3
+
 	echo "##############################################################\n#Run LEFSE for Group"
 	source deactivate
 	source activate LEFSE
@@ -498,6 +497,7 @@ com2
 		done;
 	cd ../../
 com3
+
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./

@@ -36,13 +36,11 @@ metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,s
 metadata<-metadata["%s"]
 
 ####clean na
+otu_table<-otu_table[,-dim(otu_table)[2]]
 sel<-(!is.na(metadata))
 sel1<-sel[match(colnames(otu_table),rownames(metadata))]
-sel1<-(is.na(sel1)|sel1)
 otu_table<-otu_table[,sel1]
 
-
-otu_table<-otu_table[,-dim(otu_table)[2]]
 otusum<-colSums(t(otu_table))
 hold<-sort(otusum,T)[%s]
 out<-data.frame(rownames(otu_table)[otusum>=hold])
@@ -95,20 +93,15 @@ library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-metadata["%s"]
-
+metagroup<-metadata[,1][match(colnames(otu_table)[-length(otu_table)],rownames(metadata))]
 
 
 ####clean na
-sel<-(!is.na(metadata))
-sel1<-sel[match(colnames(otu_table),rownames(metadata))]
-sel1<-(is.na(sel1)|sel1)
-otu_table<-otu_table[,sel1]
-metadata<-metadata[sel,]
-
-
-
-
 otu<-otu_table[,-dim(otu_table)[2]]
+metagroup<-metagroup[!is.na(metagroup)]
+otu<-otu[,!is.na(metagroup)]
+
+
 otusum<-colSums(t(otu))
 hold<-sort(otusum,T)[%s]
 
@@ -129,9 +122,7 @@ groupInfo1 <- split(rownames(otu_table), groupInfo1)
 
 
 otu_table<-otu_table[,-dim(otu_table)[2]]
-
-###meta
-metagroup<-metadata[,1][match(colnames(otu_table),rownames(metadata))]
+#
 otu_table=scale(t(otu_table))
 
 mysum=function(x){
