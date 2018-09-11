@@ -18,7 +18,7 @@ if(length(ag)<3){
   }
   meta<-data.frame(Subject=rownames(meta),meta)
   data<-read.table(ag[1],header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
-  data<-data[data[,1]!="Others",]
+  data<-data[data[,1]!="Others"&data[,1]!="unclassified",]
   data<-data[,c(length(data),2:(length(data)-1))]
   data[,1]<-str_replace(data[,1],";$","")
   data[,1]<-str_replace_all(data[,1],";","|")

@@ -14,7 +14,7 @@ opt <- parse_args(OptionParser(option_list=option_list))
 
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 dat <- read.table(as.character(opt$otu),comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
-dat<-dat[dat[,1]!="Others",]
+dat<-dat[dat[,1]!="Others"&dat[,1]!="unclassified",]
 dat<-dat[!duplicated(dat[,1]),]
 rownames(dat)=dat[,1]
 annotation_row<-str_replace(str_extract(dat[,length(dat)],"p__[^;]+"),"p__","")

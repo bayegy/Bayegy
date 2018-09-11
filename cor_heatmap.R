@@ -19,7 +19,7 @@ opt <- parse_args(OptionParser(option_list=option_list))
 ex<-str_split(opt$ex,",")[[1]]
 
 dat <- read.table(as.character(opt$otu),comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
-dat<-dat[dat[,1]!="Others",]
+dat<-dat[dat[,1]!="Others"&dat[,1]!="unclassified",]
 dat<-dat[!duplicated(dat[,1]),]
 rownames(dat)=dat[,1]
 annotation_row<-str_extract(dat[,length(dat)],"p__[^;]+")
