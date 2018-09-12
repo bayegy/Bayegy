@@ -19,8 +19,8 @@ echo "Check wheather your categories are the following:"
 for i in $category_set;do echo $i;done
 
 
-declare -A tax_aa
-tax_aa=([k]=Kingdom [p]=Phylum [c]=Class [o]=Order [f]=Family [g]=Genus [s]=Species)
+declare -A tax_aa;
+tax_aa=([k]=Kingdom [p]=Phylum [c]=Class [o]=Order [f]=Family [g]=Genus [s]=Species);
 
 tax_levels["1"]="Kingdom"
 tax_levels["2"]="Phylum"
@@ -362,7 +362,7 @@ com1
 	echo "##############################################################\n#export all qzv files into clickable folders"
 	#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
-
+com4
 	echo "##############################################################\n#Run Qiime1 for differOTU analysis"
 	source deactivate
 	source activate qm1
@@ -372,6 +372,10 @@ com1
 	summarize_taxa.py -i exported/DiffAbundance/otu_table.even.biom -a -L 7 -o exported/DiffAbundance/tax
 	source ~/.bash_profile
 
+
+
+	min_observation=$(echo \(`wc -l $mapping_file | sed 's/ .*//g'`-1\)/4 | bc)
+	echo "###############min observation of otu in samples is $min_observation"
 	for n4 in 2 3 4 5 6 7;
 		do echo $n4;
 		#the biom file should include taxonomy information for group_significance.py script
@@ -379,18 +383,21 @@ com1
 		perl -p -i.bak -e 's/#OTU ID/taxonomy/' exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt
 		paste exported/DiffAbundance/tax/otu_table.even_L${n4}.txt exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt > exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt
 		biom convert -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt -o exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom --to-hdf5 --table-type="OTU table" --process-obs-metadata taxonomy
+		
+
+		filter_otus_from_otu_table.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -s $min_observation -o filtered_otu_table.biom
+
 		for category_1 in $category_set;
 			do echo $category_1;
-			group_significance.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -m $mapping_file -c $category_1 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
+			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
+			group_significance.py -i filtered_otu_table.biom -m ./media_files/cleaned_map.txt -c $category_1 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 			
-			#group_significance.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -m $mapping_file -c $category_2 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_2}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap
-			group_significance.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -m $mapping_file -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
+			group_significance.py -i filtered_otu_table.biom -m ./media_files/cleaned_map.txt -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 
-			#group_significance.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -m $mapping_file -c $category_2 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_2}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap
-			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
+			python ${SCRIPTPATH}/auto_DESeq.py -m ./media_files/cleaned_map.txt -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-com4
+<<com3
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -412,7 +419,7 @@ com4
 			Rscript ${SCRIPTPATH}/RRelatedOutput.R $map $category_1;
 			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R $map $category_1 ./alpha/alpha-summary.tsv ./alpha/;
 		done;
-<<com3
+
 	source activate qm2
 	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.txt R_output/weighted_unifrac_matrix.txt R_output/unweighted_unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 

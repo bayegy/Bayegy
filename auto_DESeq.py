@@ -42,4 +42,4 @@ for i in range(len(unig)):
 		if i<j:
 			print(unig[i])
 			print(unig[j])
-			os.system('differential_abundance.py -i exported/DiffAbundance/tax/otu_table.even_%s.taxonomy.biom -o exported/DiffAbundance/DESeq2_%s_Between_%s_and_%s_DiffAbundance_%s.txt  -a DESeq2_nbinom -m %s -c %s -x %s -y %s -d'%(options.level,options.group,unig[i],unig[j],options.level,options.metadata,options.group,unig[i],unig[j]))
+			os.system('differential_abundance.py -i filtered_otu_table.biom -o exported/DiffAbundance/DESeq2_%s_Between_%s_and_%s_DiffAbundance_%s.txt  -a DESeq2_nbinom -m %s -c %s -x %s -y %s -d'%(options.group,unig[i],unig[j],options.level,options.metadata,options.group,unig[i],unig[j]))
