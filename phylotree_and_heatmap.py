@@ -1,30 +1,28 @@
-
-from __future__ import print_function,division
-from optparse import OptionParser
-from collections import defaultdict
+#coding:utf-8
+import argparse
 import re,sys,os
 
 #argument:
-usage = 'python %prog [-i] [-m] [-g] [-r]'
-p = OptionParser(usage = usage)
-p.add_option('-i','--input',dest='input',metavar='*.txt',default=False,
+p =  argparse.ArgumentParser(description="This script is used to plot phylogentic tree of top abundant otus")
+p.add_argument('-i','--input',dest='input',metavar='<file>',default=False,
 			help='specify feature_table.txt with taxonomy at last column and otu id at first column')
-p.add_option('-m','--metadata',dest='metadata',metavar='*.txt',default=False,
+p.add_argument('-m','--metadata',dest='metadata',metavar='<file>',default=False,
 			help='specify metadata with sample id at first column')
-p.add_option('-g','--group',dest='group',metavar='[group name]',default=False,
+p.add_argument('-g','--group',dest='group',metavar='<str>',default=False,
 			help='column name of group in metadata')
-p.add_option('-r','--repseqs',dest='repseqs',metavar='FeatureData[Sequences]',default=False,
-			help='specify representive sequences file after mask and align')
-p.add_option('-o','--outdir',dest='outdir',metavar='[Directory]',default='./',
+p.add_argument('-r','--repseqs',dest='repseqs',metavar='<file>',default=False,
+			help='specify representive sequences file after masking and aligning')
+p.add_argument('-o','--outdir',dest='outdir',metavar='<directory>',default='./',
 			help='specify the output directory')
-p.add_option('-n','--number',dest='num',metavar='int',default=30,
+p.add_argument('-n','--number',dest='num',metavar='<int>',default=30,
 			help='How many most abundant species do you want to analyze')
 
-(options,args) = p.parse_args()
+options = p.parse_args()
 
 
-os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
-
+#os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
+if not os.path.exists(options.outdir):
+	os.makedirs(options.outdir)
 
 ########select otu####
 

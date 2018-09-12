@@ -4,12 +4,12 @@ library(ggplot2)
 library(stringr)
 
 option_list <- list( 
-    make_option(c("-i", "--input"), dest="i",help="Specify the path of collapsed bacteria table",default=NULL),
-    make_option(c("-o", "--output"), dest="o",help="The directory of output files",default=NULL)
+    make_option(c("-i", "--input"), dest="i",help="Specify the path of collapsed bacteria table",default=NULL,metavar="path"),
+    make_option(c("-o", "--output"), dest="o",help="The directory of output files",default=NULL,metavar="path")
   )
 
 
-opt <- parse_args(OptionParser(option_list=option_list))
+opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot rarefacation curve of alpha diversity and use the exported qiime2 rarefacation results path as input"))
 
 if(!dir.exists(opt$o)){dir.create(opt$o,recursive = T)}
 

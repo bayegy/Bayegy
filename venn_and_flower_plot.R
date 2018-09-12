@@ -1,19 +1,33 @@
 library(VennDiagram)
 library(plotrix)
-ag<-commandArgs(T)
-if (length(ag)<3){
-	print("Please supply the following arguments:
-	1.the toxonomic otu table with the taxonomy at the last column;
-	2.the mapping file with the SampleID at first column
-	3.the column name in mapping file of group
-	4.the path of output files
-  5.the threshold of abundance for criterial judgement standard of existence")
-}else{
-otu<-ag[1]
-map<-ag[2]
-group<-ag[3]
-out<-ag[4]
-thresh<-ag[5]
+library(optparse)
+
+option_list <- list( 
+    make_option(c("-i", "--input"),metavar="file", dest="otu",help="Specify the path of otu table with taxonomy at last column",default=NULL),
+    make_option(c("-m", "--map"),metavar="file",dest="map", help="Specify the path of mapping file",default=NULL),
+    make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
+    make_option(c("-t", "--threshold"),metavar="int or float", dest="thresh",help="The threshold of abundance for the judgement of existence, default is 0",default=0),
+    make_option(c("-o", "--output"),metavar="path",dest="out", help="Specify the path of output files",default="./")
+    )
+
+opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot venndiagram and flower diagram, and to display the special and common otus among groups"))
+
+
+#ag<-commandArgs(T)
+#if (length(ag)<3){
+#	print("Please supply the following arguments:
+#	1.the toxonomic otu table with the taxonomy at the last column;
+#	2.the mapping file with the SampleID at first column
+#	3.the column name in mapping file of group
+#	4.the path of output files
+#  5.the threshold of abundance for the judgement of existence")
+#}else{
+otu<-opt$otu
+map<-opt$map
+group<-opt$group
+out<-opt$out
+thresh<-opt$thresh
+
 meta<-read.table(map,na.strings="",row.names=1,header = T,sep = "\t",comment.char = "",check.names = F,stringsAsFactors = F)
 
 meta<-meta[group]
@@ -117,4 +131,4 @@ flower_plot(sample=unig,value = flower_data,
 dev.off()
 }
 
-}
+#}

@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
-
-from __future__ import print_function
-from optparse import OptionParser
+import argparse
 import re,sys,os
-
 #argument:
-usage = '%prog -[i]'
-p = OptionParser(usage = usage)
-p.add_option('-m', '--metadata', dest = 'metadata', metavar = '*.txt',
+p = argparse.ArgumentParser()
+p.add_argument('-m', '--metadata', dest = 'metadata', metavar = '*.txt',
 			help = 'taxonomic count biom file')
-p.add_option('-g', '--group', dest = 'group', metavar = 'Group',
+p.add_argument('-g', '--group', dest = 'group', metavar = 'Group',
 			help = 'Column name of group in metadata')
-p.add_option('-l', '--level', dest = 'level', metavar = 'level', default = 'Genus',
+p.add_argument('-l', '--level', dest = 'level', metavar = 'level', default = 'Genus',
 			help = 'Specify the taxonomy level')
 
-(options,args) = p.parse_args()
+options = p.parse_args()
 
 with open(options.metadata,'r') as infile:
 	ln=1

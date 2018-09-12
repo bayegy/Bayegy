@@ -1,26 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-from optparse import OptionParser
+import argparse
 import re,sys,os
 
-#*********************************************************************** 青年才俊红凡凡 *********************************************************************************
+#*********************************************************************** *********************************************************************************
 #argument:
-usage = '%prog -[i]'
-p = OptionParser(usage = usage)
-p.add_option('-i', '--input', dest = 'input', metavar = '<file>',
+p = argparse.ArgumentParser(description="This script is used to plot RDA of species. The numeric enviroment factors must be encluded in maping file. The categories will be filterd before RDA")
+p.add_argument('-i', '--input', dest = 'input', metavar = '<file>',
 			help = 'taxonomic count data file')
-p.add_option('-o', '--output', dest = 'output', metavar = '<Directory>', default = './',
+p.add_argument('-o', '--output', dest = 'output', metavar = '<Directory>', default = './',
 			help = 'given an output directory')
-p.add_option('-m', '--metadata', dest = 'meta', metavar = '<File>',
+p.add_argument('-m', '--metadata', dest = 'meta', metavar = '<file>',
 			help = 'sample metadata file')
-p.add_option('-g', '--group', dest = 'group', metavar = '<str>',
+p.add_argument('-g', '--group', dest = 'group', metavar = '<str>',
 			help = 'column name in sample-metadata file')
-p.add_option('-n', '--number', dest = 'number', metavar = '<int>', default = '15',
+p.add_argument('-n', '--number', dest = 'number', metavar = '<int>', default = '15',
 			help = 'specify how many species to be display, defaulf is 15')
-p.add_option('-e', '--exclude', dest = 'exclude', metavar = '<str>', default = 'none',
+p.add_argument('-e', '--exclude', dest = 'exclude', metavar = '<str>', default = 'none',
 			help = 'specify numeric variables excluded from rda seprated by commas,use "none" if all numeric variables is expected')
-(options,args) = p.parse_args()
+options = p.parse_args()
 
 if not options.input and options.group:
 	p.error("must have argument -i")
@@ -28,11 +26,6 @@ if not options.input and options.group:
 else:
 	pass
 
-#********************************************************************* I AM A LONELY LINE ********************************************************************************
-#data file:
-
-#********************************************************************* I AM A LONELY LINE *******************************************************************************
-#Rscript:
 
 rscript = open('rda.R', 'w')
 
