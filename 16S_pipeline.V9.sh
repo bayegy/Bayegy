@@ -389,12 +389,12 @@ com4
 
 		for category_1 in $category_set;
 			do echo $category_1;
-			Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
-			group_significance.py -i filtered_otu_table.biom -m ./media_files/cleaned_map.txt -c $category_1 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
+			#Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
+			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 			
-			group_significance.py -i filtered_otu_table.biom -m ./media_files/cleaned_map.txt -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
+			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 
-			python ${SCRIPTPATH}/auto_DESeq.py -m ./media_files/cleaned_map.txt -g $category_1 -l ${tax_levels[${n4}]};
+			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
 <<com3
