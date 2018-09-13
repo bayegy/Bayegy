@@ -1,33 +1,40 @@
 #R script for generating alpha dviersit comparison plots
-ag<-commandArgs(T)
-
-
-if(length(ag)<4){
-print("Please input: (1) Full path of mapfile; 
-      (2) Column name in mapfile you want to analyse; 
-      (3) Full path of merged α diversity file; 
-      (4) Path of the output files")
-}else{
-
+library(optparse)
 require(reshape)
 require(ggplot2)
 require(ggpubr)
 library(dplyr)
 library(ggsignif)
 
+option_list <- list( 
+    make_option(c("-i", "--input"),metavar="file", dest="ap",help="Specify the path of merged α diversity file",default=NULL),
+    make_option(c("-m", "--map"),metavar="file",dest="map", help="Specify the path of mapping file",default=NULL),
+    make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
+    make_option(c("-o", "--output"),metavar="path",dest="out", help="Specify the path of output files",default="./")
+    )
+
+opt <- parse_args(OptionParser(option_list=option_list,description = "R script for generating alpha dviersity comparison plots"))
+if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
+#ag<-commandArgs(T)
+#if(length(ag)<4){
+#print("Please input: (1) Full path of mapfile; 
+#      (2) Column name in mapfile you want to analyse; 
+#      (3) Full path of merged α diversity file; 
+#      (4) Path of the output files")
+#}else{
+
+
 #map = "~/Desktop/WST/16S-pipeline/sample-metadata.tsv"
 #group = "Group1"
 #alpha= "~/Desktop/WST/16S-pipeline/alpha/alpha-summary.tsv"
 #output="~/Desktop/plot.png"
-
-  
-map<-read.table(ag[1],header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "",na.strings="")
-adiv<-read.table(ag[3],header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
+map<-read.table(opt$map,header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "",na.strings="")
+adiv<-read.table(opt$ap,header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
 
 
 a<-colnames(adiv)
 
-map<-map[ag[2]]
+map<-map[opt$group]
 colnames(map)<-"Group"
 rowname_join<-function(x,y)
 {
@@ -43,7 +50,7 @@ joinedtab<-rowname_join(map,adiv)
 joinedtab<-joinedtab[!is.na(joinedtab["Group"]),]
 meltab<-melt(joinedtab,id.vars = "Group")
 anno_dfa = compare_means(value ~ Group, group.by = "variable", data = meltab) %>% mutate(p.adj = format.pval(p.adj, digits = 2))
-write.table(as.matrix(anno_dfa), paste(ag[4],"/","alpha_",ag[2],"_wilcox_compare_results.txt",sep=""), quote=FALSE, col.names=NA, sep="\t")
+write.table(as.matrix(anno_dfa), paste(opt$out,"/","alpha_",opt$group,"_wilcox_compare_results.txt",sep=""), quote=FALSE, col.names=NA, sep="\t")
 
 
 for(i in a){
@@ -74,9 +81,9 @@ alphaplotwithsig <- ggplot(unitab, aes(x=Group, y=value)) + geom_boxplot(fill=ra
  #stat_compare_means(label.y = p5+0.7*p3,label.x.npc="center")+
  ylab(i)+xlab("")+theme(text=element_text(size=15,face="bold"))
 
-ggsave(paste(ag[4],"/",i,"_",ag[2],"_wilcox_compare_boxplot.png",sep=""), plot=alphaplotwithsig, height=6, width=p1*1.5+1, dpi = 300)
+ggsave(paste(opt$out,"/",i,"_",opt$group,"_wilcox_compare_boxplot.png",sep=""), plot=alphaplotwithsig, height=6, width=p1*1.5+1, dpi = 300)
 }
-}
+#}
 
 
 

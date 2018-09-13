@@ -415,7 +415,7 @@ COMMENT6
 	for category_1 in $category_set;
 		do echo $category_1;
 			Rscript ${SCRIPTPATH}/RRelatedOutput.R $mapping_file $category_1;
-			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R ./alpha/sample-metadata_alphadiversity.txt $category_1 ./alpha/alpha-summary.tsv ./alpha/;
+			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R -m ./alpha/sample-metadata_alphadiversity.txt -c $category_1 -i ./alpha/alpha-summary.tsv -o ./alpha/;
 		done;
 
 
@@ -473,7 +473,7 @@ COMMENT6
 	mkdir 4-VennAndFlower
 	for category_1 in $category_set;
 		do echo $category_1;
-		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  ./exported/feature-table.taxonomy.txt $mapping_file $category_1 ./4-VennAndFlower 0;
+		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R -i ./exported/feature-table.taxonomy.txt -m $mapping_file -c $category_1 -o ./4-VennAndFlower;
 		#python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
 	done;
 
@@ -499,7 +499,7 @@ COMMENT5
 			cd Lefse/${n7}	
 			for category_1 in $category_set;
 				do echo $category_1;
-					Rscript ${SCRIPTPATH}/write_data_for_lefse.R otu_table.${n7}.relative.txt $mapping_file $category_1 ${category_1}_${n7}_lefse.txt;
+					Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i otu_table.${n7}.relative.txt -m $mapping_file -c $category_1 -o ${category_1}_${n7}_lefse.txt;
 					base=$(basename ${category_1}_${n7}_lefse.txt .txt); lefse-format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt;  lefse-plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; lefse-plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
 				done;
 			cd ../../

@@ -1,34 +1,36 @@
-#coding:utf-8
+# coding:utf-8
 import argparse
-import re,sys,os
+import re
+import sys
+import os
 
-#argument:
-p =  argparse.ArgumentParser(description="This script is used to plot phylogentic tree of top abundant otus")
-p.add_argument('-i','--input',dest='input',metavar='<file>',default=False,
-			help='specify feature_table.txt with taxonomy at last column and otu id at first column')
-p.add_argument('-m','--metadata',dest='metadata',metavar='<file>',default=False,
-			help='specify metadata with sample id at first column')
-p.add_argument('-g','--group',dest='group',metavar='<str>',default=False,
-			help='column name of group in metadata')
-p.add_argument('-r','--repseqs',dest='repseqs',metavar='<file>',default=False,
-			help='specify representive sequences file after masking and aligning')
-p.add_argument('-o','--outdir',dest='outdir',metavar='<directory>',default='./',
-			help='specify the output directory')
-p.add_argument('-n','--number',dest='num',metavar='<int>',default=30,
-			help='How many most abundant species do you want to analyze')
+# argument:
+p = argparse.ArgumentParser(description="This script is used to plot phylogentic tree of top abundant otus")
+p.add_argument('-i', '--input', dest='input', metavar='<file>', default=False,
+               help='specify feature_table.txt with taxonomy at last column and otu id at first column')
+p.add_argument('-m', '--metadata', dest='metadata', metavar='<file>', default=False,
+               help='specify metadata with sample id at first column')
+p.add_argument('-g', '--group', dest='group', metavar='<str>', default=False,
+               help='column name of group in metadata')
+p.add_argument('-r', '--repseqs', dest='repseqs', metavar='<file>', default=False,
+               help='specify representive sequences file after masking and aligning')
+p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='./',
+               help='specify the output directory')
+p.add_argument('-n', '--number', dest='num', metavar='<int>', default=30,
+               help='How many most abundant species do you want to analyze')
 
 options = p.parse_args()
 
 
 #os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
 if not os.path.exists(options.outdir):
-	os.makedirs(options.outdir)
+    os.makedirs(options.outdir)
 
 ########select otu####
 
 
 with open('tree.R', 'w') as rscript:
-	print ('''
+    print('''
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-metadata["%s"]
@@ -44,48 +46,46 @@ hold<-sort(otusum,T)[%s]
 out<-data.frame(rownames(otu_table)[otusum>=hold])
 write.table(out,"%s/selected_features.txt",sep = "",row.names = F,col.names = F,quote = F)
 '''
-% (options.input,options.metadata,options.group,options.num,options.outdir),
-file = rscript)
+          % (options.input, options.metadata, options.group, options.num, options.outdir),
+          file=rscript)
 os.system('Rscript tree.R')
 
 
-
 #######align and mask#####
-os.system("qiime tools export  %s --output-dir %s/"%(options.repseqs,options.outdir))
+os.system("qiime tools export  %s --output-dir %s/" % (options.repseqs, options.outdir))
 
 
 #######select rep-seqs####
-with open('%s/selected_features_reseqs.fasta'%(options.outdir),'w') as fout:
-	s_otuid=open('%s/selected_features.txt'%(options.outdir),'r')
-	s_otuid=s_otuid.read()
+with open('%s/selected_features_reseqs.fasta' % (options.outdir), 'w') as fout:
+    s_otuid = open('%s/selected_features.txt' % (options.outdir), 'r')
+    s_otuid = s_otuid.read()
 
-	s_otuid=re.split('\n',s_otuid)
-	sn=[]
-	ln=1
-	for line in open("%s/aligned-dna-sequences.fasta"%(options.outdir),'r'):
-		
-		line=re.sub('\n$','',line)
-		line=re.sub('^>','',line)
-		if ln in sn:
-			fout.write(line+"\n")
-		
-		if line in s_otuid:
-			fout.write('>'+line+"\n")
-			sn.append(ln+1)
-		ln+=1
+    s_otuid = re.split('\n', s_otuid)
+    sn = []
+    ln = 1
+    for line in open("%s/aligned-dna-sequences.fasta" % (options.outdir), 'r'):
+
+        line = re.sub('\n$', '', line)
+        line = re.sub('^>', '', line)
+        if ln in sn:
+            fout.write(line + "\n")
+
+        if line in s_otuid:
+            fout.write('>' + line + "\n")
+            sn.append(ln + 1)
+        ln += 1
 
 
 ######form tree#####
 os.system("qiime tools import --input-path %s/selected_features_reseqs.fasta --output-path %s/selected_features_reseqs.qza --type 'FeatureData[AlignedSequence]'&&\
 qiime phylogeny fasttree --i-alignment %s/selected_features_reseqs.qza --o-tree %s/selected_unrooted-tree.qza&&\
 qiime phylogeny midpoint-root --i-tree %s/selected_unrooted-tree.qza --o-rooted-tree %s/selected_rooted-tree.qza&&\
-qiime tools export %s/selected_rooted-tree.qza --output-dir %s/"%(options.outdir,options.outdir,options.outdir,options.outdir,options.outdir,options.outdir,options.outdir,options.outdir))
-
+qiime tools export %s/selected_rooted-tree.qza --output-dir %s/" % (options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir))
 
 
 ######visualize tree####
 with open('tree.R', 'w') as rscript:
-	print ('''
+    print('''
 library("ggtree")
 library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
@@ -150,9 +150,7 @@ gheatmap(p, data, offset = 0.22, width=0.8+par1*0.1, hjust=0.5,colnames_offset_y
 
 dev.off()
 '''
-% (options.input,options.metadata,options.group,options.num,options.outdir,options.outdir,str(options.group)+'_phylogenetic_tree_heatmap.pdf'),
-file = rscript)
+          % (options.input, options.metadata, options.group, options.num, options.outdir, options.outdir, str(options.group) + '_phylogenetic_tree_heatmap.pdf'),
+          file=rscript)
 
 os.system('Rscript tree.R')
-
-

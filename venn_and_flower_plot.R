@@ -12,7 +12,7 @@ option_list <- list(
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot venndiagram and flower diagram, and to display the special and common otus among groups"))
 
-
+if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #ag<-commandArgs(T)
 #if (length(ag)<3){
 #	print("Please supply the following arguments:

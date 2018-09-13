@@ -1,7 +1,7 @@
 #/bin/sh -S
 #########
 #Please address any bugs to Cheng. 
-#Date 2017.12.19
+#Date 2018.9.13
 #########
 
 echo $(readlink -f $1)
@@ -121,7 +121,6 @@ MAIN() {
 	#echo "##############################################################\n#Demultiplexing the paired-end sequence file"
 	#qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-<<com1
 
 	source activate qiime2-2018.8
 
@@ -251,8 +250,6 @@ MAIN() {
 				qiime feature-table heatmap --i-table media_files/filtered_feature_table.qza  --m-metadata-file media_files/cleaned_map.txt --m-metadata-column $category_1 --o-visualization exported/${min_freq}/${category_1}-table-${tax_levels[${n}]}.${min_freq}.qzv;
 			done;
 	done;
-com1
-<<com4
 
 	source deactivate
 	source activate qm2
@@ -362,7 +359,6 @@ com1
 	echo "##############################################################\n#export all qzv files into clickable folders"
 	#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
-com4
 	echo "##############################################################\n#Run Qiime1 for differOTU analysis"
 	source deactivate
 	source activate qm1
@@ -371,8 +367,6 @@ com4
 	summarize_taxa.py -i exported/DiffAbundance/otu_table.even.biom -a -o exported/DiffAbundance/tax
 	summarize_taxa.py -i exported/DiffAbundance/otu_table.even.biom -a -L 7 -o exported/DiffAbundance/tax
 	source ~/.bash_profile
-
-
 
 	min_observation=$(echo \(`wc -l $mapping_file | sed 's/ .*//g'`-1\)/4 | bc)
 	echo "###############min observation of otu in samples is $min_observation"
@@ -383,7 +377,6 @@ com4
 		perl -p -i.bak -e 's/#OTU ID/taxonomy/' exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt
 		paste exported/DiffAbundance/tax/otu_table.even_L${n4}.txt exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt > exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt
 		biom convert -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt -o exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom --to-hdf5 --table-type="OTU table" --process-obs-metadata taxonomy
-		
 
 		filter_otus_from_otu_table.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -s $min_observation -o filtered_otu_table.biom
 
@@ -391,13 +384,11 @@ com4
 			do echo $category_1;
 			#Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
 			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
-			
 			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-<<com3
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -417,7 +408,7 @@ com4
 			map=$(readlink -f ./media_files/cleaned_map.txt)
 			#otu=$(readlink -f ./media_files/cleaned_feature_table.txt)
 			Rscript ${SCRIPTPATH}/RRelatedOutput.R $map $category_1;
-			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R $map $category_1 ./alpha/alpha-summary.tsv ./alpha/;
+			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R -m $map -c $category_1 -i ./alpha/alpha-summary.tsv -o ./alpha/;
 		done;
 
 	source activate qm2
@@ -430,10 +421,6 @@ com4
 		do echo $n5;
 		for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/Function_PCA.r ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt ${PWD}/closedRef_forPICRUSt//sample-metadata.PCA.txt $category_1;done;
 	done;
-
-
-
-
 
 
 	echo "##############################################################\n#Generate the absolute directory for enviromental factors relational analysis"
@@ -483,8 +470,6 @@ com4
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
 
-
-
 	echo "##############################################################\n#Run LEFSE for Group"
 	source deactivate
 	source activate LEFSE
@@ -497,14 +482,12 @@ com4
 			cd Lefse/${n7}	
 			for category_1 in $category_set;
 				do echo $category_1;
-					Rscript ${SCRIPTPATH}/write_data_for_lefse.R otu_table.${n7}.relative.txt $mapping_file $category_1 ${category_1}_${n7}_lefse.txt;
+					Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i otu_table.${n7}.relative.txt -m $mapping_file -c $category_1 -o ${category_1}_${n7}_lefse.txt;
 					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 3;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.4 --label_font_size 10;
 				done;
 			cd ../../
 		done;
 	cd ../../
-com3
-
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./

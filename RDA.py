@@ -1,35 +1,41 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import argparse
-import re,sys,os
+import re
+import sys
+import os
 
 #*********************************************************************** *********************************************************************************
-#argument:
-p = argparse.ArgumentParser(description="This script is used to plot RDA of species. The numeric enviroment factors must be encluded in maping file. The categories will be filterd before RDA")
-p.add_argument('-i', '--input', dest = 'input', metavar = '<file>',
-			help = 'taxonomic count data file')
-p.add_argument('-o', '--output', dest = 'output', metavar = '<Directory>', default = './',
-			help = 'given an output directory')
-p.add_argument('-m', '--metadata', dest = 'meta', metavar = '<file>',
-			help = 'sample metadata file')
-p.add_argument('-g', '--group', dest = 'group', metavar = '<str>',
-			help = 'column name in sample-metadata file')
-p.add_argument('-n', '--number', dest = 'number', metavar = '<int>', default = '15',
-			help = 'specify how many species to be display, defaulf is 15')
-p.add_argument('-e', '--exclude', dest = 'exclude', metavar = '<str>', default = 'none',
-			help = 'specify numeric variables excluded from rda seprated by commas,use "none" if all numeric variables is expected')
+# argument:
+p = argparse.ArgumentParser(
+    description="This script is used to plot RDA of species. The numeric enviroment factors must be encluded in maping file. The categories will be filterd before RDA")
+p.add_argument('-i', '--input', dest='input', metavar='<file>',
+               help='taxonomic count data file')
+p.add_argument('-o', '--output', dest='output', metavar='<path>', default='./',
+               help='given an output directory')
+p.add_argument('-m', '--metadata', dest='meta', metavar='<file>',
+               help='sample metadata file')
+p.add_argument('-g', '--group', dest='group', metavar='<str>',
+               help='column name in sample-metadata file')
+p.add_argument('-n', '--number', dest='number', metavar='<int>', default='20',
+               help='specify how many species to be display, defaulf is 20')
+p.add_argument('-e', '--exclude', dest='exclude', metavar='<str>', default='none',
+               help='specify numeric variables excluded from rda seprated by commas,use "none" if all numeric variables is expected')
 options = p.parse_args()
 
-if not options.input and options.group:
-	p.error("must have argument -i")
-	sys.exit()
+if not options.input and options.group and options.meta:
+  p.error("must have argument -i -m -g")
+  sys.exit()
 else:
-	pass
+  pass
+
+if not os.path.exists(options.output):
+  os.makedirs(options.output)
 
 
 rscript = open('rda.R', 'w')
 
-print ('''
+print('''
 library(vegan)
 library(stringr)
 library(ggrepel)
@@ -45,7 +51,7 @@ groups<-map["%s"]
 
 notstr=c()
 for(i in 1:length(map)){
-	notstr[i]=!is.character(map[,i])
+  notstr[i]=!is.character(map[,i])
 }
 envdata<-map[,notstr]
 if(ex[1]!="none"){envdata<-envdata[,!colnames(envdata)%%in%%ex]}
@@ -62,11 +68,11 @@ envdata<-envdata[!is.na(groups),]
 dca <- decorana(veg = dat)
 dcam <- max(dca$rproj)
 if (dcam > 4){
-	cca <- cca(formula=dat~.,data=envdata, scale = TRUE, na.action = na.exclude)
-	pre <- "CCA"
+  cca <- cca(formula=dat~.,data=envdata, scale = TRUE, na.action = na.exclude)
+  pre <- "CCA"
 }else{
-	cca <- rda(formula=dat~.,data=envdata,scale = TRUE, na.action = na.exclude)
-	pre <- "RDA"
+  cca <- rda(formula=dat~.,data=envdata,scale = TRUE, na.action = na.exclude)
+  pre <- "RDA"
 }
 
 path="%s"
@@ -206,8 +212,8 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
 ggsave(paste(path,"/",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
 '''
-% (options.exclude,options.input,options.meta, options.group,options.output,options.group,options.number,options.group,options.group,options.group,options.group,options.group,options.group),
-file = rscript)
+      % (options.exclude, options.input, options.meta, options.group, options.output, options.group, options.number, options.group, options.group, options.group, options.group, options.group, options.group),
+      file=rscript)
 
 rscript.close()
 
