@@ -4,10 +4,10 @@ library(psych)
 library(stringr)
 
 option_list <- list( 
-    make_option(c("-i", "--input"), dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
-    make_option(c("-n", "--number"), dest="num",help="The number of most abundant species you want to plot",default=50,type="integer"),
-    make_option(c("-c", "--cut"),dest="cut", help="Specify the threshold of correlation coefficent",default=0.6),
-    make_option(c("-o", "--output"),dest="out", help="Specify the path of output files",default="./")  
+    make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
+    make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most abundant species you want to plot",default=50,type="integer"),
+    make_option(c("-c", "--cut"),metavar="float",dest="cut", help="Specify the threshold of correlation coefficent",default=0.6),
+    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the path of output files",default="./")  
     )
 
 opt <- parse_args(OptionParser(option_list=option_list))

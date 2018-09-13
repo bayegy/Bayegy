@@ -9,11 +9,11 @@ import os
 # argument:
 p = argparse.ArgumentParser(
     description="This script is used to plot RDA of species. The numeric enviroment factors must be encluded in maping file. The categories will be filterd before RDA")
-p.add_argument('-i', '--input', dest='input', metavar='<file>',
+p.add_argument('-i', '--input', dest='input', metavar='<path>',
                help='taxonomic count data file')
-p.add_argument('-o', '--output', dest='output', metavar='<path>', default='./',
+p.add_argument('-o', '--output', dest='output', metavar='<directory>', default='./',
                help='given an output directory')
-p.add_argument('-m', '--metadata', dest='meta', metavar='<file>',
+p.add_argument('-m', '--metadata', dest='meta', metavar='<path>',
                help='sample metadata file')
 p.add_argument('-g', '--group', dest='group', metavar='<str>',
                help='column name in sample-metadata file')

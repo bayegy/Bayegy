@@ -5,12 +5,12 @@ library(stringr)
 
 #######arguments
 option_list <- list( 
-    make_option(c("-i", "--input"),metavar="file", dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
-    make_option(c("-m", "--map"),metavar="file",dest="map", help="Specify the path of mapping file",default=NULL),
+    make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
+    make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-e", "--exclude"),metavar="string",dest="ex", help="Specify the numeric variables excluded from plot and seprated by commas in mapping file",default="none"),
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most related species you want to plot, default is 20",default=20),
     make_option(c("-r", "--min-cor"),metavar="float", dest="minr",help="Min correlation coefficent to label significance, default is 0.4",default=0.4),
-    make_option(c("-o", "--output"),metavar="path",dest="out", help="Specify the path of output files",default="./")
+    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the path of output files",default="./")
     )
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to relate the bacteria species and enviromental factors(numeric), and a heatmap is used to visualize the rank correlation coefficent"))

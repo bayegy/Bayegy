@@ -2,13 +2,13 @@ library(optparse)
 
 #######arguments
 option_list <- list( 
-    make_option(c("-m", "--map"),dest="m", help="Specify the path of mapping file with the Sample ID at the first column [Required]",default=NULL),
-    make_option(c("-g", "--group"),dest="g", help="Specify group name according to which the map and input files will be cleaned [Required]",default=NULL),
-    make_option(c("-t", "--table-qza"), dest="t",help="qza otu table needed to clean na.",default=NULL),
-    make_option(c("-i", "--input"), dest="i",help="the otu table needed to clean na. Sample id must be the column name. All the columns not in sample ID will be saved",default=NULL),
-    make_option(c("-d", "--distance-matrix"), dest="d",help="the .qza distance matrix needed to clean na.",default=NULL),
-    make_option(c("-o", "--output"),dest="out", help="Specify the path of output files",default="./"),
-    make_option(c("-a", "--na-string"),dest="a", help="Specify the character representing the missing values.Default is ''",default="")
+    make_option(c("-m", "--map"),metavar="path",dest="m", help="Specify the path of mapping file with the Sample ID at the first column [Required]",default=NULL),
+    make_option(c("-g", "--group"),metavar="string",dest="g", help="Specify group name according to which the map and input files will be cleaned [Required]",default=NULL),
+    make_option(c("-t", "--table-qza"),metavar="path", dest="t",help="qza otu table needed to clean na.",default=NULL),
+    make_option(c("-i", "--input"),metavar="path", dest="i",help="the otu table needed to clean na. Sample id must be the column name. All the columns not in sample ID will be saved",default=NULL),
+    make_option(c("-d", "--distance-matrix"),metavar="path", dest="d",help="the .qza distance matrix needed to clean na.",default=NULL),
+    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the path of output files",default="./"),
+    make_option(c("-a", "--na-string"),metavar="string",dest="a", help="Specify the character representing the missing values.Default is ''",default="")
     )
 
 opt <- parse_args(OptionParser(option_list=option_list))

@@ -3,11 +3,11 @@ library(plotrix)
 library(optparse)
 
 option_list <- list( 
-    make_option(c("-i", "--input"),metavar="file", dest="otu",help="Specify the path of otu table with taxonomy at last column",default=NULL),
-    make_option(c("-m", "--map"),metavar="file",dest="map", help="Specify the path of mapping file",default=NULL),
+    make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of otu table with taxonomy at last column",default=NULL),
+    make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
     make_option(c("-t", "--threshold"),metavar="int or float", dest="thresh",help="The threshold of abundance for the judgement of existence, default is 0",default=0),
-    make_option(c("-o", "--output"),metavar="path",dest="out", help="Specify the path of output files",default="./")
+    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the path of output files",default="./")
     )
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot venndiagram and flower diagram, and to display the special and common otus among groups"))
@@ -83,23 +83,23 @@ flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,
                         circle_col = rgb(0, 162, 214, max = 255),
                         text_cex = 1.6) {
   par( bty = "n", ann = F, xaxt = "n", yaxt = "n", mar = c(1,1,1,1))
-  plot(c(0,10),c(0,10),type="n")
+  plot(c(0,14),c(0,14),type="n")
   n   <- length(sample)
   deg <- 360 / n
   res <- lapply(1:n, function(t){
-    draw.ellipse(x = 5 + ell_pos*cos((start + deg * (t - 1)) * pi / 180), 
-                 y = 5 + ell_pos*sin((start + deg * (t - 1)) * pi / 180), 
+    draw.ellipse(x = 7 + ell_pos*cos((start + deg * (t - 1)) * pi / 180), 
+                 y = 7 + ell_pos*sin((start + deg * (t - 1)) * pi / 180), 
                  col = ellipse_col[t],
                  border = ellipse_col[t],
                  a = a, b = b, angle = deg * (t - 1))
-    text(x = 5 + num_pos * cos((start + deg * (t - 1)) * pi / 180),
-         y = 5 + num_pos * sin((start + deg * (t - 1)) * pi / 180),
+    text(x = 7+ num_pos * cos((start + deg * (t - 1)) * pi / 180),
+         y = 7 + num_pos * sin((start + deg * (t - 1)) * pi / 180),
          value[t],cex = text_cex
     )
     
     if (deg * (t - 1) < 180 && deg * (t - 1) > 0 ) {
-      text(x = 5 + tax_pos * cos((start + deg * (t - 1)) * pi / 180),
-           y = 5 + tax_pos * sin((start + deg * (t - 1)) * pi / 180),
+      text(x = 7 + tax_pos * cos((start + deg * (t - 1)) * pi / 180),
+           y = 7 + tax_pos * sin((start + deg * (t - 1)) * pi / 180),
            sample[t],
            #srt = deg * (t - 1) - start,
            adj = 1,
@@ -107,8 +107,8 @@ flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,
       )
       
     } else {
-      text(x = 5 + tax_pos * cos((start + deg * (t - 1)) * pi / 180),
-           y = 5 + tax_pos * sin((start + deg * (t - 1)) * pi / 180),
+      text(x = 7 + tax_pos * cos((start + deg * (t - 1)) * pi / 180),
+           y = 7 + tax_pos * sin((start + deg * (t - 1)) * pi / 180),
            sample[t],
            #srt = deg * (t - 1) + start,
            adj = 0,
@@ -116,8 +116,8 @@ flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,
       )
     }     
   })
-  draw.circle(x = 5, y = 5, r = circ_r, col = circle_col, border = circle_col)
-  text(x=5,y=5,common,cex = text_cex)
+  draw.circle(x = 7, y = 7, r = circ_r, col = circle_col, border = circle_col)
+  text(x=7,y=7,common,cex = text_cex)
 }
 
 

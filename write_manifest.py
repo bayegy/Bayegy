@@ -4,9 +4,9 @@ import re,sys,os
 
 #argument:
 p = argparse.ArgumentParser(description="This script is used to form manifest of 16S demuxed sequences for the use of qiime2")
-p.add_argument('-i', '--input', dest = 'input', metavar = '<file>',
+p.add_argument('-i', '--input', dest = 'input', metavar = '<path>',
 			help = 'Path of demuxed PE files')
-p.add_argument('-m', '--map', dest = 'meta', metavar = '<file>',
+p.add_argument('-m', '--map', dest = 'meta', metavar = '<path>',
 			help = 'raw sample metadata files. The sample ID must in first and last column. Two columns do not have to be same, but the IDs in first column must be respond to --sample-id-patern')
 p.add_argument('-s', '--sample-id-patern', dest = 'sp', default=r'\.([^\.]+)\.[12]\.fq$',metavar = '<regular expression>',
 			help = 'The regular expression of sample ID in file names. You must use \(\) to contain sample ID expression')
@@ -14,7 +14,7 @@ p.add_argument('-f', '--forward-file-pattern', dest = 'fp',default = r'\.1\.fq$'
 			help = 'The regular expression representing forward sequence in file names')
 p.add_argument('-r', '--reverse-file-pattern', dest = 'rp',default = r'\.2\.fq$', metavar = '<regular expression>',
 			help = 'The regular expression representing reverse sequence in file names')
-p.add_argument('-o', '--output', dest = 'out', metavar = '<path>', default = './',
+p.add_argument('-o', '--output', dest = 'out', metavar = '<directory>', default = './',
 			help = 'The path of output files')
 options = p.parse_args()
 

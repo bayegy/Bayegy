@@ -59,7 +59,7 @@ if [ -z "$8" ]; then
 		8) specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 
 		Sample Usage:
-		bash ~/github/Bayegy/16S_pipeline.V8.sh ../data/sample-metadata.tsv 20000 1000 Group1,Group2,Group3 ~/database_16S/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none
+		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv 20000 1000 Group1,Group2,Group3 ~/database_16S/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none
 		"
 	exit 0
 else
@@ -121,7 +121,7 @@ MAIN() {
 	#echo "##############################################################\n#Demultiplexing the paired-end sequence file"
 	#qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-
+<<com1
 	source activate qiime2-2018.8
 
 
@@ -131,20 +131,27 @@ MAIN() {
 	#single-end
 	#qiime demux emp-single --i-seqs emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza --p-rev-comp-mapping-barcodes
 	#qiime demux emp-single --i-seqs ../database/emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
-	qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --input-format SingleEndFastqManifestPhred33
+	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --input-format SingleEndFastqManifestPhred33
 	#paired-end
-	#qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
+	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	echo "##############################################################\n#Use DADA2 for quality control and feature table construction"
 	#single-end
 	#qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 10 --p-trunc-len 265 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 17 --p-trunc-len 277 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	#qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 17 --p-trunc-len 277 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 
 	#paired-end
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 210 --p-trunc-len-r 210 --p-trim-left-f 24 --p-trim-left-r 25 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 226 --p-trim-left-f 17 --p-trim-left-r 19 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 250 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 0 --p-trunc-len-r 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
+
+
+	####Alternative methods of read-joining in QIIME 2
+	#qiime vsearch join-pairs --p-maxdiffs 5 --p-minovlen 15 --p-truncqual 2 --i-demultiplexed-seqs demux.qza --o-joined-sequences demux-joined.qza
+	#qiime demux summarize --i-data demux-joined.qza --o-visualization demux-joined.qzv
+	#qiime quality-filter q-score-joined --i-demux demux-joined.qza --o-filtered-sequences demux-joined-filtered.qza --o-filter-stats demux-joined-filter-stats.qza
+	#qiime deblur denoise-16S --i-demultiplexed-seqs demux-joined-filtered.qza --p-trim-length 420  --p-sample-stats --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza --o-stats stats-dada2.qza
 
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
 	mv rep-seqs-dada2.qza rep-seqs.withCandM.qza
@@ -469,10 +476,10 @@ MAIN() {
 
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
-
+com1
 	echo "##############################################################\n#Run LEFSE for Group"
 	source deactivate
-	source activate LEFSE
+	source activate lefse
 	cd exported/Relative
 	mkdir Lefse/
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
@@ -482,7 +489,7 @@ MAIN() {
 			cd Lefse/${n7}	
 			for category_1 in $category_set;
 				do echo $category_1;
-					Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i otu_table.${n7}.relative.txt -m $mapping_file -c $category_1 -o ${category_1}_${n7}_lefse.txt;
+					Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt;
 					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 3;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.4 --label_font_size 10;
 				done;
 			cd ../../
