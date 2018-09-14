@@ -26,7 +26,7 @@ annotation_row<-str_extract(dat[,length(dat)],"p__[^;]+")
 dat=dat[,-c(1,length(dat))]
 
 
-map<-read.table(as.character(opt$map),sep="\t",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
+map<-read.table(as.character(opt$map),sep="\t",na.strings="",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 notstr=c()
 for(i in 1:length(map)){
 	notstr[i]=!is.character(map[,i])

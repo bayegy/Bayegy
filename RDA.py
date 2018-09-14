@@ -46,7 +46,7 @@ dat <- read.table("%s", header = TRUE, sep = "\\t",comment.char = "",check.names
 dat<-dat[!duplicated(dat[,1]),]
 
 rownames(dat)=dat[,1]
-map<-read.table("%s",header = T,na.strings="",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
+map<-read.table("%s",header = T,na.strings="",sep = "\\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 groups<-map["%s"]
 
 notstr=c()
@@ -60,10 +60,9 @@ dat=dat[,-c(1,length(dat))]
 dat=t(dat)[match(rownames(groups),rownames(t(dat))),]
 
 #clean na
-groups<-groups[!is.na(groups),]
 dat<-dat[!is.na(groups),]
 envdata<-envdata[!is.na(groups),]
-
+groups<-groups[!is.na(groups),]
 
 dca <- decorana(veg = dat)
 dcam <- max(dca$rproj)
@@ -127,9 +126,9 @@ ylab <- paste(pre, "2: ", round(pc2, digits = 2), "%%", sep = "")
 if(pre=="RDA"){
 envis[,1]<-envis[,1]*0.5
 envis[,2]<-envis[,2]*0.5
-p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) + 
+p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
   geom_point(aes(x=RDA1,y=RDA2,color=%s,pch=%s),size=3) +
-  geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+  
+  geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
   geom_text_repel(data=envis,aes(x=RDA1,y=RDA2,label=id),color="black",size=5) +  
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+  
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
