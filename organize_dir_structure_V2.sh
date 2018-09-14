@@ -186,10 +186,10 @@ organize_deliverable_structure() {
 	cp -rp alpha-rarefaction-ggplot2/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
 	
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
-	cd ./Result_AmpliconSequencing/
-	for f in $(find . -type f -name "*qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); mv $f ${f}.exported; mv ${f}.exported ${dir}/${base}; done
-	for f in $(find . -type f -name "index.html") ; do echo $f; base=$(basename $f .html); dir=$(dirname $f); new=${dir}/Summary_请点此文件查看.html; mv $f $new; done
-	cd ../
+	#cd ./Result_AmpliconSequencing/
+	for f in $(find ./Result_AmpliconSequencing/ -type f -name "*qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); mv $f ${f}.exported; mv ${f}.exported ${dir}/${base}; done
+	for f in $(find ./Result_AmpliconSequencing/ -type f -name "index.html") ; do echo $f; base=$(basename $f .html); dir=$(dirname $f); new=${dir}/Summary_请点此文件查看.html; mv $f $new; done
+	#cd ../
 
 
 
