@@ -1,5 +1,7 @@
 library("ggbiplot")
 library("stringr")
+library(devtools)
+#install_github("vqv/ggbiplot", ref = "experimental") 
 
 args <- commandArgs(trailingOnly = TRUE)
 KEGG_function_txt = args[1]
@@ -11,65 +13,60 @@ setwd(this.dir)
 
 #setwd("~/Desktop")
 #KEGG_function_txt = "feature-table.metagenome.L2.PCA.txt"
-#meta_txt = "sample-metadata.tsv"
+#meta_txt = "sample-metadata.PCA.txt"
 #category_1= "Group1"
 
-design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F,na.strings = "") 
+design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F, na.strings = "") 
+#head(design)
 
-# 读取OTU表
-otu_table = read.delim(KEGG_function_txt, row.names= 1,  header=T, sep="\t",check.names=F)
+table = read.table(KEGG_function_txt, row.names= 1,  header=T, sep="\t",check.names=F)
+#head(table)
 
-######################################################clean na zhangguoxing
-sel<-(!is.na(design[category_1]))
-sel1<-sel[match(colnames(otu_table),rownames(design))]
-sel1<-(is.na(sel1)|sel1)
-otu_table<-otu_table[,sel1]
-design<-design[sel,]
+#remove the last column and transpose
+table2<-t(table[,-(ncol(table))])
+#summary(table2)
 
+#Sort the table
+table3<-table2[order(rownames(table2)), ]
 
-otu_table[otu_table == 0] = 0.0001
-#otu_table
+#Sort the design file
+design2<-design[order(rownames(design)), ]
+#dim(table3)
+#dim(design2)
 
-# 过滤数据并排序
-idx = rownames(design) %in% colnames(otu_table) 
-sub_design = design[idx,]
-count = otu_table[, rownames(sub_design)]
+#Find the common samples in both design and table
+idx = rownames(design2) %in% rownames(table3)
+design3 = design2[idx,]
 
-# 基于OTU表PCA分析
-#otu.pca <- prcomp(t(count), scale. = TRUE)
+#may not necessary for table4, as the number should match already but just put here in case.
+table4 = table3[rownames(design3), ]
+#dim(table4)
 
-# 绘制PCA图，并按组添加椭圆
-#p<-ggbiplot(otu.pca, obs.scale = 1, var.scale = 1, groups = sub_design$Group1, ellipse = TRUE,var.axes = F)
+#Convert to proportion
+table5<-prop.table(as.matrix(table4), margin = 1)
 
+#Remove the ones with zero variance
+table6<-table5[ , apply(table5, 2, var) != 0]
+rowSums(table6,na=T)
 
-# 显著高丰度菌的影响
+#Transpose
+table7<-t(table6)
 
-# 转换原始数据为百分比
+# 筛选mad值：按mad值排序取前10波动最大的OTUs
+table8 = head(table7[order(apply(table7,1,mad), decreasing=T),],n=10)
 
-norm = t(t(count)/colSums(count,na=T)) * 100 # normalization to total 100
+#Transpose back
+table9<-t(table8)
 
-
-#colnames(norm)<-colnames(count)
-#rownames(norm)<-rownames(count)
-# 筛选mad值大于0.5的OTU
-mad.5 = norm[apply(norm,1,mad)>0.5,]
-# 另一种方法：按mad值排序取前6波动最大的OTUs
-mad.5 = head(norm[order(apply(norm,1,mad), decreasing=T),],n=6)
-# 计算PCA和菌与菌轴的相关性
-tmad<-t(mad.5)
-#colnames(tmad)<-rownames(mad.5)
-#rownames(tmad)<-colnames(mad.5)
-
-
-otu.pca <- prcomp(tmad)
+pc <- prcomp(table9, center=TRUE, scale. = TRUE)
 
 print(paste("Making PCA plots for", KEGG_function_txt, sep=" "))
 KEGG_function_txt<-str_replace(KEGG_function_txt,"PCA.txt","")
 ###########The name is bad here use tools::file_path_sans_ext("ABCD.csv") to obtain the basename in the future.
 PCA_plot_outputpdfname <- paste(KEGG_function_txt, category_1,".PCA.pdf", sep="")
-pdf( PCA_plot_outputpdfname, width=8, height=6)
-ggbiplot(otu.pca, obs.scale = 1, var.scale = 1, groups = sub_design[[category_1]], ellipse = TRUE,var.axes = T,varname.adjust=1,varname.size=3)
-print(plot)
-dev.off()
+p<-ggbiplot(pc, obs.scale = 1, var.scale = 1, groups = design3[[category_1]], ellipse = TRUE, varname.adjust = 1.2, varname.abbrev=T, varname.size=3) +
+  scale_color_discrete(name = '') +
+  theme_bw()
+  
 
-
+ggsave(PCA_plot_outputpdfname, plot=p, height=6, width=8, dpi = 300)
