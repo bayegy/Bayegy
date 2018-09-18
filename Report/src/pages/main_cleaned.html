@@ -291,7 +291,7 @@
 			<br><br>
 			<h3><a id="a4.2"></a>4.2 组间OTU差异显著性分析</h3>
 			<p>
-				ANCOM(Analysis of composition of microbiomes)是专门用于比较微生物组学数据中物种在组间的显著性差异的分析方法。<sup>[7]</sup>ANCOM分析不依赖于数据的分布假设，并解决了在其他方法中相对丰度分析所带来的限制，从而能够有效降低结果的假阳性。从下面链接中我们可以得知属水平分类的物种在组间表现了丰度的显著差异：
+				ANCOM(Analysis of composition of microbiomes)是专门用于比较微生物组学数据中物种在组间的显著性差异的分析方法。<sup>[11]</sup>ANCOM分析不依赖于数据的分布假设，并解决了在其他方法中相对丰度分析所带来的限制，从而能够有效降低结果的假阳性。从下面链接中我们可以得知属水平分类的物种在组间表现了丰度的显著差异：
 			</p>
 
 			<p align="center">
@@ -317,12 +317,12 @@
 		 	<br>
 			<h3><a id="a4.3"></a>4.3 样品共有物种分析</h3>
 			<p>
-				对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现样本在OTU水平上的组成相似性及重叠情况（图4-3）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../2-AbundanceAnalysis/3-VennAndFlower"> ./2-AbundanceAnalysis/3-VennAndFlower</a>
+				对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图（Venn diagram）分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现样本在OTU水平上的组成相似性及重叠情况（图4-3）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../2-AbundanceAnalysis/3-VennAndFlower"> ./2-AbundanceAnalysis/3-VennAndFlower</a>
 			</p>
 
 			<p align="center"><img src="../../Figure4-4.png" width="600" height="600"></p>
-			<p align="center"><strong>图4-4 共有或特有物种Venn图展示</strong></p>
-			<dd style="font-size:80%;">说明：Venn图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。</dd>
+			<p align="center"><strong>图4-4 共有或特有物种韦恩图展示（当分组数目小于等于5时）</strong></p>
+			<dd style="font-size:80%;">说明：韦恩图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。<a href="../../../2-AbundanceAnalysis/3-VennAndFlower">请点击打开新窗口查看韦恩图/花瓣图</a></dd>
 			
 			<p>
 				查看各分类水平的物种在各个样本的分布情况请点击<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats">./2AundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/</a>。  
@@ -465,7 +465,7 @@
 			<h2 align="left">
 				八 关联统计分析(<a href="../../../6-AssociationAnalysis">6-AssociationAnalysis目录</a>) 
 			</h2>
-			<h2 style="color:#F00">温馨提示：如果没有提供环境因子将没有相关性热图和RDA/CCA</h2>
+			<h2 style="color:#F00">温馨提示：如果没有提供环境因子将没有相关性热图和CCA/RDA</h2>
 			<h3 align="left"><a id="a8.1"></a>8.1 CCA/RDA分析</h3>
 			<p>
 				CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 <sup>[27-29]</sup>
@@ -553,7 +553,7 @@
 			</p>
 			<p align="center"><strong>图9-2 基于KEGG L1水平的PCA分析结果展示</strong></p>
 			<dd style="font-size:80%;">
-				说明：横坐标（x）表示第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标（y）表示第二主成分，百分比表示第二主成分对样品差异的贡献值；图中的每个点表示一个样品，同一个组的样品使用同一种颜色表示。箭头方向和长度代表该预测功能在该方向的样本/组别中的主导能力程度，长度约长代表主导的能力越大。 
+				说明：横坐标（x）表示第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标（y）表示第二主成分，百分比表示第二主成分对样品差异的贡献值；图中的每个点表示一个样品，同一个组的样品使用同一种颜色表示。箭头方向和长度代表该预测功能(功能名称英文首字母缩写)在该方向的样本/组别中的主导能力程度，长度约长代表主导的能力越大。
 			</dd>
 
 			<h3><a id="a9.3"></a>9.3 组间功能差异性分析</h3>
@@ -568,43 +568,43 @@
 			<p>
 				1.		Bokulich,  N. A. et al. Quality-filtering vastly improves diversity estimates from  Illumina amplicon sequencing. Nat. Methods 10, 57–59 (2012).<br>
 				<br>2.		Caporaso,  J. G. et al. QIIME allows analysis of high-throughput community sequencing  data. Nat. Methods 7, 335–6 (2010).<br>
-				<br>3.		Magoč, T. &amp; Salzberg, S. L. FLASH: fast  length adjustment of short reads to improve genome assemblies. Bioinformatics  27, 2957–63 (2011).<br>
+				<br>3.		Jovel J., et al., Characterization of the Gut Microbiome Using 16S or Shotgun Metagenomics, Front Microbiol, 7: 459 (2016).<br>
 				<br>4.		Edgar,  R. C., Haas, B. J., Clemente, J. C., Quince, C. &amp; Knight, R. UCHIME  improves sensitivity and speed of chimera detection. Bioinformatics 27,  2194–200 (2011).<br>
-				<br>5.		Haas,  B. J. et al. Chimeric 16S rRNA sequence formation and detection in Sanger and  454-pyrosequenced PCR amplicons. Genome Res. 21, 494–504 (2011).<br>
-				<br>6.		Wang,  Q., Garrity, G. M., Tiedje, J. M. &amp; Cole, J. R. Naive Bayesian classifier  for rapid assignment of rRNA sequences into the new bacterial taxonomy. Appl.  Environ. Microbiol. 73, 5261–7 (2007).<br>
+				<br>5.		Pollock J., et al.,The Madness of Microbiome: Attempting To Find Consensus “Best Practice” for 16S Microbiome Studies. Appl Environ Microbiol, 19;84(7) (2018).<br>
+				<br>6.		Knight R., et al., Best practices for analysing microbiomes. Nat Rev Microbiol. 16, pages410–422 (2018).<br>
 				<br>7.		Callahan B. J., et al. DADA2: High-resolution sample inference from Illumina amplicon data. Nat. Method., 13(7):581-3 (2016).<br>
-				<br>8.    Cole,  J. R. et al. The Ribosomal Database Project: improved alignments and new tools  for rRNA analysis. Nucleic Acids Res. 37, D141-5 (2009).<br>
-				<br>9.		Quast,  C. et al. The SILVA ribosomal RNA gene database project: improved data  processing and web-based tools. Nucleic Acids Res. 41, D590-6 (2013).<br>
+				<br>8.    	Balvociute M., et al., SILVA, RDP, Greengenes, NCBI and OTT — how do these taxonomies compare? BMC Genomics, 18 (Suppl 2) :114 (2017)<br>
+				<br>9.		Caporaso J. G., et al., QIIME allows analysis of high-throughput community sequencing data. Nat Methods, 7(5):335-6 (2010).<br>
 				<br>10.		DeSantis,  T. Z. et al. Greengenes, a chimera-checked 16S rRNA gene database and workbench  compatible with ARB. Appl. Environ. Microbiol. 72, 5069–72 (2006).<br>
 				<br>11.		Mandal S., et al. Analysis of composition of microbiomes: a novel method for studying microbial composition. Microb. Ecol. Health. Dis., 29;26:27663 (2015).<br>
 				<br>12.		Segata,  N. et al. Metagenomic biomarker discovery and explanation. Genome Biol. 12, R60  (2011).<br>
-				<br>13.		White,  J. R., Nagarajan, N. &amp; Pop, M. Statistical methods for detecting  differentially abundant features in clinical metagenomic samples. PLoS Comput.  Biol. 5, e1000352 (2009).<br>
-				<br>14.  Callahan,  B. J. et al. DADA2: High-resolution sample inference from Illumina amplicon  data. Nat. Methods 13, 581–3 (2016).<br>
-				<br>15.    Wang,  Y. et al. Comparison of the levels of bacterial diversity in freshwater,  intertidal wetland, and marine sediments by using millions of illumina tags.  Appl. Environ. Microbiol. 78, 8264–71 (2012).<br>
-				<br>16.    Human  Microbiome Project Consortium. Structure, function and diversity of the healthy  human microbiome. Nature 486, 207–14 (2012).<br>
-				<br>17.    Tuomisto,  H. A consistent terminology for quantifying species diversity? Yes, it does  exist. Oecologia 164, 853–60 (2010).<br>
-				<br>18.    Lozupone,  C. &amp; Knight, R. UniFrac: a new phylogenetic method for comparing microbial  communities. Appl. Environ. Microbiol. 71, 8228–35 (2005).<br>
-				<br>19.    Chen,  J. et al. Associating microbiome composition with environmental covariates  using generalized UniFrac distances. Bioinformatics 28, 2106–13 (2012).<br>
-				<br>20.    Vázquez-Baeza,  Y., Pirrung, M., Gonzalez, A. &amp; Knight, R. EMPeror: a tool for visualizing  high-throughput microbial community data. Gigascience 2, 16 (2013).<br>
-				<br>21.    Tuomisto,  H. A diversity of beta diversities: straightening up a concept gone awry. Part  1. Defining beta diversity as a function of alpha and gamma diversity.  Ecography (Cop.). 33, 2–22 (2010).<br>
-				<br>22.    Adams,  D. C. &amp; Collyer, M. L. Permutation tests for phylogenetic comparative  analyses of high-dimensional shape data: what you shuffle matters. Evolution  69, 823–9 (2015).<br>
-				<br>23.    Anderson,  M. J. &amp; Walsh, D. C. I. PERMANOVA, ANOSIM, and the Mantel test in the face  of heterogeneous dispersions: What null hypothesis are you testing? Ecol.  Monogr. 83, 557–574 (2013).<br>
-				<br>24.    Kelly,  B. J. et al. Power and sample-size estimation for microbiome studies using  pairwise distances and PERMANOVA. Bioinformatics 31, 2461–8 (2015).<br>
-				<br>25.    McMurdie,  P. J. &amp; Holmes, S. phyloseq: an R package for reproducible interactive  analysis and graphics of microbiome census data. PLoS One 8, e61217 (2013).<br>
-				<br>26.    Letunic,  I. &amp; Bork, P. Interactive Tree Of Life v2: online annotation and display of  phylogenetic trees made easy. Nucleic Acids Res. 39, W475-8 (2011).<br>
-				<br>27.		Hill M, Gauch H. Detrended  correspondence analysis: an improved ordination technique. Vegetatio. 42,  47-58 (1980) .<br>
-				<br>28.		Oksanen J, Minchin P.  Instability of ordination results under changes in input data order:  explanations and remedies. Journal of Vegetation Science. 8, 447-454 (1997) .<br>
-				<br>29.		McCune B. Influence of noisy  environmental data on canonical correspondence analysis. Ecology. 78,  2617-2623 (1997) .<br>
+				<br>13.		White,  J. R., Nagarajan, N. &amp; Pop, M. Statistical methods for detecting  differentially abundant features in clinical metagenomic samples. PLoS Comput. Biol. 5, e1000352 (2009).<br>
+				<br>14.  	Anders S., et al., Differential expression analysis for sequence count data. 11(10):R106 (2010).<br>
+				<br>15.    	Wang,  Y. et al. Comparison of the levels of bacterial diversity in freshwater, intertidal wetland, and marine sediments by using millions of illumina tags. Appl. Environ. Microbiol. 78,8264–71 (2012).<br>
+				<br>16.    	Human  Microbiome Project Consortium. Structure, function and diversity of the healthy  human microbiome. Nature 486, 207–14 (2012).<br>
+				<br>17.    	Tuomisto,  H. A consistent terminology for quantifying species diversity? Yes, it does  exist. Oecologia 164, 853–60 (2010).<br>
+				<br>18.    	Lozupone,  C. &amp; Knight, R. UniFrac: a new phylogenetic method for comparing microbial  communities. Appl. Environ. Microbiol. 71, 8228–35 (2005).<br>
+				<br>19.    	Chen,  J. et al. Associating microbiome composition with environmental covariates  using generalized UniFrac distances. Bioinformatics 28, 2106–13 (2012).<br>
+				<br>20.    	Vázquez-Baeza,  Y., Pirrung, M., Gonzalez, A. &amp; Knight, R. EMPeror: a tool for visualizing  high-throughput microbial community data. Gigascience 2, 16 (2013).<br>
+				<br>21.    	Tuomisto,  H. A diversity of beta diversities: straightening up a concept gone awry. Part  1. Defining beta diversity as a function of alpha and gamma diversity.  Ecography (Cop.). 33, 2–22 (2010).<br>
+				<br>22.    	Adams,  D. C. &amp; Collyer, M. L. Permutation tests for phylogenetic comparative  analyses of high-dimensional shape data: what you shuffle matters. Evolution  69, 823–9 (2015).<br>
+				<br>23.    	Anderson,  M. J. &amp; Walsh, D. C. I. PERMANOVA, ANOSIM, and the Mantel test in the face  of heterogeneous dispersions: What null hypothesis are you testing? Ecol.  Monogr. 83, 557–574 (2013).<br>
+				<br>24.    	Kelly,  B. J. et al. Power and sample-size estimation for microbiome studies using  pairwise distances and PERMANOVA. Bioinformatics 31, 2461–8 (2015).<br>
+				<br>25.    	McMurdie,  P. J. &amp; Holmes, S. phyloseq: an R package for reproducible interactive  analysis and graphics of microbiome census data. PLoS One 8, e61217 (2013).<br>
+				<br>26.		Letunic,  I. &amp; Bork, P. Interactive Tree Of Life v2: online annotation and display of  phylogenetic trees made easy. Nucleic Acids Res. 39, W475-8 (2011).<br>
+				<br>27.		Buttigieg P. L., et al., A guide to statistical analysis in microbial ecology: a community-focused, living review of multivariate data analyses. FEMS Microbiol Ecol. 90(3):543-50 (2014).<br>
+				<br>28.		Johnson, R. A., et al., Applied Multivariate Statistical Analysis. ISBN 978-0-13-187715-3 (2007). <br>
+				<br>29.		Hazen T. C., et al., Advances in monitoring environmental microbes. Curr Opin Biotechnol. 24(3):526-33 (2013)<br>
 				<br>30.		Palmer M. et al., Putting things in even  better order: The advantages of canonical correspondence analysis. Ecology.  74,2215-2230 (2011).<br>
-				<br>31.		TerBraak C. (1986) Canonical  Correspondence Analysis: a new eigenvector technique for multivariate direct  gradient analysis. Ecology. 67, 1167-1179.<br>
-				<br>32.		Clarke K. Non-parametric  multivariate analysis of changes in community structure. Australian Journal of  Ecology. 18, 117-143 (1993) .<br>
+				<br>31.		Paliy O., et al., Application of multivariate statistical techniques in microbial ecology. Mol Ecol., 25(5):1032-57 (2016) <br>
+				<br>32.		Xia Y., et al., Hypothesis testing and statistical analysis of microbiome., Genes and Disease. 4(3):138-148 (2017). <br>
 				<br>33.		Knights D., et al., Bayesian community-wide culture-independent microbial source tracking. Nat Methods. 8(9): 761–763 (2011).<br>
 				<br>34.		Fang H., et al., CCLasso: correlation inference for compositional data through Lasso. Bioinformatics. 31(19):3172-3180 (2015).<br>
 				<br>35.		Feng et al. Gut microbiome development along the colorectal adenoma-carcinoma  sequence. Nature communications 6: 6528  (2015) . <br>
 				<br>36.		<a href="https://www.ayasdi.com/">https://www.ayasdi.com/</a><br>
-				<br>37.    Langille,  M. G. I. et al. Predictive functional profiling of microbial communities using  16S rRNA marker gene sequences. Nat. Biotechnol. 31, 814–821 (2013).<br>
-				<br>38.    Comeau,  A. M., Douglas, G. M. &amp; Langille, M. G. I. Microbiome Helper: a Custom and  Streamlined Workflow for Microbiome Research. mSystems 2, e00127-16 (2017).<br>
-				<br>39.    Parks,  D. H., Tyson, G. W., Hugenholtz, P. &amp; Beiko, R. G. STAMP: statistical  analysis of taxonomic and functional profiles. Bioinformatics 30, 3123–4  (2014).<br>
+				<br>37.    	Langille,  M. G. I. et al. Predictive functional profiling of microbial communities using  16S rRNA marker gene sequences. Nat. Biotechnol. 31, 814–821 (2013).<br>
+				<br>38.    	Comeau,  A. M., Douglas, G. M. &amp; Langille, M. G. I. Microbiome Helper: a Custom and  Streamlined Workflow for Microbiome Research. mSystems 2, e00127-16 (2017).<br>
+				<br>39.    	Parks,  D. H., Tyson, G. W., Hugenholtz, P. &amp; Beiko, R. G. STAMP: statistical  analysis of taxonomic and functional profiles. Bioinformatics 30, 3123–4 (2014).<br>
 			</p>
 
 			<hr>
