@@ -169,7 +169,7 @@ organize_deliverable_structure() {
 	#cp -r /Result_AmpliconSequencing/6-AssociationAnalysis
 
 	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
-	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA*
+	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
 	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
 	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf

@@ -162,7 +162,6 @@ MAIN() {
 
 COMMENT1
 <<COMMENT2
-COMMENT2
 	echo "##############################################################\n#Filter out Choloroplast and Mitochondira"
 	check_file $reference_trained
 	qiime feature-classifier classify-sklearn   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
@@ -218,12 +217,15 @@ COMMENT2
 	##These following two commands work only for column with numeric values:
 	##qiime emperor plot   --i-pcoa core-metrics-results/unweighted_unifrac_pcoa_results.qza   --m-metadata-file $mapping_file --p-custom-axis $category_2   --o-visualization 'core-metrics-results/unweighted_unifrac-emperor-'$category_2'.qzv'
 	##qiime emperor plot   --i-pcoa core-metrics-results/bray_curtis_pcoa_results.qza   --m-metadata-file $mapping_file   --p-custom-axis $category_2   --o-visualization 'core-metrics-results/bray-curtis-emperor-'$category_2'.qzv'
+COMMENT2
 
 
 
 
 <<COMMENT4
 COMMENT4
+<<COMMENT7
+
 	echo "##############################################################\n#alpha dviersity summary"
 	mkdir alpha
 	qiime diversity alpha --i-table table.qza --p-metric chao1 --output-dir alpha/chao1
@@ -290,9 +292,9 @@ COMMENT4
 	done;
 	for svg_file in exported/Relative/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200  -b white $svg_file > exported/Relative/${n}.png; done
 
-<<COMMENT7
 COMMENT7
 
+<<COMMENT3
 
 	echo "ANCOM analaysis for differential OTU"
 	mkdir exported/ANCOM
@@ -305,8 +307,6 @@ COMMENT7
 
 
 
-<<COMMENT3
-COMMENT3
 	echo "##############################################################\n#Run for PICRUST analysis and STAMP visulization"
 	qiime vsearch cluster-features-closed-reference --i-sequences rep-seqs.qza --i-table table.qza --i-reference-sequences $close_reference_trained --p-perc-identity 0.97 --p-threads 0 --output-dir closedRef_forPICRUSt
 	qiime feature-table summarize --i-table closedRef_forPICRUSt/clustered_table.qza --o-visualization closedRef_forPICRUSt/clustered_table.qzv --m-sample-metadata-file $mapping_file
@@ -323,6 +323,7 @@ COMMENT3
 
 	cd closedRef_forPICRUSt
 
+
 	for n3 in 1 2 3;
 		do echo $n3;
 		python ${SCRIPTPATH}/convert_percent.py -i feature-table.metagenome.L${n3}.txt;
@@ -333,13 +334,14 @@ COMMENT3
 		#${SCRIPTPATH}/PCA.R.pl ${PWD}/percent.feature-table.metagenome.L${n3}.txt 0.2 ${PWD}/PCA_L${n3}
 		cp $mapping_file ./sample-metadata.PCA.txt
 		perl -p -i.bak -e 's/#//' ./sample-metadata.PCA.txt
-		tail -n +2 feature-table.metagenome.L${n3}.txt > feature-table.metagenome.L${n3}.PCA.txt
+		#The "disease" related KEGG function cause a problem in R read.table that the row won't be recongnized correctly. 
+		tail -n +2 feature-table.metagenome.L${n3}.txt | grep -v "disease" > feature-table.metagenome.L${n3}.PCA.txt
 		perl -p -i.bak -e 's/#OTU ID/KEGG_function/' feature-table.metagenome.L${n3}.PCA.txt
 	done;
 	for svg_file in *svg; do echo $svg_file; base=$(basename $svg_file .svg); rsvg-convert -h 3200  -b white $svg_file > ${base}.png; done
 	cd ..
-
-
+COMMENT3
+<<COMMENT6
 
 	echo "##############################################################\n#Make phylogenetic trees for ITOL"
 	mkdir phylogeny
@@ -366,8 +368,8 @@ COMMENT3
 	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
 
 
-<<COMMENT6
-COMMENT6
+
+
 	echo "##############################################################\n#Run Qiime1 for differOTU analysis"
 	source deactivate
 	source activate qiime1
@@ -399,6 +401,7 @@ COMMENT6
 
 
 
+
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	#source activate qiime2-2018.6
@@ -422,13 +425,20 @@ COMMENT6
 	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_matrix.txt R_output/wunifrac_matrix.txt R_output/unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 
 	rsvg-convert -h 3200  -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
+
+
 	python2 ${SCRIPTPATH}/biom_to_stamp.py -m KEGG_Pathways closedRef_forPICRUSt/feature-table.metagenome.biom > closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt
+	source deactivate
 	for n5 in 1 2 3;
 		do echo $n5;
-		for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/Function_PCA.r ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt ${PWD}/closedRef_forPICRUSt//sample-metadata.PCA.txt $category_1;done;
+		#tail -n +2 ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.txt | grep -v "disease" > ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt
+		#perl -p -i.bak -e 's/#OTU ID/KEGG_function/' ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt
+		for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_PCA.r ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt $category_1; done;
+		for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_DunnTest.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt -g $category_1; done;
 	done;
 
-
+COMMENT6
+<<COMMENT5
 
 
 	echo "##############################################################\n#Generate the absolute directory for enviromental factors relational analysis"
@@ -478,8 +488,6 @@ COMMENT6
 	done;
 
 
-<<COMMENT5
-COMMENT5
 	echo "##############################################################\nCorrelation analysis" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
@@ -507,12 +515,12 @@ COMMENT5
 	cd ../../
 
 
+COMMENT5
 
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH}/Result_README.pdf $min_freq
-
 
 }
 
