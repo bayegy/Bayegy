@@ -16,10 +16,10 @@ setwd(this.dir)
 #meta_txt = "sample-metadata.PCA.txt"
 #category_1= "Group1"
 
-design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F, na.strings = "") 
+design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F, na.strings = "",  fill = TRUE) 
 #head(design)
 
-table = read.table(KEGG_function_txt, row.names= 1,  header=T, sep="\t",check.names=F)
+table = read.table(KEGG_function_txt, row.names= 1,  header=T, sep="\t",check.names=F, na.strings = "",  fill = TRUE)
 #head(table)
 
 #remove the last column and transpose
@@ -48,6 +48,7 @@ table5<-prop.table(as.matrix(table4), margin = 1)
 #Remove the ones with zero variance
 table6<-table5[ , apply(table5, 2, var) != 0]
 rowSums(table6,na=T)
+dim(table6)
 
 #Transpose
 table7<-t(table6)

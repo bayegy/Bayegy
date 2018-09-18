@@ -126,8 +126,7 @@
 				<div class="AccordionPanelContent">
 					<li><a href="#a9.1">9.1 预测微生物群落功能</a></li>
 					<li><a href="#a9.2">9.2 预测功能PCA分析</a></li>
-					<li><a href="#a9.3">9.3 预测功能聚类分析</a></li>
-					<li><a href="#a9.4">9.4 组间功能差异性分析</a></li>
+					<li><a href="#a9.3">9.3 组间功能差异性分析</a></li>
 				</div>
 			</div>
 
@@ -541,31 +540,22 @@
 			<dd style="font-size:80%;">
 				说明：横坐标（x）表示第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标（y）表示第二主成分，百分比表示第二主成分对样品差异的贡献值；图中的每个点表示一个样品，同一个组的样品使用同一种颜色表示。箭头方向和长度代表该预测功能在该方向的样本/组别中的主导能力程度，长度约长代表主导的能力越大。 
 			</dd>
-			<h3 align="center"><a id="a9.3"></a>9.3 预测功能聚类分析 </h3>
+
+			<h3><a id="a9.3"></a>9.3 组间功能差异性分析</h3>
 			<p>
-				为了研究不同样品间的Bray  Curtis相似性，还可以通过对样品进行聚类分析，构建样品的聚类树。从基因在各样品中的丰度表出发，以Bray  Curtis矩阵进行样品间聚类分析（图9-3）。其他注释等级的聚类树图可查看目录<a href="../../../7-FunctionAnalysis/3-TreeBasedPlots/">/ 7-FunctionAnalysis/3-TreeBasedPlots/</a>。 
+				在得到KEGG功能注释后，结合分组信息，利用Krsuskal Wallis和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。除此之外，为了方便用户进行个性化地比较分析，分析结果中也提供了用于在样本之间功能差异比较的STAMP软件的输入文件<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
 			</p>
-			<p align="center"><img src="../../Figure9-3.png" width="800" height="600"></p>
-			<p align="center"><strong>图9-3 基于Bray Curtis距离的第一层级聚类树</strong></p>
-			<dd style="font-size:80%;">说明：中心是Bray Curtis距离聚类树结构，外圈各层是各样品在第一层级上的功能相对丰度分布，各颜色区块对应的功能类别见左上角图例。</dd>
-			<dd style="font-size:80%;">&nbsp;</dd>
-			<h3><a id="a9.4"></a>9.4 组间功能差异性分析</h3>
-			<p>
-				在得到KEGG功能注释后，结合分组信息，STAMP软件在这里被用于分析在微生物群落在不同组间的功能是否有显著性差异。为了方便用户是个性化地做比较分析，分析结果中给用户提供了STAMP软件的输入文件<a href="../../../7-FunctionAnalysis/1-KEGG_Pathway/feature-table.metagenome.KEGG_Pathways.STAMP.txt">./7-FunctionAnalysis/1-KEGG_Pathway/feature-table.metagenome.KEGG_Pathways.STAMP.txt</a>。
-			</p>
+
 
 			<hr>
-			<h2>
-				十 参考文献
-			</h2>
+			<h2><a id="a10"></a>十 参考文献</h2>
 
-			
 			<p>
 				1.		Bokulich,  N. A. et al. Quality-filtering vastly improves diversity estimates from  Illumina amplicon sequencing. Nat. Methods 10, 57–59 (2012).<br>
 				<br>2.		Caporaso,  J. G. et al. QIIME allows analysis of high-throughput community sequencing  data. Nat. Methods 7, 335–6 (2010).<br>
 				<br>3.		Magoč, T. &amp; Salzberg, S. L. FLASH: fast  length adjustment of short reads to improve genome assemblies. Bioinformatics  27, 2957–63 (2011).<br>
 				<br>4.		Edgar,  R. C., Haas, B. J., Clemente, J. C., Quince, C. &amp; Knight, R. UCHIME  improves sensitivity and speed of chimera detection. Bioinformatics 27,  2194–200 (2011).<br>
-				<br>5.		Haas,  B. J. et al. Chimeric 16S rRNA sequence formation and detection in Sanger and  454-pyrosequenced PCR amplicons. Genome Res. 21, 494–504 (2011).
+				<br>5.		Haas,  B. J. et al. Chimeric 16S rRNA sequence formation and detection in Sanger and  454-pyrosequenced PCR amplicons. Genome Res. 21, 494–504 (2011).<br>
 				<br>6.		Wang,  Q., Garrity, G. M., Tiedje, J. M. &amp; Cole, J. R. Naive Bayesian classifier  for rapid assignment of rRNA sequences into the new bacterial taxonomy. Appl.  Environ. Microbiol. 73, 5261–7 (2007).<br>
 				<br>7.		Callahan B. J., et al. DADA2: High-resolution sample inference from Illumina amplicon data. Nat. Method., 13(7):581-3 (2016).<br>
 				<br>8.    Cole,  J. R. et al. The Ribosomal Database Project: improved alignments and new tools  for rRNA analysis. Nucleic Acids Res. 37, D141-5 (2009).<br>

@@ -68,7 +68,7 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/ \
 	./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/ \
 	./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/ \
-	./Result_AmpliconSequencing/7-FunctionAnalysis/3-TreeBasedPlots/ \
+	./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
 	./Result_AmpliconSequencing/8-FiguresTablesForReport \
  	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Phyloseq \
@@ -168,15 +168,14 @@ organize_deliverable_structure() {
 
 	#cp -r /Result_AmpliconSequencing/6-AssociationAnalysis
 
-	cp -r closedRef_forPICRUSt/feature-table.metagenome* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
+	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
 	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA*
 	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
+	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
 	#rm ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/PCA.R ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/Rplots.pdf
-
-	cp -r closedRef_forPICRUSt/tree*png ./Result_AmpliconSequencing/7-FunctionAnalysis/3-TreeBasedPlots/
 
 	cp AdditionalPhylogeny/*.pdf ./Result_AmpliconSequencing/5-Phylogenetics/
 	cp -rp 4-VennAndFlower/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/3-VennAndFlower
@@ -228,7 +227,7 @@ organize_deliverable_structure() {
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
 	cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure9-1.png
 	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure9-2.pdf
-	cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
+	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
 
 
 
