@@ -196,7 +196,7 @@ MAIN() {
 	fi;
 
 
-	echo "#####################################The selected sample depth is $min_depth"
+	echo "##############################################################The selected sample depth is $min_depth"
 
 	echo "##############################################################\n#Core alpha and beta diversity analysis"
 	qiime diversity core-metrics-phylogenetic   --i-phylogeny rooted-tree.qza   --i-table table.qza   --p-sampling-depth $min_depth   --m-metadata-file $mapping_file  --output-dir core-metrics-results

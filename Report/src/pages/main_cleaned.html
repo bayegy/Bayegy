@@ -12,11 +12,20 @@
 		<script src="SpryAssets/SpryAccordion.js" type="text/javascript"></script>
 		<link href="SpryAssets/SpryAccordion.css" rel="stylesheet" type="text/css" />
 
-		<style type="text/css">
-			.noprint .menu .main_menu li a {
-				font-family: Verdana, Geneva, sans-serif;
+		<style media=print>
+			.noprint{
+				display: none;
 			}
-			.noprint .menu .main_menu li a {
+
+			#section{
+				margin-left: 20px;
+			}
+
+		</style>
+
+		<style type="text/css">
+
+			.noprint li a p dd{
 				font-family: Times New Roman, Times, serif;
 			}
 			body{
@@ -28,16 +37,22 @@
 			a{ 
 				text-decoration:none; 
 			}
+			p{
+				line-height: 28px;
+			}
+			dd{
+				line-height: 22px;
+			}
 		</style>
 	</head>
 
 
 	<body>
 
-		<div id="ee" style="position:fixed;margin-left:20px">
+		<div class="noprint" id="ee" style="position:fixed;margin-left:20px">
 			<button id="myBtn" style="background:#FFB6C1">展开目录</button>
 		</div>
-		<div id="emm" style="position:fixed;margin-left:20px">
+		<div class="noprint" id="emm" style="position:fixed;margin-left:20px">
 			<button id="h" style="background:#FFB6C1">隐藏目录</button>
 		</div>
 
@@ -59,7 +74,7 @@
 		});
 		</script>
 
-		<div id="nav">
+		<div class="noprint" id="nav">
 			<div class="AccordionPanel">
 				<div class="AccordionPanelTab"><li><a href="#summary">一 概述</a></li></div>
 			</div>
