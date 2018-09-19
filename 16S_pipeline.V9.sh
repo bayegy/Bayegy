@@ -124,7 +124,7 @@ MAIN() {
 
 	source activate qiime2-2018.8
 
-
+<<com1
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -187,17 +187,18 @@ MAIN() {
 	qiime feature-table tabulate-seqs   --i-data rep-seqs.qza   --o-visualization rep-seqs.qzv	
 	qiime taxa barplot   --i-table table.qza   --i-taxonomy taxonomy.qza   --m-metadata-file $mapping_file  --o-visualization taxa-bar-plots.qzv
 
-
+com1
 	#########calculate the min sample depth
-	for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
+	#for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
+	qiime tools export --input-path table.qzv --output-path exported_qzv
 	if [[ $depth == 'auto' ]];
-		then min_depth=$(echo \($(cut -f2 -d ',' table.qzv.exported/sample-frequency-detail.csv | sort | head -n1)/1000\)*1000 | bc);
+		then min_depth=$(echo \($(cut -f2 -d ',' exported_qzv/sample-frequency-detail.csv | sort | head -n1)/1000\)*1000 | bc);
 		else min_depth=$depth;
 	fi;
 
 
 	echo "##############################################################The selected sample depth is $min_depth"
-
+<<com2
 	echo "##############################################################\n#Core alpha and beta diversity analysis"
 	qiime diversity core-metrics-phylogenetic   --i-phylogeny rooted-tree.qza   --i-table table.qza   --p-sampling-depth $min_depth   --m-metadata-file $mapping_file  --output-dir core-metrics-results
 
@@ -240,8 +241,8 @@ MAIN() {
  	paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8}' >  alpha/alpha-summary.tsv
 
 	echo "##############################################################\n#Export necessary files for future analysis"
-	#for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
-	for f in alpha-rarefaction.qzv table.qzv taxa-bar-plots.qzv; do echo $f; qiime tools export --input-path $f --output-path exported_qzv; done
+	for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
+	#for f in alpha-rarefaction.qzv table.qzv taxa-bar-plots.qzv; do echo $f; qiime tools export --input-path $f --output-path exported_qzv; done
 	qiime tools export --input-path rooted-tree.qza --output-path exported/
 	mv exported/tree.nwk exported/tree.rooted.nwk 
 	qiime tools export --input-path unrooted-tree.qza --output-path exported/
@@ -407,6 +408,7 @@ MAIN() {
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
+com2
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -441,7 +443,7 @@ MAIN() {
 		for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_DunnTest.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt -g $category_1; done;
 	done;
 
-
+<<com3
 	echo "##############################################################\n#Generate the absolute directory for enviromental factors relational analysis"
 
 	cd exported/
@@ -485,10 +487,10 @@ MAIN() {
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
 			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
 		done;
-
+com3
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
-
+<<COM4
 	echo "##############################################################\n#Run LEFSE for Group"
 	source deactivate
 	source activate lefse
@@ -498,7 +500,7 @@ MAIN() {
 		do echo $n7;
 			mkdir Lefse/${n7}
 			cp otu_table.${n7}.relative.txt Lefse/${n7}
-			cd Lefse/${n7}	
+			cd Lefse/${n7}
 			for category_1 in $category_set;
 				do echo $category_1;
 					Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt;
@@ -507,7 +509,7 @@ MAIN() {
 			cd ../../
 		done;
 	cd ../../
-
+COM4
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
