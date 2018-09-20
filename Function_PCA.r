@@ -1,12 +1,25 @@
 library("ggbiplot")
 library("stringr")
+library(optparse)
+require(reshape)
+require(ggplot2)
+require(ggpubr)
+library(dplyr)
 library(devtools)
 #install_github("vqv/ggbiplot", ref = "experimental") 
 
+option_list <- list( 
+    make_option(c("-i", "--input"),metavar="path", dest="input",help="Specify the path of the PICRUSt output file",default=NULL),
+    make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
+    make_option(c("-g", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none")
+    )
+
+opt <- parse_args(OptionParser(option_list=option_list,description = "R script for generating Dunn test output"))
+
 args <- commandArgs(trailingOnly = TRUE)
-KEGG_function_txt = args[1]
-meta_txt = args[2]
-category_1=args[3]
+KEGG_function_txt = opt$input
+meta_txt = opt$map
+category_1= opt$group
 
 this.dir <- getwd()
 setwd(this.dir)
@@ -38,8 +51,14 @@ design2<-design[order(rownames(design)), ]
 idx = rownames(design2) %in% rownames(table3)
 design3 = design2[idx,]
 
+design4<-design3[category_1]
+colnames(design4)<-"Group"
+#head(map3)
+
+design5<-design3[!is.na(design4["Group"]),]
+
 #may not necessary for table4, as the number should match already but just put here in case.
-table4 = table3[rownames(design3), ]
+table4 = table3[rownames(design4), ]
 #dim(table4)
 
 #Convert to proportion
@@ -50,8 +69,12 @@ table6<-table5[ , apply(table5, 2, var) != 0]
 rowSums(table6,na=T)
 dim(table6)
 
+joinedtab<-data.frame(design4,table6,check.rows = T,check.names = F)
+data<-joinedtab[!is.na(joinedtab["Group"]),]
+table6_2<-data[,-1]
+
 #Transpose
-table7<-t(table6)
+table7<-t(table6_2)
 
 # 筛选mad值：按mad值排序取前10波动最大的OTUs
 table8 = head(table7[order(apply(table7,1,mad), decreasing=T),],n=10)
@@ -65,7 +88,7 @@ print(paste("Making PCA plots for", KEGG_function_txt, sep=" "))
 KEGG_function_txt<-str_replace(KEGG_function_txt,"PCA.txt","")
 ###########The name is bad here use tools::file_path_sans_ext("ABCD.csv") to obtain the basename in the future.
 PCA_plot_outputpdfname <- paste(KEGG_function_txt, category_1,".PCA.pdf", sep="")
-p<-ggbiplot(pc, obs.scale = 1, var.scale = 1, groups = design3[[category_1]], ellipse = TRUE, varname.adjust = 1.2, varname.abbrev=T, varname.size=3) +
+p<-ggbiplot(pc, obs.scale = 1, var.scale = 1, groups = design5[[category_1]], ellipse = TRUE, varname.adjust = 1.2, varname.abbrev=T, varname.size=3) +
   scale_color_discrete(name = '') +
   theme_bw()
   

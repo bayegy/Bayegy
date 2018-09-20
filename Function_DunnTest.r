@@ -50,17 +50,7 @@ table3<-prop.table(as.matrix(table2), margin = 1)
 table4<-table3[ , apply(table3, 2, var) != 0]
 rowSums(table4,na=T)
 
-
-rowname_join<-function(x,y)
-{
-    ya<-data.frame(y[match(rownames(x),rownames(y)),])
-    colnames(ya)<-colnames(y)
-    colnames(ya)[colnames(ya)%in%colnames(x)]<-paste(colnames(ya)[colnames(ya)%in%colnames(x)],"_y",sep = "")
-    out<-data.frame(x,ya,check.rows = T,check.names = F)
-     return(out)
-}
-
-joinedtab<-rowname_join(map3,table4)
+joinedtab<-data.frame(map3,table4,check.rows = T,check.names = F)
 
 data<-joinedtab[!is.na(joinedtab["Group"]),]
 
