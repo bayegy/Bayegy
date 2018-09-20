@@ -85,14 +85,14 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   NMDS_outputpdfname <- paste(category1,"_",distance_matrix[2], "_NMDS.pdf", sep="")
   NMDS_ordtxtname <- paste(category1,"_",distance_matrix[2], "_NMDS.ord.txt", sep="")
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
-  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
   ####without names and ellipse
   pdf(paste(category1,"_",distance_matrix[2], "_NMDS_without_labels.pdf", sep=""), width=7.6, height=6.6)
-  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
@@ -109,14 +109,14 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
 
 
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)
-  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
   ######without names and ellipse
   pdf(paste(category1,"_",distance_matrix[2], "_PCoA_2D_without_labels.pdf", sep=""), width=7.6, height=6.6)
-  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1,shape=category1) 
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
@@ -135,9 +135,13 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   tdata<-GP.ord$vectors[,1:3]
   eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
   lab<-paste("PC",c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
-  pdf(paste(category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=6.6, height=6.6)
-  scatterplot3d(tdata,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
-  legend("top", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = TRUE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)
+  pdf(paste(category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=8, height=6.6)
+  opar<-par(no.readonly=TRUE)
+  par(fig=c(0,0.8,0,0.8))
+  scatterplot3d(tdata,mar=c(0,0,0,0)+1,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
+  par(fig=c(0.8,1,0,1),xpd=TRUE)
+  legend("right", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = FALSE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)
+  par(opar)
   dev.off()
   write.table(as.matrix(GP.ord), PCoA_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
 

@@ -27,5 +27,5 @@ for (a in c("faith_pd","observed_otus","shannon")){
 	  geom_smooth(se=F, method = "lm",formula = y ~ log(x)) +  ### #使用log拟合
 	  theme_bw() +xlab("Number of sequences")+ylab(a)+
 	  theme(panel.grid=element_blank())
-	ggsave(plot = p,filename = paste(opt$o,'/',a,"_rarefaction_curve.png",sep = ""),width = 8,height = 6,dpi = 300)
+	ggsave(plot = p,filename = paste(opt$o,'/',a,"_rarefaction_curve.png",sep = ""),width = 10,height = 6,dpi = 300)
 }
