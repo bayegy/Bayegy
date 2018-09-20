@@ -124,7 +124,7 @@ MAIN() {
 
 	source activate qiime2-2018.8
 
-<<com1
+
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -199,8 +199,7 @@ MAIN() {
 
 
 	echo "##############################################################The selected sample depth is $min_depth"
-com1
-<<com2
+
 	echo "##############################################################\n#Core alpha and beta diversity analysis"
 	qiime diversity core-metrics-phylogenetic   --i-phylogeny rooted-tree.qza   --i-table table.qza   --p-sampling-depth $min_depth   --m-metadata-file $mapping_file  --output-dir core-metrics-results
 
@@ -410,7 +409,7 @@ com1
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-com2
+
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -445,7 +444,7 @@ com2
 		for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_DunnTest.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt -g $category_1; done;
 	done;
 
-<<com3
+
 	echo "##############################################################\n#Generate the absolute directory for enviromental factors relational analysis"
 
 	cd exported/
@@ -492,8 +491,7 @@ com2
 
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
-com3
-<<COM4
+
 	echo "##############################################################\n#Run LEFSE for Group"
 	source deactivate
 	source activate lefse
@@ -512,7 +510,7 @@ com3
 			cd ../../
 		done;
 	cd ../../
-COM4
+
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
