@@ -1,0 +1,628 @@
+RESULT_AMPLICONSEQUENCING•••••••••••••••••••••••••••••••••••••••••••••••••••••••••分析结果文件夹
+│  mapping_file.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••元文件
+│  Result_README.pdf••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••结果目录查看指南
+│  结题报告.html••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••网页结题报告
+│  
+├─1-QCStats•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••质控过程统计文件夹
+│  ├─1-Stats-demux••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••序列样本拆分统计网页结果文件夹
+│  │  │  demultiplex-summary.pdf••••••••••••••••••••••••••••••••••••••••••••••••••序列样本拆分统计图pdf格式
+│  │  │  demultiplex-summary.png••••••••••••••••••••••••••••••••••••••••••••••••••序列样本拆分统计图png格式
+│  │  │  demux.qzv••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••序列样本拆分统计的qiime2结果展示文件
+│  │  │  per-sample-fastq-counts.csv••••••••••••••••••••••••••••••••••••••••••••••每个样本的raw reads数目表
+│  │  │  quality-plot.html••••••••••••••••••••••••••••••••••••••••••••••••••••••••序列质量分统计图
+│  │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │  
+│  └─2-Stats-dada2••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••dada2序列质控过程统计网页结果文件夹
+│      │  stats-dada2.qzv•••••••••••••••••••••••••••••••••••••••••••••••••••••••••dada2序列质控过程统计qiime2结果展示文件
+│      │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│      │  
+├─2-AbundanceAnalysis•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••菌群物种丰度分析结果文件夹
+│  │  Classified_stat_relative.png••••••••••••••••••••••••••••••••••••••••••••••••每个样本各分类水平注释情况统计png图
+│  │  feature-table.taxonomy.biom•••••••••••••••••••••••••••••••••••••••••••••••••OTU(features) biom格式的绝对丰度表
+│  │  feature-table.taxonomy.even.txt•••••••••••••••••••••••••••••••••••••••••••••均一化的OTU丰度表
+│  │  feature-table.taxonomy.txt••••••••••••••••••••••••••••••••••••••••••••••••••OTU txt格式绝对丰度表
+│  │  
+│  ├─1-AbundanceSummary•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••菌群物种丰度汇总文件夹
+│  │  ├─1-AbundanceTable••••••••••••••••••••••••••••••••••••••••••••••••••••••••••菌群物种丰度表文件夹
+│  │  │  ├─1-Absolute•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••绝对丰度表文件夹
+│  │  │  │      otu_table.Class.absolute.txt••••••••••••••••••••••••••••••••••••••纲分类水平绝对丰度表
+│  │  │  │      otu_table.Family.absolute.txt•••••••••••••••••••••••••••••••••••••科分类水平绝对丰度表
+│  │  │  │      otu_table.Genus.absolute.txt••••••••••••••••••••••••••••••••••••••属分类水平绝对丰度表
+│  │  │  │      otu_table.Kingdom.absolute.txt••••••••••••••••••••••••••••••••••••界分类水平绝对丰度表
+│  │  │  │      otu_table.Order.absolute.txt••••••••••••••••••••••••••••••••••••••目分类水平绝对丰度表
+│  │  │  │      otu_table.Phylum.absolute.txt•••••••••••••••••••••••••••••••••••••门分类水平绝对丰度表
+│  │  │  │      otu_table.Species.absolute.txt••••••••••••••••••••••••••••••••••••种分类水平绝对丰度表
+│  │  │  │      
+│  │  │  ├─2-Relative•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••相对丰度表文件夹
+│  │  │  │      otu_table.Class.relative.txt••••••••••••••••••••••••••••••••••••••纲分类水平相对丰度表
+│  │  │  │      otu_table.Family.relative.txt•••••••••••••••••••••••••••••••••••••科分类水平相对丰度表
+│  │  │  │      otu_table.Genus.relative.txt••••••••••••••••••••••••••••••••••••••属分类水平相对丰度表
+│  │  │  │      otu_table.Kingdom.relative.txt••••••••••••••••••••••••••••••••••••界分类水平相对丰度表
+│  │  │  │      otu_table.Order.relative.txt••••••••••••••••••••••••••••••••••••••目分类水平相对丰度表
+│  │  │  │      otu_table.Phylum.relative.txt•••••••••••••••••••••••••••••••••••••门分类水平相对丰度表
+│  │  │  │      otu_table.Species.relative.txt••••••••••••••••••••••••••••••••••••种分类水平相对丰度表
+│  │  │  │      
+│  │  │  └─3-CollapsedStats•••••••••••••••••••••••••••••••••••••••••••••••••••••••每个分类水平的绝对丰度统计
+│  │  │      ├─collapsed-Class••••••••••••••••••••••••••••••••••••••••••••••••••••纲分类水平绝对丰度统计网页结果文件夹
+│  │  │      │  │  collapsed-Class.qzv••••••••••••••••••••••••••••••••••••••••••••纲分类水平绝对丰度统计qiime2结果展示文件
+│  │  │      │  │  feature-frequencies.pdf••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequencies.png••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequency-detail.csv•••••••••••••••••••••••••••••••••••每个物种的总丰度统计表
+│  │  │      │  │  sample-frequencies.pdf•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequencies.png•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequency-detail.csv••••••••••••••••••••••••••••••••••••每个样本的总丰度统计表
+│  │  │      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  │  
+│  │  │      ├─collapsed-Family•••••••••••••••••••••••••••••••••••••••••••••••••••科分类水平绝对丰度统计网页结果文件夹
+│  │  │      │  │  collapsed-Family.qzv•••••••••••••••••••••••••••••••••••••••••••科分类水平绝对丰度统计qiime2结果展示文件
+│  │  │      │  │  feature-frequencies.pdf••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequencies.png••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequency-detail.csv•••••••••••••••••••••••••••••••••••每个物种的总丰度统计表
+│  │  │      │  │  sample-frequencies.pdf•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequencies.png•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequency-detail.csv••••••••••••••••••••••••••••••••••••每个样本的总丰度统计表
+│  │  │      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  │  
+│  │  │      ├─collapsed-Genus••••••••••••••••••••••••••••••••••••••••••••••••••••属分类水平绝对丰度统计网页结果文件夹
+│  │  │      │  │  collapsed-Genus.qzv••••••••••••••••••••••••••••••••••••••••••••属分类水平绝对丰度统计qiime2结果展示文件
+│  │  │      │  │  feature-frequencies.pdf••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequencies.png••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequency-detail.csv•••••••••••••••••••••••••••••••••••每个物种的总丰度统计表
+│  │  │      │  │  sample-frequencies.pdf•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequencies.png•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequency-detail.csv••••••••••••••••••••••••••••••••••••每个样本的总丰度统计表
+│  │  │      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  │  
+│  │  │      ├─collapsed-Order••••••••••••••••••••••••••••••••••••••••••••••••••••目分类水平绝对丰度统计网页结果文件夹
+│  │  │      │  │  collapsed-Order.qzv••••••••••••••••••••••••••••••••••••••••••••目分类水平绝对丰度统计qiime2结果展示文件
+│  │  │      │  │  feature-frequencies.pdf••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequencies.png••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequency-detail.csv•••••••••••••••••••••••••••••••••••每个物种的总丰度统计表
+│  │  │      │  │  sample-frequencies.pdf•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequencies.png•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequency-detail.csv••••••••••••••••••••••••••••••••••••每个样本的总丰度统计表
+│  │  │      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  │  
+│  │  │      ├─collapsed-Phylum•••••••••••••••••••••••••••••••••••••••••••••••••••门分类水平绝对丰度统计网页结果文件夹
+│  │  │      │  │  collapsed-Phylum.qzv•••••••••••••••••••••••••••••••••••••••••••门分类水平绝对丰度统计qiime2结果展示文件
+│  │  │      │  │  feature-frequencies.pdf••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequencies.png••••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │      │  │  feature-frequency-detail.csv•••••••••••••••••••••••••••••••••••每个物种的总丰度统计表
+│  │  │      │  │  sample-frequencies.pdf•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequencies.png•••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │      │  │  sample-frequency-detail.csv••••••••••••••••••••••••••••••••••••每个样本的总丰度统计表
+│  │  │      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  │  
+│  │  │      └─collapsed-Species••••••••••••••••••••••••••••••••••••••••••••••••••种分类水平绝对丰度统计网页结果文件夹
+│  │  │          │  collapsed-Species.qzv•••••••••••••••••••••••••••••••••••••••••种分类水平绝对丰度统计qiime2结果展示文件
+│  │  │          │  feature-frequencies.pdf•••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │          │  feature-frequencies.png•••••••••••••••••••••••••••••••••••••••每个物种的总丰度统计图
+│  │  │          │  feature-frequency-detail.csv••••••••••••••••••••••••••••••••••每个物种的总丰度统计表
+│  │  │          │  sample-frequencies.pdf••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │          │  sample-frequencies.png••••••••••••••••••••••••••••••••••••••••每个样本的总丰度统计图
+│  │  │          │  sample-frequency-detail.csv•••••••••••••••••••••••••••••••••••每个样本的总丰度统计表
+│  │  │          │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │          │  
+│  │  ├─2-RepresentiveSequence••••••••••••••••••••••••••••••••••••••••••••••••••••OTU(feature)代表序列目录
+│  │  │  │  dna-sequences.fasta•••••••••••••••••••••••••••••••••••••••••••••••••••OTU(feature)代表序列fasta格式
+│  │  │  │  tree.rooted.nwk•••••••••••••••••••••••••••••••••••••••••••••••••••••••有根进化树nwk格式
+│  │  │  │  tree.unrooted.nwk•••••••••••••••••••••••••••••••••••••••••••••••••••••无根进化树nwk格式
+│  │  │  │  
+│  │  │  └─rep-seqs•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••代表序列网页结果文件夹
+│  │  │      │  rep-seqs.qzv••••••••••••••••••••••••••••••••••••••••••••••••••••••代表序列qiime2结果展示文件
+│  │  │      │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  
+│  │  ├─3-Barplots••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••物种相对丰度堆积柱形图
+│  │  │  │      otu_table.Class.relative.png••••••••••••••••••••••••••••••••••••••纲分类水平物种相对丰度堆积柱形图
+│  │  │  │      otu_table.Class.relative.txt••••••••••••••••••••••••••••••••••••••纲分类水平相对丰度表
+│  │  │  │      otu_table.Family.relative.png•••••••••••••••••••••••••••••••••••••科分类水平物种相对丰度堆积柱形图
+│  │  │  │      otu_table.Family.relative.txt•••••••••••••••••••••••••••••••••••••科分类水平相对丰度表
+│  │  │  │      otu_table.Genus.relative.txt••••••••••••••••••••••••••••••••••••••属分类水平相对丰度表
+│  │  │  │      otu_table.Kingdom.relative.txt••••••••••••••••••••••••••••••••••••界分类水平相对丰度表
+│  │  │  │      otu_table.Order.relative.png••••••••••••••••••••••••••••••••••••••目分类水平物种相对丰度堆积柱形图
+│  │  │  │      otu_table.Order.relative.txt••••••••••••••••••••••••••••••••••••••目分类水平相对丰度表
+│  │  │  │      otu_table.Phylum.relative.png•••••••••••••••••••••••••••••••••••••门分类水平物种相对丰度堆积柱形图
+│  │  │  │      otu_table.Phylum.relative.txt•••••••••••••••••••••••••••••••••••••门分类水平相对丰度表
+│  │  │  │      otu_table.Species.relative.png••••••••••••••••••••••••••••••••••••种分类水平物种相对丰度堆积柱形图
+│  │  │  │      otu_table.Species.relative.txt••••••••••••••••••••••••••••••••••••种分类水平相对丰度表
+│  │  │  │      
+│  │  │  └─taxa-bar-plots_Qiime2••••••••••••••••••••••••••••••••••••••••••••••••••物种相对丰度堆积柱形图网页结果文件夹
+│  │  │      │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  taxa-bar-plots.qzv••••••••••••••••••••••••••••••••••••••••••••••••物种相对丰度堆积柱形图qiime2结果展示文件
+│  │  │      │  
+│  │  └─4-Heatmaps••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••物种绝对丰度（log10）热图+聚类图网页结果文件夹
+│  │      ├─Group-table-Class.1000••••••••••••••••••••••••••••••••••••••••••••••••纲分类水平物种绝对丰度热图+聚类图网页结果文件夹
+│  │      │  │  feature-table-heatmap.png•••••••••••••••••••••••••••••••••••••••••热图+聚类图png格式
+│  │      │  │  feature-table-heatmap.svg•••••••••••••••••••••••••••••••••••••••••热图+聚类图svg格式
+│  │      │  │  Group-table-Class.1000.qzv••••••••••••••••••••••••••••••••••••••••纲分类水平热图+聚类图qiime2结果展示文件
+│  │      │  │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  │  
+│  │      ├─Group-table-Family.1000•••••••••••••••••••••••••••••••••••••••••••••••科分类水平物种绝对丰度热图+聚类图网页结果文件夹
+│  │      │  │  feature-table-heatmap.png•••••••••••••••••••••••••••••••••••••••••热图+聚类图png格式
+│  │      │  │  feature-table-heatmap.svg•••••••••••••••••••••••••••••••••••••••••热图+聚类图svg格式
+│  │      │  │  Group-table-Family.1000.qzv•••••••••••••••••••••••••••••••••••••••科分类水平热图+聚类图qiime2结果展示文件
+│  │      │  │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  │  
+│  │      ├─Group-table-Genus.1000••••••••••••••••••••••••••••••••••••••••••••••••属分类水平物种绝对丰度热图+聚类图网页结果文件夹
+│  │      │  │  feature-table-heatmap.png•••••••••••••••••••••••••••••••••••••••••热图+聚类图png格式
+│  │      │  │  feature-table-heatmap.svg•••••••••••••••••••••••••••••••••••••••••热图+聚类图svg格式
+│  │      │  │  Group-table-Genus.1000.qzv••••••••••••••••••••••••••••••••••••••••属分类水平热图+聚类图qiime2结果展示文件
+│  │      │  │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  │  
+│  │      ├─Group-table-Order.1000••••••••••••••••••••••••••••••••••••••••••••••••目分类水平物种绝对丰度热图+聚类图网页结果文件夹
+│  │      │  │  feature-table-heatmap.png•••••••••••••••••••••••••••••••••••••••••热图+聚类图png格式
+│  │      │  │  feature-table-heatmap.svg•••••••••••••••••••••••••••••••••••••••••热图+聚类图svg格式
+│  │      │  │  Group-table-Order.1000.qzv••••••••••••••••••••••••••••••••••••••••目分类水平热图+聚类图qiime2结果展示文件
+│  │      │  │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  │  
+│  │      ├─Group-table-Phylum.1000•••••••••••••••••••••••••••••••••••••••••••••••门分类水平物种绝对丰度热图+聚类图网页结果文件夹
+│  │      │  │  feature-table-heatmap.png•••••••••••••••••••••••••••••••••••••••••热图+聚类图png格式
+│  │      │  │  feature-table-heatmap.svg•••••••••••••••••••••••••••••••••••••••••热图+聚类图svg格式
+│  │      │  │  Group-table-Phylum.1000.qzv•••••••••••••••••••••••••••••••••••••••门分类水平热图+聚类图qiime2结果展示文件
+│  │      │  │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  │  
+│  │      └─Group-table-Species.1000••••••••••••••••••••••••••••••••••••••••••••••种分类水平物种绝对丰度热图+聚类图网页结果文件夹
+│  │          │  feature-table-heatmap.png••••••••••••••••••••••••••••••••••••••••热图+聚类图png格式
+│  │          │  feature-table-heatmap.svg••••••••••••••••••••••••••••••••••••••••热图+聚类图svg格式
+│  │          │  Group-table-Species.1000.qzv•••••••••••••••••••••••••••••••••••••种分类水平热图+聚类图qiime2结果展示文件
+│  │          │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │          │  
+│  ├─2-AbundanceComparison••••••••••••••••••••••••••••••••••••••••••••••••••••••••菌群组间丰度比较结果文件夹
+│  │  ├─1-ANCOM•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••ANCOM分析的结果文件夹
+│  │  │  ├─Group.ANCOM.Class••••••••••••••••••••••••••••••••••••••••••••••••••••••纲分类水平ANCOM分析的网页结果文件夹
+│  │  │  │  │  Group.ANCOM.Class.qzv••••••••••••••••••••••••••••••••••••••••••••••纲分类水平ANCOM分析qiime2结果展示文件
+│  │  │  │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │  │  │  
+│  │  │  ├─Group.ANCOM.Family•••••••••••••••••••••••••••••••••••••••••••••••••••••科分类水平ANCOM分析的网页结果文件夹
+│  │  │  │  │  Group.ANCOM.Family.qzv•••••••••••••••••••••••••••••••••••••••••••••科分类水平ANCOM分析qiime2结果展示文件
+│  │  │  │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │  │  │  
+│  │  │  ├─Group.ANCOM.Genus••••••••••••••••••••••••••••••••••••••••••••••••••••••属分类水平ANCOM分析的网页结果文件夹
+│  │  │  │  │  Group.ANCOM.Genus.qzv••••••••••••••••••••••••••••••••••••••••••••••属分类水平ANCOM分析qiime2结果展示文件
+│  │  │  │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │  │  │  
+│  │  │  ├─Group.ANCOM.Order••••••••••••••••••••••••••••••••••••••••••••••••••••••目分类水平ANCOM分析的网页结果文件夹
+│  │  │  │  │  Group.ANCOM.Order.qzv••••••••••••••••••••••••••••••••••••••••••••••目分类水平ANCOM分析qiime2结果展示文件
+│  │  │  │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │  │  │  
+│  │  │  ├─Group.ANCOM.Phylum•••••••••••••••••••••••••••••••••••••••••••••••••••••门分类水平ANCOM分析的网页结果文件夹
+│  │  │  │  │  Group.ANCOM.Phylum.qzv•••••••••••••••••••••••••••••••••••••••••••••门分类水平ANCOM分析qiime2结果展示文件
+│  │  │  │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │  │  │  
+│  │  │  └─Group.ANCOM.Species••••••••••••••••••••••••••••••••••••••••••••••••••••种分类水平ANCOM分析的网页结果文件夹
+│  │  │      │  Group.ANCOM.Species.qzv•••••••••••••••••••••••••••••••••••••••••••种分类水平ANCOM分析qiime2结果展示文件
+│  │  │      │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │  │      │  
+│  │  ├─2-ANOVA•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••ANOVA分析结果文件夹
+│  │  │      ANOVA_Group_DiffAbundance_Class.txt••••••••••••••••••••••••••••••••••纲分类水平ANOVA分析结果
+│  │  │      ANOVA_Group_DiffAbundance_Family.txt•••••••••••••••••••••••••••••••••科分类水平ANOVA分析结果
+│  │  │      ANOVA_Group_DiffAbundance_Genus.txt••••••••••••••••••••••••••••••••••属分类水平ANOVA分析结果
+│  │  │      ANOVA_Group_DiffAbundance_Order.txt••••••••••••••••••••••••••••••••••目分类水平ANOVA分析结果
+│  │  │      ANOVA_Group_DiffAbundance_Phylum.txt•••••••••••••••••••••••••••••••••门分类水平ANOVA分析结果
+│  │  │      ANOVA_Group_DiffAbundance_Species.txt••••••••••••••••••••••••••••••••种分类水平ANOVA分析结果
+│  │  │      
+│  │  ├─3-KruskalWallis•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••Kruskal-Wallis分析的结果文件夹
+│  │  │      kruskal_wallis_Group_DiffAbundance_Class.txt•••••••••••••••••••••••••纲分类水平Kruskal-Wallis分析的结果
+│  │  │      kruskal_wallis_Group_DiffAbundance_Family.txt••••••••••••••••••••••••科分类水平Kruskal-Wallis分析的结果
+│  │  │      kruskal_wallis_Group_DiffAbundance_Genus.txt•••••••••••••••••••••••••属分类水平Kruskal-Wallis分析的结果
+│  │  │      kruskal_wallis_Group_DiffAbundance_Order.txt•••••••••••••••••••••••••目分类水平Kruskal-Wallis分析的结果
+│  │  │      kruskal_wallis_Group_DiffAbundance_Phylum.txt••••••••••••••••••••••••门分类水平Kruskal-Wallis分析的结果
+│  │  │      kruskal_wallis_Group_DiffAbundance_Species.txt•••••••••••••••••••••••种分类水平Kruskal-Wallis分析的结果
+│  │  │      
+│  │  ├─4-LEfSe•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••各分类水平LEfSe分析结果文件夹
+│  │  │  ├─Class••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••纲分类水平分析结果文件夹
+│  │  │  │      Group_Class_lefse.cladogram.png•••••••••••••••••••••••••••••••••••LEfSe分析cladogram图
+│  │  │  │      Group_Class_lefse.LDA.txt•••••••••••••••••••••••••••••••••••••••••LEfSe分析结果文件
+│  │  │  │      Group_Class_lefse.lefseinput.txt••••••••••••••••••••••••••••••••••LEfSe分析中间文件
+│  │  │  │      Group_Class_lefse.png•••••••••••••••••••••••••••••••••••••••••••••LEfSe分析柱形图
+│  │  │  │      Group_Class_lefse.txt•••••••••••••••••••••••••••••••••••••••••••••LEfSe分析数据数据文件
+│  │  │  │      otu_table.Class.relative.txt••••••••••••••••••••••••••••••••••••••纲分类水平相对丰度表
+│  │  │  │      
+│  │  │  ├─Family•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••科分类水平分析结果文件夹
+│  │  │  │      Group_Family_lefse.cladogram.png••••••••••••••••••••••••••••••••••LEfSe分析cladogram图
+│  │  │  │      Group_Family_lefse.LDA.txt••••••••••••••••••••••••••••••••••••••••LEfSe分析结果文件
+│  │  │  │      Group_Family_lefse.lefseinput.txt•••••••••••••••••••••••••••••••••LEfSe分析中间文件
+│  │  │  │      Group_Family_lefse.png••••••••••••••••••••••••••••••••••••••••••••LEfSe分析柱形图
+│  │  │  │      Group_Family_lefse.txt••••••••••••••••••••••••••••••••••••••••••••LEfSe分析数据数据文件
+│  │  │  │      otu_table.Family.relative.txt•••••••••••••••••••••••••••••••••••••科分类水平相对丰度表
+│  │  │  │      
+│  │  │  ├─Genus••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••属分类水平分析结果文件夹
+│  │  │  │      Group_Genus_lefse.cladogram.png•••••••••••••••••••••••••••••••••••LEfSe分析cladogram图
+│  │  │  │      Group_Genus_lefse.LDA.txt•••••••••••••••••••••••••••••••••••••••••LEfSe分析结果文件
+│  │  │  │      Group_Genus_lefse.lefseinput.txt••••••••••••••••••••••••••••••••••LEfSe分析中间文件
+│  │  │  │      Group_Genus_lefse.png•••••••••••••••••••••••••••••••••••••••••••••LEfSe分析柱形图
+│  │  │  │      Group_Genus_lefse.txt•••••••••••••••••••••••••••••••••••••••••••••LEfSe分析数据数据文件
+│  │  │  │      otu_table.Genus.relative.txt••••••••••••••••••••••••••••••••••••••属分类水平相对丰度表
+│  │  │  │      
+│  │  │  ├─Order••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••目分类水平分析结果文件夹
+│  │  │  │      Group_Order_lefse.cladogram.png•••••••••••••••••••••••••••••••••••LEfSe分析cladogram图
+│  │  │  │      Group_Order_lefse.LDA.txt•••••••••••••••••••••••••••••••••••••••••LEfSe分析结果文件
+│  │  │  │      Group_Order_lefse.lefseinput.txt••••••••••••••••••••••••••••••••••LEfSe分析中间文件
+│  │  │  │      Group_Order_lefse.png•••••••••••••••••••••••••••••••••••••••••••••LEfSe分析柱形图
+│  │  │  │      Group_Order_lefse.txt•••••••••••••••••••••••••••••••••••••••••••••LEfSe分析数据数据文件
+│  │  │  │      otu_table.Order.relative.txt••••••••••••••••••••••••••••••••••••••目分类水平相对丰度表
+│  │  │  │      
+│  │  │  ├─Phylum•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••门分类水平分析结果文件夹
+│  │  │  │      Group_Phylum_lefse.cladogram.png••••••••••••••••••••••••••••••••••LEfSe分析cladogram图
+│  │  │  │      Group_Phylum_lefse.LDA.txt••••••••••••••••••••••••••••••••••••••••LEfSe分析结果文件
+│  │  │  │      Group_Phylum_lefse.lefseinput.txt•••••••••••••••••••••••••••••••••LEfSe分析中间文件
+│  │  │  │      Group_Phylum_lefse.png••••••••••••••••••••••••••••••••••••••••••••LEfSe分析柱形图
+│  │  │  │      Group_Phylum_lefse.txt••••••••••••••••••••••••••••••••••••••••••••LEfSe分析数据数据文件
+│  │  │  │      otu_table.Phylum.relative.txt•••••••••••••••••••••••••••••••••••••门分类水平相对丰度表
+│  │  │  │      
+│  │  │  └─Species••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••种分类水平分析结果文件夹
+│  │  │          Group_Species_lefse.cladogram.png••••••••••••••••••••••••••••••••LEfSe分析cladogram图
+│  │  │          Group_Species_lefse.LDA.txt••••••••••••••••••••••••••••••••••••••LEfSe分析结果文件
+│  │  │          Group_Species_lefse.lefseinput.txt•••••••••••••••••••••••••••••••LEfSe分析中间文件
+│  │  │          Group_Species_lefse.png••••••••••••••••••••••••••••••••••••••••••LEfSe分析柱形图
+│  │  │          Group_Species_lefse.txt••••••••••••••••••••••••••••••••••••••••••LEfSe分析数据数据文件
+│  │  │          otu_table.Species.relative.txt•••••••••••••••••••••••••••••••••••种分类水平相对丰度表
+│  │  │          
+│  │  └─5-DESeq2••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••各分类水平DESeq2组间丰度比较结果文件夹
+│  │          DESeq2_Group_Between_Con_and_Mes_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mes_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mes_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mes_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mes_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mes_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mod_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mod_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mod_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mod_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mod_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_Mod_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP1_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP1_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP1_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP1_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP1_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP1_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP2_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP2_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP2_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP2_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP2_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP2_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP3_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP3_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP3_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP3_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP3_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Con_and_TP3_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_Mod_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_Mod_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_Mod_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_Mod_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_Mod_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_Mod_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP1_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP1_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP1_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP1_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP1_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP1_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP2_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP2_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP2_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP2_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP2_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP2_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP3_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP3_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP3_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP3_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP3_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mes_and_TP3_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP1_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP1_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP1_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP1_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP1_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP1_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP2_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP2_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP2_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP2_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP2_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP2_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP3_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP3_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP3_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP3_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP3_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_Mod_and_TP3_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP2_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP2_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP2_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP2_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP2_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP2_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP3_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP3_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP3_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP3_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP3_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP1_and_TP3_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP2_and_TP3_DiffAbundance_Class.txt••••••••••••纲分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP2_and_TP3_DiffAbundance_Family.txt•••••••••••科分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP2_and_TP3_DiffAbundance_Genus.txt••••••••••••属分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP2_and_TP3_DiffAbundance_Order.txt••••••••••••目分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP2_and_TP3_DiffAbundance_Phylum.txt•••••••••••门分类水平对应分组间DESeq2丰度比较结果文件
+│  │          DESeq2_Group_Between_TP2_and_TP3_DiffAbundance_Species.txt••••••••••种分类水平对应分组间DESeq2丰度比较结果文件
+│  │          
+│  └─3-VennAndFlower••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••维恩图和花瓣图的分析结果文件夹
+│          Group_common_species.xls•••••••••••••••••••••••••••••••••••••••••••••••所有分组共有的OTU及丰度
+│          Group_Con_special_species.xls••••••••••••••••••••••••••••••••••••••••••对应分组特有的OTU及丰度
+│          Group_Flower_plot.pdf••••••••••••••••••••••••••••••••••••••••••••••••••花瓣图
+│          Group_Mes_special_species.xls••••••••••••••••••••••••••••••••••••••••••对应分组特有的OTU及丰度
+│          Group_Mod_special_species.xls••••••••••••••••••••••••••••••••••••••••••对应分组特有的OTU及丰度
+│          Group_TP1_special_species.xls••••••••••••••••••••••••••••••••••••••••••对应分组特有的OTU及丰度
+│          Group_TP2_special_species.xls••••••••••••••••••••••••••••••••••••••••••对应分组特有的OTU及丰度
+│          Group_TP3_special_species.xls••••••••••••••••••••••••••••••••••••••••••对应分组特有的OTU及丰度
+│          Group_Venn_plot.png••••••••••••••••••••••••••••••••••••••••••••••••••••维恩图
+│
+├─3-AlphaDiversity••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••α多样性分析结果文件夹
+│  ├─1-AlphaDiversitySummary••••••••••••••••••••••••••••••••••••••••••••••••••••••α多样性指数汇总文件夹
+│  │      alpha-summary.tsv•••••••••••••••••••••••••••••••••••••••••••••••••••••••α多样性指数汇总表格
+│  │      Group_alpha_diversity_faith_pd.boxplot.pdf••••••••••••••••••••••••••••••各分组Faith-PD箱线图
+│  │      Group_alpha_diversity_observed_otus.boxplot.pdf•••••••••••••••••••••••••各分组观测OTU数箱线图
+│  │      Group_alpha_diversity_shannon.boxplot.pdf•••••••••••••••••••••••••••••••各分组香农指数箱线图
+│  │      
+│  ├─2-AlphaRarefaction•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••稀释性曲线结果文件夹
+│  │  ├─alpha-rarefaction-ggplot2•••••••••••••••••••••••••••••••••••••••••••••••••用R语言ggplot2包画的稀释性曲线
+│  │  │      faith_pd_rarefaction_curve.png•••••••••••••••••••••••••••••••••••••••faith_pd稀释性曲线
+│  │  │      observed_otus_rarefaction_curve.png••••••••••••••••••••••••••••••••••观测OTU数稀释性曲线
+│  │  │      shannon_rarefaction_curve.png••••••••••••••••••••••••••••••••••••••••香农指数稀释性曲线
+│  │  │      
+│  │  └─alpha-rarefaction-Qiime2••••••••••••••••••••••••••••••••••••••••••••••••••用Qiime2画的稀释性曲线
+│  │      │  alpha-rarefaction.qzv••••••••••••••••••••••••••••••••••••••••••••••••稀释性曲线qiime2结果展示文件
+│  │      │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  
+│  └─3-SignificanceAnalysis•••••••••••••••••••••••••••••••••••••••••••••••••••••••α多样性组间差异显著性分析结果文件夹
+│      ├─1-Wilcox_Test••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••α多样性组间差异Wilcox分析结果文件夹
+│      │      alpha_Group_wilcox_compare_results.txt••••••••••••••••••••••••••••••对应分组方式的α多样性组间差异Wilcox分析结果
+│      │      chao1_Group_wilcox_compare_boxplot.png••••••••••••••••••••••••••••••对应分组方式的chao1组间差异Wilcox分析结果
+│      │      faith_pd_Group_wilcox_compare_boxplot.png•••••••••••••••••••••••••••对应分组方式的Faith_PD组间差异Wilcox分析结果
+│      │      observed_otus_Group_wilcox_compare_boxplot.png••••••••••••••••••••••对应分组方式的observed_otus组间差异Wilcox分析结果
+│      │      shannon_Group_wilcox_compare_boxplot.png••••••••••••••••••••••••••••对应分组方式的shannon组间差异Wilcox分析结果
+│      │      
+│      └─2-Kruskal_Wallis•••••••••••••••••••••••••••••••••••••••••••••••••••••••••α多样性组间差异Kruskal_Wallis分析结果文件夹
+│          ├─faith-pd-group-significance••••••••••••••••••••••••••••••••••••••••••Faith-PD组间差异分析网页结果文件夹
+│          │  │  faith-pd-group-significance.qzv••••••••••••••••••••••••••••••••••Faith-PD组间比较qiime2展示文件
+│          │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│          │  │  
+│          ├─observed_otus-group-significance•••••••••••••••••••••••••••••••••••••观测OTUs组间差异分析网页结果文件夹
+│          │  │  observed_otus-group-significance.qzv•••••••••••••••••••••••••••••观测OTUs组间比较结果qiime2结果展示文件
+│          │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│          │  │  
+│          └─shannon-group-significance•••••••••••••••••••••••••••••••••••••••••••香农指数组间差异分析网页结果文件夹
+│              │  shannon-group-significance.qzv••••••••••••••••••••••••••••••••••香农指数组间比较qiime2结果展示文件
+│              │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│              │  
+├─4-BetaDiversity•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••β多样性分析结果文件夹
+│  ├─1-BetaDiversitySummary•••••••••••••••••••••••••••••••••••••••••••••••••••••••β多样性指数汇总文件夹
+│  │      BetaDiversity_heatmap.png•••••••••••••••••••••••••••••••••••••••••••••••三个β多样性指数热图
+│  │      bray_curtis_betadiversity_summary.pdf•••••••••••••••••••••••••••••••••••bray_curtis距离可视化热图
+│  │      bray_curtis_matrix.txt••••••••••••••••••••••••••••••••••••••••••••••••••bray_curtis距离矩阵
+│  │      unweighted_unifrac_betadiversity_summary.pdf••••••••••••••••••••••••••••非加权unifrac距离可视化热图
+│  │      unweighted_unifrac_matrix.txt•••••••••••••••••••••••••••••••••••••••••••非加权unifrac距离矩阵
+│  │      weighted_unifrac_betadiversity_summary.pdf••••••••••••••••••••••••••••••加权unifrac距离可视化热图
+│  │      weighted_unifrac_matrix.txt•••••••••••••••••••••••••••••••••••••••••••••加权unifrac距离矩阵
+│  │      
+│  ├─2-PCoA•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••PCoA分析结果文件夹
+│  │  ├─PCoA-Phyloseq•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••用R语言Phyloseq包分析的PCoA结果文件夹
+│  │  │      Group_bray_curtis_PCoA_2D.ord.txt••••••••••••••••••••••••••••••••••••基于bray_curtis的PCoA分析坐标文件
+│  │  │      Group_bray_curtis_PCoA_2D.pdf••••••••••••••••••••••••••••••••••••••••基于bray_curtis的PCoA分析2D图
+│  │  │      Group_bray_curtis_PCoA_2D_without_labels.pdf•••••••••••••••••••••••••基于bray_curtis的PCoA分析没有置信椭圆的2D图
+│  │  │      Group_bray_curtis_PCoA_3D.pdf••••••••••••••••••••••••••••••••••••••••基于bray_curtis的PCoA分析3D图
+│  │  │      Group_unweighted_unifrac_PCoA_2D.ord.txt•••••••••••••••••••••••••••••基于非加权unifrac的PCoA分析坐标文件
+│  │  │      Group_unweighted_unifrac_PCoA_2D.pdf•••••••••••••••••••••••••••••••••基于非加权unifrac的PCoA分析2D图
+│  │  │      Group_unweighted_unifrac_PCoA_2D_without_labels.pdf••••••••••••••••••基于非加权unifrac的PCoA分析没有置信椭圆的2D图
+│  │  │      Group_unweighted_unifrac_PCoA_3D.pdf•••••••••••••••••••••••••••••••••基于非加权unifrac的PCoA分析3D图
+│  │  │      Group_weighted_unifrac_PCoA_2D.ord.txt•••••••••••••••••••••••••••••••基于加权unifrac的PCoA分析坐标文件
+│  │  │      Group_weighted_unifrac_PCoA_2D.pdf•••••••••••••••••••••••••••••••••••基于加权unifrac的PCoA分析2D图
+│  │  │      Group_weighted_unifrac_PCoA_2D_without_labels.pdf••••••••••••••••••••基于加权unifrac的PCoA分析没有置信椭圆的2D图
+│  │  │      Group_weighted_unifrac_PCoA_3D.pdf•••••••••••••••••••••••••••••••••••基于加权unifrac的PCoA分析3D图
+│  │  │      
+│  │  └─PCoA-Qiime2•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••用Qiime2分析的PCoA结果文件夹
+│  │      ├─bray_curtis_emperor•••••••••••••••••••••••••••••••••••••••••••••••••••基于bray_curtis的PCoA分析结果网页文件夹
+│  │      │  │  bray_curtis_emperor.qzv•••••••••••••••••••••••••••••••••••••••••••基于bray_curtis的PCoA分析qiime2结果展示文件
+│  │      │  │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  │  
+│  │      ├─unweighted_unifrac_emperor••••••••••••••••••••••••••••••••••••••••••••基于非加权Unifra的PCoA分析结果网页文件夹
+│  │      │  │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │      │  │  unweighted_unifrac_emperor.qzv••••••••••••••••••••••••••••••••••••基于非加权Unifrac的PCoA qiime2结果展示文件
+│  │      │  │  
+│  │      └─weighted_unifrac_emperor••••••••••••••••••••••••••••••••••••••••••••••基于加权Unifrac的PCoA分析结果网页文件夹
+│  │          │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│  │          │  weighted_unifrac_emperor.qzv•••••••••••••••••••••••••••••••••••••基于加权Unifrac的PCoA qiime2结果展示文件
+│  │          │  
+│  ├─3-NMDS•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••NMDS分析结果文件夹
+│  │      Group_bray_curtis_NMDS.ord.txt••••••••••••••••••••••••••••••••••••••••••基于bray_curtis的NMDS分析坐标文件
+│  │      Group_bray_curtis_NMDS.pdf••••••••••••••••••••••••••••••••••••••••••••••基于bray_curtis的NMDS分析2D图
+│  │      Group_bray_curtis_NMDS_without_labels.pdf•••••••••••••••••••••••••••••••基于bray_curtis的NMDS分析没有置信椭圆的2D图
+│  │      Group_unweighted_unifrac_NMDS.ord.txt•••••••••••••••••••••••••••••••••••基于非加权UniFrac的NMDS分析坐标文件
+│  │      Group_unweighted_unifrac_NMDS.pdf•••••••••••••••••••••••••••••••••••••••基于非加权UniFrac的NMDS分析2D图
+│  │      Group_unweighted_unifrac_NMDS_without_labels.pdf••••••••••••••••••••••••基于非加权UniFrac的NMDS分析没有置信椭圆的2D图
+│  │      Group_weighted_unifrac_NMDS.ord.txt•••••••••••••••••••••••••••••••••••••基于加权UniFrac的NMDS分析坐标文件
+│  │      Group_weighted_unifrac_NMDS.pdf•••••••••••••••••••••••••••••••••••••••••基于加权UniFrac的NMDS分析2D图
+│  │      Group_weighted_unifrac_NMDS_without_labels.pdf••••••••••••••••••••••••••基于加权UniFrac的NMDS分析没有置信椭圆的2D图
+│  │      
+│  ├─4-PLS-DA•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••PLS-DA分析结果文件夹
+│  │      Group _ PLSDA_Variable_importance_in_projection.txt•••••••••••••••••••••PLSDA各OTU的重要性（VIP）
+│  │      Group_PCA_plot.pdf••••••••••••••••••••••••••••••••••••••••••••••••••••••OTU丰度PCA图
+│  │      Group_PLSDA_AUC_plot.pdf••••••••••••••••••••••••••••••••••••••••••••••••PLSDA分析AUC曲线
+│  │      Group_PLSDA_comp_plot.pdf•••••••••••••••••••••••••••••••••••••••••••••••PLSDA分析第一、二成分排序图
+│  │      
+│  └─5-GroupSignificance••••••••••••••••••••••••••••••••••••••••••••••••••••••••••基于距离矩阵的组间菌群结构差异分析
+│      ├─bray_curtis-anosim-Group-significance••••••••••••••••••••••••••••••••••••基于bray_curtis的anosim组间菌群结构差异分析网页结果文件夹
+│      │  │  anosim-pairwise.csv••••••••••••••••••••••••••••••••••••••••••••••••••anosim多重比较表格
+│      │  │  bray_curtis-anosim-Group-significance.qzv••••••••••••••••••••••••••••基于bray_curtis的anosim分析结果qiime2结果展示文件
+│      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│      │  │  
+│      ├─bray_curtis-permanova-Group-significance•••••••••••••••••••••••••••••••••基于bray_curtis的permanova组间菌群结构差异分析网页结果文件夹
+│      │  │  bray_curtis-permanova-Group-significance.qzv•••••••••••••••••••••••••基于bray_curtis的permanova分析结果qiime2结果展示文件
+│      │  │  permanova-pairwise.csv•••••••••••••••••••••••••••••••••••••••••••••••permanova多重比较表格
+│      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│      │  │  
+│      ├─unweighted_unifrac-anosim-Group-significance•••••••••••••••••••••••••••••基于非加权unifrac的anosim组间菌群结构差异分析网页结果文件夹
+│      │  │  anosim-pairwise.csv••••••••••••••••••••••••••••••••••••••••••••••••••anosim多重比较表格
+│      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│      │  │  unweighted_unifrac-anosim-Group-significance.qzv•••••••••••••••••••••基于非加权Unifrac的anosim qiime2结果展示文件
+│      │  │  
+│      ├─unweighted_unifrac-permanova-Group-significance••••••••••••••••••••••••••基于非加权Unifrac的permanova组间菌群结构差异分析网页结果文件夹
+│      │  │  permanova-pairwise.csv•••••••••••••••••••••••••••••••••••••••••••••••permanova多重比较表格
+│      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│      │  │  unweighted_unifrac-permanova-Group-significance.qzv••••••••••••••••••基于非加权Unifrac的permanova qiime2结果展示文件
+│      │  │  
+│      ├─weighted_unifrac-anosim-Group-significance•••••••••••••••••••••••••••••••基于加权Unifrac的anosim组间菌群结构差异分析网页结果文件夹
+│      │  │  anosim-pairwise.csv••••••••••••••••••••••••••••••••••••••••••••••••••anosim多重比较表格
+│      │  │  Summary_请点此文件查看.html•••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│      │  │  weighted_unifrac-anosim-Group-significance.qzv•••••••••••••••••••••••基于加权Unifrac的anosim qiime2结果展示文件
+│      │  │  
+│      └─weighted_unifrac-permanova-Group-significance••••••••••••••••••••••••••••基于加权Unifrac的permanova组间菌群结构差异分析网页结果文件夹
+│          │  permanova-pairwise.csv••••••••••••••••••••••••••••••••••••••••••••••permanova多重比较表格
+│          │  Summary_请点此文件查看.html••••••••••••••••••••••••••••••••••••••••••••••••分析结果汇总网页
+│          │  weighted_unifrac-permanova-Group-significance.qzv•••••••••••••••••••基于加权Unifrac的permanova qiime2结果展示文件
+│          │  
+├─5-Phylogenetics•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••进化树分析结果文件夹
+│      Group_phylogenetic_tree_heatmap.pdf••••••••••••••••••••••••••••••••••••••••丰度较高OTU的进化树+丰度热图
+│      tol_labels.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••iTOL分析输入文件
+│      tol_multibar.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••iTOL分析输入文件
+│      tol_ranges.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••iTOL分析输入文件
+│      tree.rooted.nwk••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••iTOL分析输入文件
+│      
+├─6-AssociationAnalysis•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••关联分析
+│  ├─1-RDA••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••RDA分析结果文件夹
+│  │  ├─Class•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••纲分类水平分析结果文件夹
+│  │  │      Group_RDA_sample_location_plot.png•••••••••••••••••••••••••••••••••••RDA分析样本和环境因子关系可视化图
+│  │  │      otu_table.Class.absolute.txt•••••••••••••••••••••••••••••••••••••••••纲分类水平绝对丰度表
+│  │  │      RDA.bacteria.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••各物种的RDA坐标
+│  │  │      RDA.envfit.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各环境因子的RDA坐标、解释方差及p值
+│  │  │      RDA.sample.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各样本的RDA坐标
+│  │  │      RDA_bacteria_location_plot.png•••••••••••••••••••••••••••••••••••••••RDA分析物种和环境因子关系可视化图
+│  │  │      
+│  │  ├─Family••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••科分类水平分析结果文件夹
+│  │  │      Group_RDA_sample_location_plot.png•••••••••••••••••••••••••••••••••••RDA分析样本和环境因子关系可视化图
+│  │  │      otu_table.Family.absolute.txt••••••••••••••••••••••••••••••••••••••••科分类水平绝对丰度表
+│  │  │      RDA.bacteria.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••各物种的RDA坐标
+│  │  │      RDA.envfit.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各环境因子的RDA坐标、解释方差及p值
+│  │  │      RDA.sample.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各样本的RDA坐标
+│  │  │      RDA_bacteria_location_plot.png•••••••••••••••••••••••••••••••••••••••RDA分析物种和环境因子关系可视化图
+│  │  │      
+│  │  ├─Genus•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••属分类水平分析结果文件夹
+│  │  │      Group_RDA_sample_location_plot.png•••••••••••••••••••••••••••••••••••RDA分析样本和环境因子关系可视化图
+│  │  │      otu_table.Genus.absolute.txt•••••••••••••••••••••••••••••••••••••••••属分类水平绝对丰度表
+│  │  │      RDA.bacteria.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••各物种的RDA坐标
+│  │  │      RDA.envfit.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各环境因子的RDA坐标、解释方差及p值
+│  │  │      RDA.sample.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各样本的RDA坐标
+│  │  │      RDA_bacteria_location_plot.png•••••••••••••••••••••••••••••••••••••••RDA分析物种和环境因子关系可视化图
+│  │  │      
+│  │  ├─Order•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••目分类水平分析结果文件夹
+│  │  │      Group_RDA_sample_location_plot.png•••••••••••••••••••••••••••••••••••RDA分析样本和环境因子关系可视化图
+│  │  │      otu_table.Order.absolute.txt•••••••••••••••••••••••••••••••••••••••••目分类水平绝对丰度表
+│  │  │      RDA.bacteria.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••各物种的RDA坐标
+│  │  │      RDA.envfit.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各环境因子的RDA坐标、解释方差及p值
+│  │  │      RDA.sample.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各样本的RDA坐标
+│  │  │      RDA_bacteria_location_plot.png•••••••••••••••••••••••••••••••••••••••RDA分析物种和环境因子关系可视化图
+│  │  │      
+│  │  ├─Phylum••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••门分类水平分析结果文件夹
+│  │  │      Group_RDA_sample_location_plot.png•••••••••••••••••••••••••••••••••••RDA分析样本和环境因子关系可视化图
+│  │  │      otu_table.Phylum.absolute.txt••••••••••••••••••••••••••••••••••••••••门分类水平绝对丰度表
+│  │  │      RDA.bacteria.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••各物种的RDA坐标
+│  │  │      RDA.envfit.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各环境因子的RDA坐标、解释方差及p值
+│  │  │      RDA.sample.txt•••••••••••••••••••••••••••••••••••••••••••••••••••••••各样本的RDA坐标
+│  │  │      RDA_bacteria_location_plot.png•••••••••••••••••••••••••••••••••••••••RDA分析物种和环境因子关系可视化图
+│  │  │      
+│  │  └─Species•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••种分类水平分析结果文件夹
+│  │          Group_RDA_sample_location_plot.png••••••••••••••••••••••••••••••••••RDA分析样本和环境因子关系可视化图
+│  │          otu_table.Species.absolute.txt••••••••••••••••••••••••••••••••••••••种分类水平绝对丰度表
+│  │          RDA.bacteria.txt••••••••••••••••••••••••••••••••••••••••••••••••••••各物种的RDA坐标
+│  │          RDA.envfit.txt••••••••••••••••••••••••••••••••••••••••••••••••••••••各环境因子的RDA坐标、解释方差及p值
+│  │          RDA.sample.txt••••••••••••••••••••••••••••••••••••••••••••••••••••••各样本的RDA坐标
+│  │          RDA_bacteria_location_plot.png••••••••••••••••••••••••••••••••••••••RDA分析物种和环境因子关系可视化图
+│  │          
+│  ├─2-CorrelationHeatmap•••••••••••••••••••••••••••••••••••••••••••••••••••••••••环境因子和各分类水平物种的相关性热图文件夹
+│  │  ├─Class•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••纲分类水平分析结果文件夹
+│  │  │      Correlation_heatmap.pdf••••••••••••••••••••••••••••••••••••••••••••••环境因子和物种的相关性热图
+│  │  │      fdr_adjusted_p_value_matrix.txt••••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│  │  │      spearman_rank_correlation_matrix.txt•••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│  │  │      
+│  │  ├─Family••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••科分类水平分析结果文件夹
+│  │  │      Correlation_heatmap.pdf••••••••••••••••••••••••••••••••••••••••••••••环境因子和物种的相关性热图
+│  │  │      fdr_adjusted_p_value_matrix.txt••••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│  │  │      spearman_rank_correlation_matrix.txt•••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│  │  │      
+│  │  ├─Genus•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••属分类水平分析结果文件夹
+│  │  │      Correlation_heatmap.pdf••••••••••••••••••••••••••••••••••••••••••••••环境因子和物种的相关性热图
+│  │  │      fdr_adjusted_p_value_matrix.txt••••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│  │  │      spearman_rank_correlation_matrix.txt•••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│  │  │      
+│  │  ├─Order•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••目分类水平分析结果文件夹
+│  │  │      Correlation_heatmap.pdf••••••••••••••••••••••••••••••••••••••••••••••环境因子和物种的相关性热图
+│  │  │      fdr_adjusted_p_value_matrix.txt••••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│  │  │      spearman_rank_correlation_matrix.txt•••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│  │  │      
+│  │  ├─Phylum••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••门分类水平分析结果文件夹
+│  │  │      Correlation_heatmap.pdf••••••••••••••••••••••••••••••••••••••••••••••环境因子和物种的相关性热图
+│  │  │      fdr_adjusted_p_value_matrix.txt••••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│  │  │      spearman_rank_correlation_matrix.txt•••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│  │  │      
+│  │  └─Species•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••种分类水平分析结果文件夹
+│  │          Correlation_heatmap.pdf•••••••••••••••••••••••••••••••••••••••••••••环境因子和物种的相关性热图
+│  │          fdr_adjusted_p_value_matrix.txt•••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│  │          spearman_rank_correlation_matrix.txt••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│  │          
+│  └─3-NetworkAnalysis••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••各分类水平丰度较高物种的相关网络分析
+│      ├─Class••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••纲分类水平分析结果文件夹
+│      │      Correlation_network.pdf•••••••••••••••••••••••••••••••••••••••••••••相关网络图
+│      │      fdr_adjusted_p_value_matrix.txt•••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│      │      spearman_rank_correlation_matrix.txt••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│      │      
+│      ├─Family•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••科分类水平分析结果文件夹
+│      │      Correlation_network.pdf•••••••••••••••••••••••••••••••••••••••••••••相关网络图
+│      │      fdr_adjusted_p_value_matrix.txt•••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│      │      spearman_rank_correlation_matrix.txt••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│      │      
+│      ├─Genus••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••属分类水平分析结果文件夹
+│      │      Correlation_network.pdf•••••••••••••••••••••••••••••••••••••••••••••相关网络图
+│      │      fdr_adjusted_p_value_matrix.txt•••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│      │      spearman_rank_correlation_matrix.txt••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│      │      
+│      ├─Order••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••目分类水平分析结果文件夹
+│      │      Correlation_network.pdf•••••••••••••••••••••••••••••••••••••••••••••相关网络图
+│      │      fdr_adjusted_p_value_matrix.txt•••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│      │      spearman_rank_correlation_matrix.txt••••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│      │      
+│      ├─Phylum•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••门分类水平分析结果文件夹
+│      │      Correlation_network.pdf•••••••••••••••••••••••••••••••••••••••••••••相关网络图
+│      │      fdr_adjusted_p_value_matrix.txt•••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│      │      spearman_rank_correlation_matrix.txt••••••••••••••••••••••••••••••••Spearman 秩相关矩阵
+│      │      
+│      └─Species••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••种分类水平分析结果文件夹
+│              Correlation_network.pdf••••••••••••••••••••••••••••••••••••••••••••相关网络图
+│              fdr_adjusted_p_value_matrix.txt••••••••••••••••••••••••••••••••••••校正错误发现率的相关系数p值矩阵
+│              spearman_rank_correlation_matrix.txt•••••••••••••••••••••••••••••••Speanman 秩相关矩阵
+│              
+├─7-FunctionAnalysis••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••功能分析结果文件夹
+│  ├─1-KEGG_Pathway•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••代谢通路丰度文件夹
+│  │      feature-table.metagenome.biom•••••••••••••••••••••••••••••••••••••••••••代谢通路绝对丰度表biom格式
+│  │      feature-table.metagenome.L1.txt•••••••••••••••••••••••••••••••••••••••••L1水平代谢通路丰度表
+│  │      feature-table.metagenome.L2.txt•••••••••••••••••••••••••••••••••••••••••L2水平代谢通路丰度表
+│  │      feature-table.metagenome.L3.txt•••••••••••••••••••••••••••••••••••••••••L3水平代谢通路丰度表
+│  │      percent.feature-table.metagenome.L1.png•••••••••••••••••••••••••••••••••L1水平相对丰度堆积柱形图
+│  │      percent.feature-table.metagenome.L2.png•••••••••••••••••••••••••••••••••L2水平相对丰度堆积柱形图
+│  │      percent.feature-table.metagenome.L3.png•••••••••••••••••••••••••••••••••L3水平相对丰度堆积柱形图
+│  │      
+│  ├─2-PCAPlots•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••代谢通路的PCA分析
+│  │      feature-table.metagenome.L1.Group.PCA.pdf•••••••••••••••••••••••••••••••L1水平代谢通路的PCA图
+│  │      feature-table.metagenome.L2.Group.PCA.pdf•••••••••••••••••••••••••••••••L2水平代谢通路的PCA图
+│  │      feature-table.metagenome.L3.Group.PCA.pdf•••••••••••••••••••••••••••••••L3水平代谢通路的PCA图
+│  │      
+│  └─3-SignifcanceAnalysis•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••代谢通路显著差异分组比较
+│  │      feature-table.metagenome.KEGG_Pathways.STAMP.txt••••••••••••••••••••••••代谢通路STAMP分析数据文件
+│  │      feature-table.metagenome.L1_Group1_DunnTest.txt•••••••••••••••••••••••••L1水平代谢通路相对丰度显著差异分组比较
+│  │      feature-table.metagenome.L2_Group1_DunnTest.txt•••••••••••••••••••••••••L2水平代谢通路相对丰度显著差异分组比较
+│  │      feature-table.metagenome.L3_Group1_DunnTest.txt•••••••••••••••••••••••••L3水平代谢通路相对丰度显著差异分组比较
+│  │      
+└─8-FiguresTablesForReport••••••••••••••••••••••••••••••••••••••••••••••••••••••••结题报告中的图和表汇总文件夹
