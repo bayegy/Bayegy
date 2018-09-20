@@ -135,9 +135,9 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   tdata<-GP.ord$vectors[,1:3]
   eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
   lab<-paste("PC",c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
-  pdf(paste(category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=8, height=6.6)
+  pdf(paste(category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=8, height=6.4)
   opar<-par(no.readonly=TRUE)
-  par(fig=c(0,0.8,0,0.8))
+  par(fig=c(0,0.8,0,1))
   scatterplot3d(tdata,mar=c(0,0,0,0)+1,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
   par(fig=c(0.8,1,0,1),xpd=TRUE)
   legend("right", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = FALSE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)
