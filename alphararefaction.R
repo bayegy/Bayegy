@@ -1,16 +1,18 @@
 library(optparse)
-library(reshape)
-library(ggplot2)
-library(stringr)
+
 
 option_list <- list( 
-    make_option(c("-i", "--input"), dest="i",help="Specify the path of collapsed bacteria table",default=NULL,metavar="directory"),
+    make_option(c("-i", "--input"), dest="i",help="Specify the directory of exported qiime2 alpha-rarefacation.qzv",default=NULL,metavar="directory"),
     make_option(c("-o", "--output"), dest="o",help="The directory of output files",default=NULL,metavar="directory")
   )
 
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot rarefacation curve of alpha diversity and use the exported qiime2 rarefacation results path as input"))
 
+
+library(reshape)
+library(ggplot2)
+library(stringr)
 if(!dir.exists(opt$o)){dir.create(opt$o,recursive = T)}
 
 for (a in c("faith_pd","observed_otus","shannon")){
