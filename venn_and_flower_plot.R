@@ -1,5 +1,4 @@
-library(VennDiagram)
-library(plotrix)
+
 library(optparse)
 
 option_list <- list( 
@@ -7,11 +6,12 @@ option_list <- list(
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
     make_option(c("-t", "--threshold"),metavar="int or float", dest="thresh",help="The threshold of abundance for the judgement of existence, default is 0",default=0),
-    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the path of output files",default="./")
+    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
-
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot venndiagram and flower diagram, and to display the special and common otus among groups"))
 
+library(VennDiagram)
+library(plotrix)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #ag<-commandArgs(T)
 #if (length(ag)<3){

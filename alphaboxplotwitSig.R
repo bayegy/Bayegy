@@ -1,19 +1,22 @@
 #R script for generating alpha dviersit comparison plots
 library(optparse)
+
+option_list <- list( 
+    make_option(c("-i", "--input"),metavar="path", dest="ap",help="Specify the path of merged α diversity file",default=NULL),
+    make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
+    make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
+    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
+    )
+
+opt <- parse_args(OptionParser(option_list=option_list,description = "R script for generating alpha dviersity comparison plots"))
+
+
 require(reshape)
 require(ggplot2)
 require(ggpubr)
 library(dplyr)
 library(ggsignif)
 
-option_list <- list( 
-    make_option(c("-i", "--input"),metavar="path", dest="ap",help="Specify the path of merged α diversity file",default=NULL),
-    make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
-    make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
-    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the path of output files",default="./")
-    )
-
-opt <- parse_args(OptionParser(option_list=option_list,description = "R script for generating alpha dviersity comparison plots"))
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #ag<-commandArgs(T)
 #if(length(ag)<4){

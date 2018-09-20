@@ -19,6 +19,9 @@ setwd(this.dir)
 design = read.table(meta_txt, header=T, row.names= 1, sep="\t",check.names = F, na.strings = "",  fill = TRUE) 
 #head(design)
 
+design<-design[!is.na(design[category_1]),]
+
+
 table = read.table(KEGG_function_txt, row.names= 1,  header=T, sep="\t",check.names=F, na.strings = "",  fill = TRUE)
 #head(table)
 

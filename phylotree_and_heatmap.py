@@ -7,15 +7,15 @@ import os
 # argument:
 p = argparse.ArgumentParser(description="This script is used to plot phylogentic tree of top abundant otus")
 p.add_argument('-i', '--input', dest='input', metavar='<path>', default=False,
-               help='specify feature_table.txt with taxonomy at last column and otu id at first column')
+               help='Specify feature_table.txt with taxonomy at last column and otu id at first column')
 p.add_argument('-m', '--metadata', dest='metadata', metavar='<path>', default=False,
-               help='specify metadata with sample id at first column')
+               help='Specify metadata with sample id at first column')
 p.add_argument('-g', '--group', dest='group', metavar='<str>', default=False,
-               help='column name of group in metadata')
+               help='Column name of group in metadata')
 p.add_argument('-r', '--repseqs', dest='repseqs', metavar='<path>', default=False,
-               help='specify representive sequences file after masking and aligning')
+               help='Specify representive sequences file after masking and aligning')
 p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='./',
-               help='specify the output directory')
+               help='Specify the output directory')
 p.add_argument('-n', '--number', dest='num', metavar='<int>', default=30,
                help='How many most abundant species do you want to analyze')
 

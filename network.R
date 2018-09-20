@@ -1,16 +1,19 @@
 library(optparse)
-library(igraph)
-library(psych)
-library(stringr)
+
 
 option_list <- list( 
     make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most abundant species you want to plot",default=50,type="integer"),
     make_option(c("-c", "--cut"),metavar="float",dest="cut", help="Specify the threshold of correlation coefficent",default=0.6),
-    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the path of output files",default="./")  
+    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")  
     )
 
 opt <- parse_args(OptionParser(option_list=option_list))
+
+library(igraph)
+library(psych)
+library(stringr)
+
 
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 dat <- read.table(as.character(opt$otu),comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")

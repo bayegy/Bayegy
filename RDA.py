@@ -10,17 +10,17 @@ import os
 p = argparse.ArgumentParser(
     description="This script is used to plot RDA of species. The numeric enviroment factors must be encluded in maping file. The categories will be filterd before RDA")
 p.add_argument('-i', '--input', dest='input', metavar='<path>',
-               help='taxonomic count data file')
+               help='Taxonomic count data file')
 p.add_argument('-o', '--output', dest='output', metavar='<directory>', default='./',
-               help='given an output directory')
+               help='Given an output directory')
 p.add_argument('-m', '--metadata', dest='meta', metavar='<path>',
-               help='sample metadata file')
+               help='Sample metadata file')
 p.add_argument('-g', '--group', dest='group', metavar='<str>',
-               help='column name in sample-metadata file')
+               help='Column name in sample-metadata file')
 p.add_argument('-n', '--number', dest='number', metavar='<int>', default='20',
-               help='specify how many species to be display, defaulf is 20')
+               help='Specify how many species to be display, defaulf is 20')
 p.add_argument('-e', '--exclude', dest='exclude', metavar='<str>', default='none',
-               help='specify numeric variables excluded from rda seprated by commas,use "none" if all numeric variables is expected')
+               help='Specify numeric variables excluded from rda seprated by commas,use "none" if all numeric variables is expected')
 options = p.parse_args()
 
 if not options.input and options.group and options.meta:
@@ -128,7 +128,7 @@ envis[,1]<-envis[,1]*0.5
 envis[,2]<-envis[,2]*0.5
 p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
   geom_point(aes(x=RDA1,y=RDA2,color=%s,pch=%s),size=3) +
-  geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
+  #geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
   geom_text_repel(data=envis,aes(x=RDA1,y=RDA2,label=id),color="black",size=5) +  
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+  
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
@@ -171,7 +171,7 @@ envis[,1]<-envis[,1]*3.5
 envis[,2]<-envis[,2]*3.5
 p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) + 
   geom_point(aes(x=CCA1,y=CCA2,color=%s,pch=%s),size=3) +
-  geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+  
+  #geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+  
   geom_text_repel(data=envis,aes(x=CCA1,y=CCA2,label=id),color="black",size=5) +  
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+  
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
