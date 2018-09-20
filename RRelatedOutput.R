@@ -236,11 +236,11 @@ alpha = read.table(alphadatxt, header=T, row.names= 1, sep="\t")
 # merge information for script
 index = cbind(design, alpha[match(rownames(design), rownames(alpha)), ]) 
 # run shannon, observed_otus, faith_pd separately as the aes function is not accepting variables!!! Hard coded for Group1 as well. Really bad script.
-p = ggplot(index, aes_string(x=category1, y="observed_otus", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="observed_otus index")
+p = ggplot(index, aes_string(x=category1, y="observed_otus", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="observed_otus index")+theme(axis.text.x = element_text(angle = 90))
 ggsave(paste(category1,"_","alpha_diversity_observed_otus.boxplot.pdf", sep=""), p, width = 5, height = 3)
 
-p = ggplot(index, aes_string(x=category1, y="shannon", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="shannon index")
+p = ggplot(index, aes_string(x=category1, y="shannon", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="shannon index")+theme(axis.text.x = element_text(angle = 90))
 ggsave(paste(category1,"_","alpha_diversity_shannon.boxplot.pdf", sep=""), p, width = 5, height = 3)
 
-p = ggplot(index, aes_string(x=category1, y="faith_pd", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="faith_pd index")
+p = ggplot(index, aes_string(x=category1, y="faith_pd", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="faith_pd index")+theme(axis.text.x = element_text(angle = 90))
 ggsave(paste(category1,"_","alpha_diversity_faith_pd.boxplot.pdf", sep=""), p, width = 5, height = 3)
