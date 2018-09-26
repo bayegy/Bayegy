@@ -5,7 +5,7 @@ import sys
 import os
 
 p = argparse.ArgumentParser(
-    description="This script is used to plot RDA of species. The numeric enviroment factors must be encluded in maping file. The categories will be filterd before RDA")
+    description="This script is used to transform the taxonomy derived from Silva to GreenGene")
 p.add_argument('-i', '--input', dest='input', metavar='<path>', help='Taxonomic qza')
 p.add_argument('-o', '--output', dest='output', metavar='<directory>', default='./', help='Given an output directory')
 options = p.parse_args()
@@ -19,13 +19,14 @@ def trans(tar):
   for t in level.keys():
     tar = re.sub(t, level[t], tar)
   tar = re.sub(' ', '-', tar)
-  tar = re.sub('D_7.+', '', tar)
+  tar = re.sub(';D_7.+', '', tar)
+  tar = re.sub(';[^;]+uncultured.+', '', tar)
   return(tar)
 
 
 os.system('qiime tools export --input-path %s --output-path %s' % (options.input, options.output))
 
-with open(options.output + '/' + 'taxonomy.tsv', 'r') as infile, open(options.output + '/' + 'tansformed_taxonomy.tsv', 'w') as outfile:
+with open(options.output + '/' + 'taxonomy.tsv', 'r') as infile, open(options.output + '/' + 'transformed_taxonomy.tsv', 'w') as outfile:
   for line in enumerate(infile):
     if line[0] == 0:
       outfile.write(line[1])
@@ -35,5 +36,5 @@ with open(options.output + '/' + 'taxonomy.tsv', 'r') as infile, open(options.ou
       outfile.write('\t'.join(line) + '\n')
 
 
-os.system('qiime tools import --input-format TSVTaxonomyFormat --output-path %s/%s --input-path %s/tansformed_taxonomy.tsv --type FeatureData[Taxonomy]' % (
+os.system('qiime tools import --input-format TSVTaxonomyFormat --output-path %s/%s --input-path %s/transformed_taxonomy.tsv --type FeatureData[Taxonomy]' % (
     options.output, options.input.split("/")[-1], options.output))
