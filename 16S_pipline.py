@@ -35,6 +35,10 @@ options = p.parse_args()
 if not os.path.exists(options.outdir):
   os.makedirs(options.outdir)
 
+
+options.sp = re.sub('\(', '\\\(', options.sp)
+options.sp = re.sub('\)', '\\\)', options.sp)
+
 scriptpath = sys.path[0]
 if options.parallel:
   for c in re.split(",", options.group.strip()):

@@ -1,7 +1,9 @@
-import sys,re,os
+import sys
+import re
+import os
 
-with open('Rscript.R','w') as Rscript:
-	print('''
+with open('Rscript.R', 'w') as Rscript:
+    print('''
 map=read.table('%s',header = T,row.names = 1,stringsAsFactors = F,check.names = F,comment.char = "",sep = "\\t")
 meta=read.table('%s',header = T,row.names = 1,stringsAsFactors = F,check.names = F,comment.char = "",sep = "\\t")
 rowname_join<-function(x,y)
@@ -13,9 +15,10 @@ rowname_join<-function(x,y)
   return(out)
 }
 out<-rowname_join(map,meta)
-out<-data.frame(SMAPLEID=rownames(out),out)
+out<-data.frame(SMAPLEID=rownames(out),out,check.names=F)
+out$description<-out$SMAPLEID
 colnames(out)[1]<-"#SampleID"
-write.table(out,'metadata.tsv',sep = '\\t',quote = F,row.names=F)
-'''%(sys.argv[1],sys.argv[2]),file=Rscript)
+write.table(out,'pre_map.tsv',sep = '\\t',quote = F,row.names=F)
+''' % (sys.argv[1], sys.argv[2]), file=Rscript)
 
 os.system('Rscript Rscript.R')
