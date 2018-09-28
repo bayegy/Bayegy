@@ -38,7 +38,9 @@ with open(options.meta, 'r') as meta, open(options.out + '/' + 'sample-metadata.
       li[0] = li[il]
       outmeta.write('\t'.join(li) + '\n')
 
-
+print("########################################################################################writting manifest\n\nThe regular expression for matching sample ID is %s, you should change -s if no fastq files were writed" % (options.sp))
+print("\nThe regular expression for matching reverse sequences is %s" % (options.fp))
+print("\nThe regular expression for matching forward sequence is %s, you need to change -r  and -f if the direction of sequence is wrong in manifest" % (options.rp))
 sp = re.compile(options.sp)
 fp = re.compile(options.fp)
 rp = re.compile(options.rp)
@@ -65,7 +67,7 @@ for root, dirs, files in os.walk(options.input):
           ff += 1
 
 fout.close()
-emm = "    %s fastq file were writed" % (nfile)
-emm1 = "    %s fastq file were filterd as the ids of samples were not found in mapping file" % (ff)
+emm = "\n    %s fastq file were writed" % (nfile)
+emm1 = "\n    %s fastq file were filterd as the ids of samples were not found in mapping file" % (ff)
 print(emm)
 print(emm1)

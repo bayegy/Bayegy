@@ -20,7 +20,9 @@ def trans(tar):
     tar = re.sub(t, level[t], tar)
   tar = re.sub(' ', '-', tar)
   tar = re.sub(';D_7.+', '', tar)
-  tar = re.sub(';[^;]+uncultured.+', '', tar)
+  for keyword in ['uncultured', 'Ambiguous', 'unidentified', 'unassigned', 'unclassified']:
+    tar = re.sub(';[^;]*%s.*' % (keyword), '', tar, flags=re.I)
+  tar = re.sub(';$', '', tar)
   return(tar)
 
 

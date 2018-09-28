@@ -60,12 +60,12 @@ if [ -z "$8" ]; then
 		8) Specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 		9) Specify the type of classifier, either silva or gg
 		Sample Usage:
-		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv 20000 1000 Group1,Group2,Group3 ~/database_16S/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none silva
+		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/Silva/338-806/silva-132-99-338-806-classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none silva
 		"
 	exit 0
 else
 	echo "################
-	Running: sh $0 $1 $2 $3 $4 $5 $6 $7 $8"
+	Running: sh $0 $1 $2 $3 $4 $5 $6 $7 $8 $9"
 fi
 
 check_file() {
@@ -124,7 +124,6 @@ MAIN() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	source activate qiime2-2018.8
-<<com1
 
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
@@ -147,7 +146,7 @@ MAIN() {
 	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 256 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 0 --p-trunc-len-r 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
 
-com1
+
 	####Alternative methods of read-joining in QIIME 2
 	#qiime vsearch join-pairs --p-maxdiffs 5 --p-minovlen 15 --p-truncqual 2 --i-demultiplexed-seqs demux.qza --o-joined-sequences demux-joined.qza
 	#qiime demux summarize --i-data demux-joined.qza --o-visualization demux-joined.qzv
@@ -174,6 +173,7 @@ com1
 
 	echo "##############################################################\n#Classify the taxonomy"
 	qiime feature-classifier classify-sklearn   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
+
 	if [[ $classifier_type == 'silva' ]];
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
 	fi;
