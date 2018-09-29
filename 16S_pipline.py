@@ -6,7 +6,7 @@ import os
 
 # argument:
 p = argparse.ArgumentParser(
-    description="This script work well when analyze the paired-end sequences derived from MeiJi company. Sample usage: python ~/github/Bayegy/16S_pipeline.py -i rawData/eachsample/ -m pre_map.txt -c Group1,Group2,Group3 --classifier ~/database_16S/338-806/gg_13_8_99_338_806_classifier.qza --ref-seqs ~/database_16S/338-806/gg_13_5_97_338_806_ref_seqs.qza")
+    description="This script work well when analyze the paired-end sequences derived from MeiJi company. python ~/github/Bayegy/16S_pipline.py -i 郑超君老师-ME201808031003-MJ-M-20180807049-68份样本-原始数据/rawData/eachsample/ --classifier ../../database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza --classifier-type gg -m pre_map.txt -c Group1,Group2,Group3 -o Results --run-in-parallel")
 p.add_argument('-i', '--input', dest='input', metavar='<directory>', default=False,
                help='Directory of demuxed fastq files. sub directory is allowed when store fastq files. This parameter is required if --manifest is not supplied. Supply this parameter together with -s -f -r. This option will be ignored if --manifest is specifed')
 p.add_argument('--manifest', dest='manifest', metavar='<path>', default=False,
@@ -36,6 +36,11 @@ p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='
 
 options = p.parse_args()
 
+
+if not ((options.input or options.manifest) and options.map and options.group):
+  print("You must specify either -i or --manifest, also -m and -c")
+  sys.exit()
+
 if not os.path.exists(options.outdir):
   os.makedirs(options.outdir)
 if options.manifest:
@@ -45,6 +50,8 @@ options.classifier = os.path.abspath(options.classifier)
 options.ref = os.path.abspath(options.ref)
 options.outdir = os.path.abspath(options.outdir)
 scriptpath = sys.path[0]
+
+os.system('''sed -i -e 's/ //g' %s''' % (options.map))
 
 if not options.manifest:
   #options.sp = re.sub('\(', '\\\(', options.sp)
@@ -60,6 +67,10 @@ if not options.manifest:
       os.system('''cd %s/%s_Results&&sed -i -e '1s/%s/Group/g' ../%s_data/sample-metadata.tsv&&\
   bash %s/16S_pipeline.V9.sh ../%s_data/sample-metadata.tsv %s 1000 Group %s %s ../%s_data/manifest.txt  none %s''' %
                 (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.type))
+      os.makedirs(options.outdir + '/' + 'All_Results_Summary')
+      os.system('''mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
+                (options.outdir, c, options.outdir, c))
+
   else:
     os.makedirs(options.outdir + '/Results')
     os.system("python %s/write_manifest.py -i %s -m %s -o %s/data -f '%s' -r '%s' -s '%s'" %

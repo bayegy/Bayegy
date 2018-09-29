@@ -204,7 +204,7 @@ tX<-tX[,colSums(tX)>0]
 pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
 #pca.srbct #outputs the explained variance per component
 plot(pca.srbct)  # screeplot of the eingenvalues (explained variance per component)
-pdf(paste(category1,"_","PCA_plot.pdf",sep=""), width = 6.6, height = 6.6)
+pdf(paste(category1,"_","PCA_plot.pdf",sep=""), width = 7.6, height = 6.6)
 plotIndiv(pca.srbct, group = Y, ind.names = FALSE, legend = TRUE, ellipse = TRUE, title = 'PCA plot')
 dev.off()
 #write.table(as.matrix(pca.srbct), “PCA_ord.txt”, quote=FALSE, col.names=NA, sep="\t")
@@ -214,11 +214,11 @@ srbct.plsda <- plsda(tX, Y)  # set ncomp to 10 for performance assessment later
 plsda.vip <- vip(srbct.plsda)
 write.table(data.frame(OTUID=rownames(plsda.vip),plsda.vip,Taxonomy=taxonomy),paste(category1,"_","PLSDA_Variable_importance_in_projection.txt"),row.names = F,sep="\t")
 
-pdf(paste(category1,"_","PLSDA_AUC_plot.pdf",sep=""), width = 5, height = 4)
+pdf(paste(category1,"_","PLSDA_AUC_plot.pdf",sep=""), width = 6, height = 4)
 auroc(srbct.plsda, roc.comp = 2)
 dev.off()
 
-pdf(paste(category1,"_","PLSDA_comp_plot.pdf",sep=""), width = 6, height = 6)
+pdf(paste(category1,"_","PLSDA_comp_plot.pdf",sep=""), width = 6, height = 4)
 plotIndiv(srbct.plsda , comp = 1:2, group = Y, ellipse.level = 0.75,size.xlabel = 15, size.ylabel = 15,size.axis = 15,size.legend = 15,size.legend.title = 15,ind.names = FALSE, title = "Supervised PLS-DA on OTUs",abline = T,legend = TRUE,ellipse = T)
 dev.off()
 #write.table(as.matrix(srbct.plsda), “PLSDA_ord.txt”, quote=FALSE, col.names=NA, sep="\t")
@@ -237,10 +237,10 @@ alpha = read.table(alphadatxt, header=T, row.names= 1, sep="\t")
 index = cbind(design, alpha[match(rownames(design), rownames(alpha)), ]) 
 # run shannon, observed_otus, faith_pd separately as the aes function is not accepting variables!!! Hard coded for Group1 as well. Really bad script.
 p = ggplot(index, aes_string(x=category1, y="observed_otus", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="observed_otus index")+theme(axis.text.x = element_text(angle = 90))
-ggsave(paste(category1,"_","alpha_diversity_observed_otus.boxplot.pdf", sep=""), p, width = 5, height = 3)
+ggsave(paste(category1,"_","alpha_diversity_observed_otus.boxplot.pdf", sep=""), p, width = 6, height = 3)
 
 p = ggplot(index, aes_string(x=category1, y="shannon", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="shannon index")+theme(axis.text.x = element_text(angle = 90))
-ggsave(paste(category1,"_","alpha_diversity_shannon.boxplot.pdf", sep=""), p, width = 5, height = 3)
+ggsave(paste(category1,"_","alpha_diversity_shannon.boxplot.pdf", sep=""), p, width = 6, height = 3)
 
 p = ggplot(index, aes_string(x=category1, y="faith_pd", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="faith_pd index")+theme(axis.text.x = element_text(angle = 90))
-ggsave(paste(category1,"_","alpha_diversity_faith_pd.boxplot.pdf", sep=""), p, width = 5, height = 3)
+ggsave(paste(category1,"_","alpha_diversity_faith_pd.boxplot.pdf", sep=""), p, width = 6, height = 3)

@@ -104,7 +104,13 @@ function assign_taxa() {
 #	echo $tax;
 #done;
 
+
+MAIN() {
+
 	##Activate Qiime2 Version
+	
+
+
 	echo "##############################################################\n#Initiate directory name and set up the directory structure"
 
 	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -118,7 +124,7 @@ function assign_taxa() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	source activate qiime2-2018.8
-
+<<com1
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -159,15 +165,15 @@ function assign_taxa() {
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
-	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Archaea,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
 	mv table-no-mitochondria-no-chloroplast.qza table.qza
-	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Archaea,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
 
 
 	echo "##############################################################\n#Classify the taxonomy"
 	qiime feature-classifier classify-sklearn   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
-
+com1
 	if [[ $classifier_type == 'silva' ]];
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
 	fi;
@@ -484,8 +490,8 @@ function assign_taxa() {
 	echo "##############################################################\nCorrelation analysis" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
-		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
-		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
+			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
+			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
 		done;
 
 	##########alpha rarefacation
@@ -504,7 +510,7 @@ function assign_taxa() {
 			for category_1 in $category_set;
 				do echo $category_1;
 					Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt;
-					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 3;  plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 3;  plot_res.py --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.4 --label_font_size 10;
 				done;
 			cd ../../
 		done;
@@ -514,3 +520,6 @@ function assign_taxa() {
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
 
+}
+
+MAIN;

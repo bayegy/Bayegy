@@ -38,7 +38,7 @@ with open(options.meta, 'r') as meta, open(options.out + '/' + 'sample-metadata.
       li[0] = li[il]
       outmeta.write('\t'.join(li) + '\n')
 
-print("########################################################################################writting manifest\n\nThe regular expression for matching sample ID is %s, you should change -s if no fastq files were writed" % (options.sp))
+print("############################################################writting manifest\n\nThe regular expression for matching sample ID is %s, you should change -s if no fastq files were writed" % (options.sp))
 print("\nThe regular expression for matching forward sequences is %s" % (options.fp))
 print("\nThe regular expression for matching reverse sequence is %s \nyou need to change -r  and -f if the direction of sequence is wrong in manifest" % (options.rp))
 sp = re.compile(options.sp)

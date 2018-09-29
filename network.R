@@ -68,12 +68,11 @@ bad.vs<-V(igraph)[degree(igraph)==0]
 #igraph<-delete.vertices(igraph,bad.vs)
 
 
-
-
-pdf(paste(opt$out,"/","Correlation_network.pdf",sep = ""), height=12,width=12)
+pdf(paste(opt$out,"/","Correlation_network.pdf",sep = ""), height=10,width=14)
+par(fig=c(0,0.83,0,1),xpd=F)
 plot(igraph,vertex.label.color="black",edge.width=1,layout=layout_on_grid,
-     edge.curved=F,margin=c(0,0,0,0.4),vertex.label.cex=1)
-
-legend(title="Phylum",x="right",y = "right",bty="n",col = rainbow(length(unig)),pt.bg = rainbow(length(unig)),pch = rep(16,length(unig)),pt.cex=2,legend = unig)
+     edge.curved=F,margin=c(0,0,0,0)+0.06,vertex.label.cex=0.9)
+par(fig=c(0.7,1,0,1),xpd=F)
+legend('center',xpd = F,title="Phylum",bty="n",col = rainbow(length(unig)),pch = rep(16,length(unig)),pt.cex=2,legend = unig,horiz = FALSE)
 dev.off()
 
