@@ -59,7 +59,9 @@ if not options.manifest:
 
   if options.parallel:
     for c in re.split(",", options.group.strip()):
-      os.makedirs(options.outdir + '/' + c + "_Results")
+      print('##############################################################Start to generate results according to the samples of %s' % (c))
+      if not os.path.exists(options.outdir + '/' + c + "_Results"):
+        os.makedirs(options.outdir + '/' + c + "_Results")
       os.system("Rscript %s/clean_na_of_inputs.R -m %s --group %s  -o %s" %
                 (scriptpath, options.map, c, options.outdir))
       os.system("python %s/write_manifest.py -i %s -m %s/cleaned_map.txt -o %s/%s_data -f '%s' -r '%s' -s '%s'" %
@@ -67,12 +69,14 @@ if not options.manifest:
       os.system('''cd %s/%s_Results&&sed -i -e '1s/%s/Group/g' ../%s_data/sample-metadata.tsv&&\
   bash %s/16S_pipeline.V9.sh ../%s_data/sample-metadata.tsv %s 1000 Group %s %s ../%s_data/manifest.txt  none %s''' %
                 (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.type))
-      os.makedirs(options.outdir + '/' + 'All_Results_Summary')
+      if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
+        os.makedirs(options.outdir + '/' + 'All_Results_Summary')
       os.system('''mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
                 (options.outdir, c, options.outdir, c))
 
   else:
-    os.makedirs(options.outdir + '/Results')
+    if not os.path.exists(options.outdir + '/Results'):
+      os.makedirs(options.outdir + '/Results')
     os.system("python %s/write_manifest.py -i %s -m %s -o %s/data -f '%s' -r '%s' -s '%s'" %
               (scriptpath, options.input, options.map, options.outdir, options.fp, options.rp, options.sp))
     os.system('''cd %s/Results&&\
