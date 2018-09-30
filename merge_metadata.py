@@ -1,3 +1,4 @@
+#coding='utf-8'
 import sys
 import re
 import os
@@ -18,7 +19,8 @@ out<-rowname_join(map,meta)
 out<-data.frame(SMAPLEID=rownames(out),out,check.names=F)
 out$description<-out$SMAPLEID
 colnames(out)[1]<-"#SampleID"
-write.table(out,'pre_map.tsv',sep = '\\t',quote = F,row.names=F)
+out<-out[out$Farm!='F1',]
+write.table(out,'pre_map.txt',sep = '\\t',quote = F,row.names=F,na='')
 ''' % (sys.argv[1], sys.argv[2]), file=Rscript)
 
 os.system('Rscript Rscript.R')
