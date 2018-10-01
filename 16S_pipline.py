@@ -8,7 +8,7 @@ import os
 p = argparse.ArgumentParser(
     description="This script work well when analyze the paired-end sequences derived from MeiJi company. python ~/github/Bayegy/16S_pipline.py -i 郑超君老师-ME201808031003-MJ-M-20180807049-68份样本-原始数据/rawData/eachsample/ --classifier ../../database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza --classifier-type gg -m pre_map.txt -c Group1,Group2,Group3 -o Results --run-in-parallel")
 p.add_argument('-i', '--input', dest='input', metavar='<directory>', default=False,
-               help='Directory of demuxed fastq files. sub directory is allowed when store fastq files. This parameter is required if --manifest is not supplied. Supply this parameter together with -s -f -r. This option will be ignored if --manifest is specifed')
+               help='Directory of demuxed fastq files. sub directory is allowed when storing fastq files. This parameter is required if --manifest is not supplied. Supply this parameter together with -s -f -r. This option will be ignored if --manifest is specifed')
 p.add_argument('--manifest', dest='manifest', metavar='<path>', default=False,
                help='The manifest file to import demuxed fastq files, required if -i is not specified. And -i, -s, -f, -r will be ignored if this parameter is specifed')
 p.add_argument('-m', '--map', dest='map', metavar='<path>', default=False,
