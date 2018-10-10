@@ -24,7 +24,7 @@ group<-dat[opt$g]
 rownames(group)<-dat[,1]
 sel<-(!is.na(group))
 dat<-dat[sel,]
-write.table(dat,file = paste(opt$out,"/","cleaned_map.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F)
+write.table(dat,file = paste(opt$out,"/","cleaned_map.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F,na ="")
 
 if(!is.null(opt$i)){
     otu <- read.table(opt$i,skip=1,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings=opt$a)

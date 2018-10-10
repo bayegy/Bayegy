@@ -76,13 +76,13 @@ if (dcam > 4){
 
 path="%s"
 ccascore <- scores(cca)
-write.table(ccascore$sites, file = paste(path,"/", pre, ".sample.txt", sep = ""), sep = "\\t")
-write.table(ccascore$species, file = paste(path,"/", pre, ".bacteria.txt", sep = ""), sep = "\\t")
+write.table(ccascore$sites, file = paste(path,"/","%s_", pre, ".sample.txt", sep = ""), sep = "\\t")
+write.table(ccascore$species, file = paste(path,"/","%s_", pre, ".bacteria.txt", sep = ""), sep = "\\t")
 envfit <- envfit(cca, envdata, permu = 2000, na.rm = TRUE)
 rp <- cbind(as.matrix(envfit$vectors$r), as.matrix(envfit$vectors$pvals))
 colnames(rp) <- c("r2", "Pr(>r)")
 env <- cbind(envfit$vectors$arrows, rp)
-write.table(as.data.frame(env), file = paste(path,"/", pre, ".envfit.txt", sep = ""),sep = "\\t")
+write.table(as.data.frame(env), file = paste(path,"/", "%s_",pre, ".envfit.txt", sep = ""),sep = "\\t")
 
 
 new<-cca$CCA
@@ -127,10 +127,10 @@ if(pre=="RDA"){
 envis[,1]<-envis[,1]*0.5
 envis[,2]<-envis[,2]*0.5
 p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
-  geom_point(aes(x=RDA1,y=RDA2,color=%s,pch=%s),size=3) +
+  geom_point(aes(x=RDA1,y=RDA2,color=%s),size=3) +
   #geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
-  geom_text_repel(data=envis,aes(x=RDA1,y=RDA2,label=id),color="black",size=5) +  
-  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+  
+  geom_text_repel(data=envis,aes(x=RDA1,y=RDA2,label=id),color="black",size=5) +
+  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   labs(title=paste(pre," sample location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
@@ -146,13 +146,13 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
 ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
 
 
-p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) + 
-  geom_point(aes(x=RDA1,y=RDA2,size=abundance),color=rainbow(3)[1]) + 
+p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
+  geom_point(aes(x=RDA1,y=RDA2,size=abundance),color=rainbow(3)[1]) +
   geom_point(data=hide_species,aes(x=RDA1,y=RDA2,size=abundance),color="grey") +
   guides(size=F)+
   geom_text_repel(data=envis,aes(x=RDA1,y=RDA2,label=id),color="black",size=5) +
-  geom_text_repel(aes(RDA1,RDA2,label=id)) +  
-  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+  
+  geom_text_repel(aes(RDA1,RDA2,label=id)) +
+  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   ggtitle(paste(pre," bacteria location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
@@ -165,15 +165,15 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }else{
 envis[,1]<-envis[,1]*3.5
 envis[,2]<-envis[,2]*3.5
-p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) + 
-  geom_point(aes(x=CCA1,y=CCA2,color=%s,pch=%s),size=3) +
-  #geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+  
-  geom_text_repel(data=envis,aes(x=CCA1,y=CCA2,label=id),color="black",size=5) +  
-  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+  
+p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
+  geom_point(aes(x=CCA1,y=CCA2,color=%s),size=3) +
+  #geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+
+  geom_text_repel(data=envis,aes(x=CCA1,y=CCA2,label=id),color="black",size=5) +
+  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   labs(title=paste(pre," sample location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
@@ -189,13 +189,13 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
 ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
 
 
-p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) + 
-  geom_point(aes(x=CCA1,y=CCA2,size=abundance),color=rainbow(3)[1]) + 
+p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
+  geom_point(aes(x=CCA1,y=CCA2,size=abundance),color=rainbow(3)[1]) +
   geom_point(data=hide_species,aes(x=CCA1,y=CCA2,size=abundance),color="grey") +
   guides(size=F)+
   geom_text_repel(data=envis,aes(x=CCA1,y=CCA2,label=id),color="black",size=5) +
-  geom_text_repel(aes(CCA1,CCA2,label=id)) +  
-  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+  
+  geom_text_repel(aes(CCA1,CCA2,label=id)) +
+  geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   ggtitle(paste(pre," bacteria location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
@@ -208,14 +208,13 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
-'''
-      % (options.exclude, options.input, options.meta, options.group, options.output, options.group, options.number, options.group, options.group, options.group, options.group, options.group, options.group),
-      file=rscript)
+''' % (options.exclude, options.input, options.meta, options.group, options.output,
+       options.group, options.group, options.group, options.group, options.number,
+       options.group, options.group, options.group, options.group, options.group, options.group), file=rscript)
 
 rscript.close()
 
-#os.system('/System/Pipline/DNA/DNA_Micro/16S_pipeline/16S_pipeline_V1.10/software/R-3.1.0/bin/Rscript rda.R')
 os.system('Rscript rda.R')
 os.remove('rda.R')
