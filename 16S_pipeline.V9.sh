@@ -155,7 +155,7 @@ function assign_taxa() {
 
 	echo "##############################################################\n#Filter out Choloroplast and Mitochondira"
 	check_file $reference_trained
-	qiime feature-classifier classify-sklearn   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
@@ -166,7 +166,7 @@ function assign_taxa() {
 
 
 	echo "##############################################################\n#Classify the taxonomy"
-	qiime feature-classifier classify-sklearn   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
+	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
 	if [[ $classifier_type == 'silva' ]];
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
@@ -183,7 +183,7 @@ function assign_taxa() {
 
 	echo "##############################################################\n#Visulize of the table without Choloroplast and Mitochondira"
 	qiime feature-table summarize --i-table table.qza --o-visualization table.qzv --m-sample-metadata-file $mapping_file
-	qiime feature-table tabulate-seqs   --i-data rep-seqs.qza   --o-visualization rep-seqs.qzv	
+	qiime feature-table tabulate-seqs   --i-data rep-seqs.qza   --o-visualization rep-seqs.qzv
 	qiime taxa barplot   --i-table table.qza   --i-taxonomy taxonomy.qza   --m-metadata-file $mapping_file  --o-visualization taxa-bar-plots.qzv
 
 
@@ -191,7 +191,7 @@ function assign_taxa() {
 	#for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
 	qiime tools export --input-path table.qzv --output-path exported_qzv
 	if [[ $depth == 'auto' ]];
-		then min_depth=$(echo \($(cut -f2 -d ',' exported_qzv/sample-frequency-detail.csv | sort | head -n1)/1000\)*1000 | bc);
+		then min_depth=$(echo \($(cut -f2 -d ',' exported_qzv/sample-frequency-detail.csv | sort -n | head -n1)/1000\)*1000 | bc);
 		else min_depth=$depth;
 	fi;
 

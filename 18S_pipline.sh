@@ -143,12 +143,18 @@ function assign_taxa() {
 
 
 	####Alternative methods of read-joining in QIIME 2
-	#qiime vsearch join-pairs --p-maxdiffs 5 --p-minovlen 15 --p-truncqual 2 --i-demultiplexed-seqs demux.qza --o-joined-sequences demux-joined.qza
-	#qiime demux summarize --i-data demux-joined.qza --o-visualization demux-joined.qzv
-	#qiime quality-filter q-score-joined --i-demux demux-joined.qza --o-filtered-sequences demux-joined-filtered.qza --o-filter-stats demux-joined-filter-stats.qza
-	#qiime deblur denoise-16S --i-demultiplexed-seqs demux-joined-filtered.qza --p-trim-length 420  --p-sample-stats --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza --o-stats stats-dada2.qza
+	qiime cutadapt trim-paired --i-demultiplexed-sequences demux.qza --p-front-f CCAGCASCYGCGGTAATTCC --p-front-r ACTTTCGTTCTTGATYRA --p-overlap 10 --o-trimmed-sequences trinmmed-demux.qza
+	qiime vsearch join-pairs --p-maxdiffs 5 --p-minovlen 15 --p-truncqual 2 --i-demultiplexed-seqs trinmmed-demux.qza --o-joined-sequences demux-joined.qza
+	qiime demux summarize --i-data demux-joined.qza --o-visualization demux-joined.qzv
 
-	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
+	qiime quality-filter q-score-joined --i-demux demux-joined.qza --o-filtered-sequences demux-joined-filtered.qza --o-filter-stats demux-joined-filter-stats.qza
+
+
+	qiime deblur denoise-other --i-reference-seqs /home/admin1/database_18S/Silva/v4_majority//silva_18S_99_v4_all_levels_majority_ref-seqs.qza --i-demultiplexed-seqs demux-joined-filtered.qza --p-trim-length 362  --p-sample-stats --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza --o-stats stats-dada2.qza --p-jobs-to-start 16 --verbose
+
+	qiime deblur visualize-stats --i-deblur-stats stats-dada2.qza --o-visualization stats-dada2.qzv
+
+	#qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
 	mv rep-seqs-dada2.qza rep-seqs.withCandM.qza
 	mv table-dada2.qza table.withCandM.qza
 
@@ -156,7 +162,7 @@ function assign_taxa() {
 com3
 	echo "##############################################################\n#Filter out Choloroplast and Mitochondira"
 	check_file $reference_trained
-	qiime feature-classifier classify-sklearn   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	qiime feature-classifier classify-sklearn --p-n-jobs 16  --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
@@ -167,7 +173,7 @@ com3
 
 
 	echo "##############################################################\n#Classify the taxonomy"
-	qiime feature-classifier classify-sklearn   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
+	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
 	if [[ $classifier_type == 'silva' ]];
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;

@@ -3,6 +3,7 @@ import argparse
 import re
 import sys
 import os
+import pandas as pd
 
 # argument:
 p = argparse.ArgumentParser(
@@ -25,18 +26,12 @@ if not os.path.exists(options.out):
   os.makedirs(options.out)
 
 id_ds = {}
-with open(options.meta, 'r') as meta, open(options.out + '/' + 'sample-metadata.tsv', 'w') as outmeta:
+with open(options.meta, 'r') as meta:
   for line in enumerate(meta):
-    li = re.split('\t', re.sub('\n$', '', line[1]))
-    il = len(li) - 1
-    if line[0] == 0:
-      li[0] = "#SampleID"
-      li[il] = "Description"
-      outmeta.write('\t'.join(li) + '\n')
-    else:
-      id_ds[li[0]] = li[il]
-      li[0] = li[il]
-      outmeta.write('\t'.join(li) + '\n')
+    li = re.split('\t', line[1].strip())
+    if line[0] > 0:
+      id_ds[li[0].strip()] = li[len(li) - 1].strip()
+
 
 print("############################################################writting manifest\n\nThe regular expression for matching sample ID is %s, you should change -s if no fastq files were writed" % (options.sp))
 print("\nThe regular expression for matching forward sequences is %s" % (options.fp))
@@ -48,6 +43,7 @@ rp = re.compile(options.rp)
 fout = open(options.out + '/' + 'manifest.txt', 'w')
 nfile = 0
 ff = 0
+id_sets = []
 fout.write('sample-id,absolute-filepath,direction\n')
 for root, dirs, files in os.walk(options.input):
   if len(dirs) == 0:
@@ -56,18 +52,44 @@ for root, dirs, files in os.walk(options.input):
       if re.search(sp, fl):
         try:
           info = "%s/%s" % (root, fl)
-          sn = id_ds[re.search(sp, fl).group(1)]
+          pre_id = re.search(sp, fl).group(1)
+          sn = id_ds[pre_id]
           if re.search(rp, fl):
             fout.write("%s,%s,reverse\n" % (sn, info))
+            # id_sets.append(pre_id)
             nfile += 1
           elif re.search(fp, fl):
             fout.write("%s,%s,forward\n" % (sn, info))
+            id_sets.append(pre_id)
             nfile += 1
         except KeyError:
           ff += 1
-
 fout.close()
-emm = "\n    %s fastq file were writed" % (nfile)
-emm1 = "\n    %s fastq file were filterd as the ids of samples were not found in mapping file" % (ff)
+
+success_id = pd.DataFrame({'#SampleID': id_sets})
+map = pd.read_csv(options.meta, sep='\t', header=0)
+for nm in map.columns:
+  try:
+    map[nm] = map[nm].map(str.strip)
+  except TypeError:
+    pass
+p1 = map.shape[0]
+colnames = list(map.columns)
+colnames[0] = "#SampleID"
+colnames[len(colnames) - 1] = "Description"
+map.columns = colnames
+map = pd.merge(map, success_id, on="#SampleID", how='inner')
+p2 = map.shape[0]
+miss = p1 - p2
+map["#SampleID"] = map["Description"]
+map.to_csv(options.out + '/' + 'sample-metadata.tsv', sep='\t', header=True, index=False)
+
+emm = "\n    %s fastq files were writed" % (nfile)
+emm1 = "\n    %s fastq files were filterd as the ids of samples were not found in mapping file" % (ff)
 print(emm)
 print(emm1)
+print('\n    %s samples were removed from sample-metadata, as the ids of samples were not found in forward fastq files\' names' % (miss))
+
+# open(options.out + '/' + 'sample-metadata.tsv', 'w') as outmeta
+#      li[0] = "#SampleID"
+#      li[il] = "Description"
