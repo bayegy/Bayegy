@@ -31,8 +31,8 @@ if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #group = "Group1"
 #alpha= "~/Desktop/WST/16S-pipeline/alpha/alpha-summary.tsv"
 #output="~/Desktop/plot.png"
-map<-read.table(opt$map,header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "",na.strings="")
-adiv<-read.table(opt$ap,header = T,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
+map<-read.table(opt$map,header = T, skipNul=TRUE,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "",na.strings="")
+adiv<-read.table(opt$ap,header = T, skipNul=TRUE,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
 
 
 a<-colnames(adiv)
@@ -85,6 +85,7 @@ alphaplotwithsig <- ggplot(unitab, aes(x=Group, y=value)) + geom_boxplot(fill=ra
  ylab(i)+xlab("")+theme(text=element_text(size=15,face="bold"),axis.text.x = element_text(angle = 90))
 
 ggsave(paste(opt$out,"/",i,"_",opt$group,"_wilcox_compare_boxplot.png",sep=""), plot=alphaplotwithsig, height=7+p1*0.6, width=p1*0.8+5, dpi = 300)
+ggsave(paste(opt$out,"/",i,"_",opt$group,"_wilcox_compare_boxplot.pdf",sep=""), plot=alphaplotwithsig, height=7+p1*0.6, width=p1*0.8+5, dpi = 300)
 }
 #}
 

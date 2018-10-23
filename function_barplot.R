@@ -2,13 +2,14 @@
 library(optparse)
 #######arguments
 option_list <- list( 
-  make_option(c("-i", "--input"),metavar="path", dest="func",help="Specify the path of L3 predicted KEGG pathway file",default=NULL),
-  make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
-  make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare",default=NULL),
-  make_option(c("-l", "--log"),metavar = "logical",dest="log", help="Use this to log the data before comparing",default = "TRUE"),
-  make_option(c("-e", "--add-se"),metavar = "logical",dest="se", help="Use this to add SE error bar, otherwise add SD error bar",default = "TRUE"),
-  make_option(c("-a", "--alpha"),metavar = "float",dest="alpha", help="Alpha for significance",default=0.001),
-  make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
+  make_option(c("-i", "--input"),metavar="path", dest="func",help="Specify the path of predicted KEGG pathway file of level 3. Required",default=NULL),
+  make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
+  make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
+  make_option(c("-l", "--log"),metavar = "logical",dest="log", help="If TRUE, log the data before comparing. Options of logical type are TRUE, T, FALSE, F. default = FALSE",default = "FALSE"),
+  make_option(c("-j", "--adjust-p"),metavar = "logical",dest="ap", help="If TRUE, adjust the p value before barplot. default = TRUE",default = "TRUE"),
+  make_option(c("-e", "--add-se"),metavar = "logical",dest="se", help="If TRUE, add SE error bar, otherwise add SD error bar. default = TRUE",default = "TRUE"),
+  make_option(c("-a", "--alpha"),metavar = "float",dest="alpha", help="Alpha for significance. default=0.05",default=0.05),
+  make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files. default=./",default="./")
 )
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to compare the predicted pathway of level 3"))
@@ -32,7 +33,7 @@ func<-apply(func,2,function(x){x/sum(x)})
 #求相对丰度
 func<-t(func)
 func<-func[,colSums(func>0)>=nrow(func)*0.5]
-#剔除观测样本数小于50%样本数的功能
+#剔除观测样本数小于50%总样本数的功能
 if(as.logical(opt$log)){
   min2<-min(func[func!=0])
   func<-log(func+min2,base = 10)-log(min2,base = 10)
@@ -47,7 +48,13 @@ data_for_anova<-melt(data.frame(group=group,t(func),check.names = FALSE),id.vars
 anova_results<-compare_means(value~group,data = data_for_anova,method = "anova",group.by = "variable")
 write.table(anova_results,paste(opt$out,'/',opt$group,"_all_pathway_anova_results.xls",sep = ""),sep = "\t",row.names = F)
 
-siginficant_function<-as.character(anova_results$variable[anova_results$p.adj<as.numeric(opt$alpha)])
+if(as.logical(opt$ap)){
+  pvalue<-anova_results$p.adj
+}else{
+  pvalue<-anova_results$p
+}
+
+siginficant_function<-as.character(anova_results$variable[pvalue<as.numeric(opt$alpha)])
 
 uni_group<-sort(unique(group))
 N_group<-length(uni_group)
@@ -69,6 +76,7 @@ for (l1 in unilf){
   if(sum(LF==l1&rownames(func)%in%siginficant_function)>=1){
     sub_func<-func[LF==l1&rownames(func)%in%siginficant_function,]
     res<-apply(sub_func,1,my_duncan)
+    LR<-str_extract(colnames(res),"[^;]+$")
     N_res<-ncol(res)
     sum_mean<-apply(sub_func,1,function(x){tapply(x,INDEX = group,mean)})
     sum_se<-apply(sub_func,1,function(x){tapply(x,INDEX = group,ifelse(as.logical(opt$se),function(x){sd(x)/sqrt(N_sample)},sd))})
@@ -77,13 +85,12 @@ for (l1 in unilf){
     sum_se<-sum_se[match(uni_group,rownames(sum_se)),]
     bar_data<-data.frame(matrix(nrow = N_group*N_res,ncol = 5))
     colnames(bar_data)<-c("pathway","group","mean","se","sig")
-    bar_data$pathway<-rep(str_extract(colnames(res),"[^;]+$"),each=N_group)
+    bar_data$pathway<-rep(LR,each=N_group)
     bar_data$group<-rep(uni_group,times=N_res)
     bar_data$mean<-as.vector(sum_mean)
     bar_data$se<-as.vector(sum_se)
     bar_data$sig<-as.vector(res)
     bar_data<-bar_data[order(bar_data$pathway),]
-#    p1<-max(bar_data$se)
     p1<-ifelse(0.2*N_group*N_res+2<50,0.2*N_group*N_res+2,49.9)
     p2<-max(bar_data$mean)/18
     cud<-0.8/(2*N_group)
@@ -100,7 +107,11 @@ for (l1 in unilf){
             axis.line = element_line(),panel.border =  element_blank(),
             axis.text.x = element_text(angle = 90,size = 9,vjust = 0.5,hjust = 1))
     ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),height = 7,width = p1)  
-    colnames(bar_data)<-ifelse(as.logical(opt$se),c("KEGG pathway","Group","Mean","SE","Significance"),c("KEGG pathway","Group","Mean","SD","Significance"))
+    if(as.logical(opt$se)){
+      colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
+    }else{
+      colnames(bar_data)<-c("KEGG pathway","Group","Mean","SD","Duncan significance")
+    }
     write.table(bar_data,paste(opt$out,'/',opt$group,"_",l1,"_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
   }
 }

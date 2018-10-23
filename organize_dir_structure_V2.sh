@@ -73,7 +73,8 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/8-FiguresTablesForReport \
  	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Phyloseq \
 	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2 \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20 
+	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20 \
+	./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest
 
 
 	echo "Start organize the files for deliverables ..."
@@ -171,7 +172,7 @@ organize_deliverable_structure() {
 	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
 	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
 	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
-	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
+	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
@@ -182,6 +183,7 @@ organize_deliverable_structure() {
 	rm ./Result_AmpliconSequencing/2-AbundanceAnalysis/3-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
 	cp -rp 2-CorrelationHeatmap/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
+	cp -rp 2-ANOVA_And_Duncan/ ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
 	cp -rp alpha-rarefaction-ggplot2/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
 	
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
