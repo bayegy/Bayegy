@@ -25,6 +25,17 @@ options = p.parse_args()
 if not os.path.exists(options.out):
   os.makedirs(options.out)
 
+
+for root, dirs, files in os.walk(options.input):
+  if len(dirs) == 0:
+    root = os.path.abspath(root)
+    for fl in files:
+      if re.search(sp, fl):
+        try:
+          info = "%s/%s" % (root, fl)
+          pre_id = re.search(sp, fl).group(1)
+
+
 id_ds = {}
 with open(options.meta, 'r') as meta:
   for line in enumerate(meta):
@@ -79,7 +90,6 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
       outfile.write('\t'.join(li) + '\n')
     else:
       if li[0] in id_sets:
-        li[0] = li[fc]
         outfile.write('\t'.join(li) + '\n')
       else:
         miss += 1

@@ -9,6 +9,7 @@ option_list <- list(
   make_option(c("-j", "--adjust-p"),metavar = "logical",dest="ap", help="If TRUE, adjust the p value before barplot. default = TRUE",default = "TRUE"),
   make_option(c("-e", "--add-se"),metavar = "logical",dest="se", help="If TRUE, add SE error bar, otherwise add SD error bar. default = TRUE",default = "TRUE"),
   make_option(c("-a", "--alpha"),metavar = "float",dest="alpha", help="Alpha for significance. default=0.05",default=0.05),
+  make_option(c("-b", "--output-by-L1"),metavar = "logical",dest="bl", help="IF TRUE, output barplot for each pathway of L1 level. If FALSE, output only one plot anyway. Or use auto to determine by the number of siginficant function (10)",default="auto"),
   make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files. default=./",default="./")
 )
 
@@ -69,12 +70,73 @@ my_duncan<-function(x){
   return(out1)
 }
 
-LF<-str_extract(rownames(func),'^[^;]+')
-unilf<-unique(LF)
 
-for (l1 in unilf){
-  if(sum(LF==l1&rownames(func)%in%siginficant_function)>=1){
-    sub_func<-func[LF==l1&rownames(func)%in%siginficant_function,]
+
+if(opt$bl=="auto"){
+  lsig<-length(siginficant_function)
+  if(lsig>10){
+    how<-1
+  }else{
+    how<-2
+  }
+}else{
+  if(as.logical(opt$bl)){
+    how<-1
+  }else{
+    how<-2
+  }
+}
+
+
+if(how==1){
+  LF<-str_extract(rownames(func),'^[^;]+')
+  unilf<-unique(LF)
+  for (l1 in unilf){
+    if(sum(LF==l1&rownames(func)%in%siginficant_function)>=1){
+      sub_func<-func[LF==l1&rownames(func)%in%siginficant_function,]
+      res<-apply(sub_func,1,my_duncan)
+      LR<-str_extract(colnames(res),"[^;]+$")
+      N_res<-ncol(res)
+      sum_mean<-apply(sub_func,1,function(x){tapply(x,INDEX = group,mean)})
+      sum_se<-apply(sub_func,1,function(x){tapply(x,INDEX = group,ifelse(as.logical(opt$se),function(x){sd(x)/sqrt(N_sample)},sd))})
+      sum_mean<-sum_mean[match(uni_group,rownames(sum_mean)),]
+      res<-res[match(uni_group,rownames(res)),]
+      sum_se<-sum_se[match(uni_group,rownames(sum_se)),]
+      bar_data<-data.frame(matrix(nrow = N_group*N_res,ncol = 5))
+      colnames(bar_data)<-c("pathway","group","mean","se","sig")
+      bar_data$pathway<-rep(LR,each=N_group)
+      bar_data$group<-rep(uni_group,times=N_res)
+      bar_data$mean<-as.vector(sum_mean)
+      bar_data$se<-as.vector(sum_se)
+      bar_data$sig<-as.vector(res)
+      bar_data<-bar_data[order(bar_data$pathway),]
+      p1<-ifelse(0.2*N_group*N_res+2<50,0.2*N_group*N_res+2,49.9)
+      p2<-max(bar_data$mean)/18
+      cud<-0.8/(2*N_group)
+      pos<-rep(seq(from=0,to=N_res-1),each=N_group)
+      cood_x<-rep(seq(0.6+cud,1.4-cud,length.out = N_group),times=N_res)+pos
+      p<-ggplot(bar_data, aes(x=pathway, y=mean, fill=group)) + 
+        geom_bar(width = 0.8,position=position_dodge(0.8), stat="identity") +
+        geom_errorbar(aes(ymin=mean-se, ymax=mean+se),width=0.2,position=position_dodge(0.8))+
+        geom_text(aes(x=cood_x,y=mean+se+p2,label=sig))+
+        guides(fill=guide_legend(title = NULL))+
+        xlab("")+ylab("Abundance")+theme_bw()+
+        theme(text = element_text(size = 12),
+              panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
+              axis.line = element_line(),panel.border =  element_blank(),
+              axis.text.x = element_text(angle = 90,size = 9,vjust = 0.5,hjust = 1))
+      ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),height = 7,width = p1)  
+      if(as.logical(opt$se)){
+        colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
+      }else{
+        colnames(bar_data)<-c("KEGG pathway","Group","Mean","SD","Duncan significance")
+      }
+      write.table(bar_data,paste(opt$out,'/',opt$group,"_",l1,"_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
+    }
+  }
+}else{
+  if(sum(rownames(func)%in%siginficant_function)>=1){
+    sub_func<-func[rownames(func)%in%siginficant_function,]
     res<-apply(sub_func,1,my_duncan)
     LR<-str_extract(colnames(res),"[^;]+$")
     N_res<-ncol(res)
@@ -106,15 +168,14 @@ for (l1 in unilf){
             panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
             axis.line = element_line(),panel.border =  element_blank(),
             axis.text.x = element_text(angle = 90,size = 9,vjust = 0.5,hjust = 1))
-    ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),height = 7,width = p1)  
+    ggsave(plot = p,paste(opt$out,'/',opt$group,"_all_significant_pathway_barplot_of_duncan.pdf",sep = ""),height = 7,width = p1)  
     if(as.logical(opt$se)){
       colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
     }else{
       colnames(bar_data)<-c("KEGG pathway","Group","Mean","SD","Duncan significance")
     }
-    write.table(bar_data,paste(opt$out,'/',opt$group,"_",l1,"_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
+    write.table(bar_data,paste(opt$out,'/',opt$group,"_all_significant_pathway_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
   }
 }
-
 
 

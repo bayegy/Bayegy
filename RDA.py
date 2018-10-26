@@ -216,7 +216,8 @@ ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,wi
 }
 ''' % (options.exclude, options.input, options.meta, options.group, options.output,
        options.group, options.group, options.group, options.group, options.number,
-       options.group, options.group, options.group, options.group, options.group, options.group), file=rscript)
+       options.group, options.group, options.group, options.group, options.group, options.group,
+       options.group, options.group, options.group, options.group), file=rscript)
 
 rscript.close()
 

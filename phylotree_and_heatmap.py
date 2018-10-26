@@ -141,16 +141,12 @@ tree<- groupOTU(tree, groupInfo1,group_name = "taxa")
 
 t<-levels(leg)
 p = ggtree(tree,aes(color=Phylum))+
-  scale_color_discrete(breaks = t,name="Phylum")+
-  geom_tiplab(size=4, align=TRUE, linesize=.5,aes(label=taxa))
+  geom_tiplab(size=4,align=TRUE, linesize=.5,aes(label=taxa))+
+  scale_color_discrete(breaks = t,name="Phylum")
 
+p1<-gheatmap(p, data, offset = 0.18, width=0.8+par1*0.1, hjust=0.5,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=17),axis.ticks=element_blank())
 
-pdf(file="%s/%s", width=10, height=11)
-
-
-gheatmap(p, data, offset = 0.22, width=0.8+par1*0.1, hjust=0.5,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=17),axis.ticks=element_blank())
-
-dev.off()
+ggsave(p1,file="%s/%s", width=10, height=11)
 '''
         % (options.input, options.metadata, options.group, options.num, options.outdir, options.outdir, str(options.group) + '_phylogenetic_tree_heatmap.pdf'),
         file=rscript)
