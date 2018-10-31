@@ -42,7 +42,7 @@ check_file() {
 }
 
 organize_deliverable_structure() {
-
+	rm -r ./Result_AmpliconSequencing
 	mkdir -p ./Result_AmpliconSequencing/ ./Result_AmpliconSequencing/1-QCStats/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/1-Absolute/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/2-Relative/ \

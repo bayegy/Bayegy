@@ -120,7 +120,7 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
-
+print("#Generate the PCoA 3D plot for betadiversity")
   ######pcoa 3d plot
   asign_rainbow_cor<-function(x){
     unig<-unique(x)
@@ -148,24 +148,6 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
 }
 
 
-print("#calculate distance")
-for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
-  beta_heatmap_outputpdfname <- paste(distance_matrix[2], "_betadiversity_summary.pdf", sep="")
-  #pdf(beta_heatmap_outputpdfname)
-  Dist <- distance(qiimedata, method=distance_matrix[1])
-
-  beta_outputtxtname <- paste(distance_matrix[2], "_matrix.txt", sep="")
-  write.table(as.matrix(Dist), beta_outputtxtname , quote=FALSE, col.names=NA, sep="\t")
-  
-  Dist_read<-read.table(beta_outputtxtname, head=T)
-  pdf(beta_heatmap_outputpdfname)
-  pheatmap(Dist_read,fontsize=10,border_color = "black",fontsize_row =10,
-           cluster_rows=T,clustering_distance_rows="euclidean",
-           cluster_cols=T,clustering_distance_cols="euclidean",
-           clustering_method="centroid")
-  dev.off()
-  
-}
 
 
 ####################Using mixOmics for PLS-DA plot

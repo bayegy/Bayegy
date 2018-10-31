@@ -47,6 +47,7 @@ dat<-dat[!duplicated(dat[,1]),]
 
 rownames(dat)=dat[,1]
 map<-read.table("%s",header = T,na.strings="",sep = "\\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
+
 groups<-map["%s"]
 
 notstr=c()
@@ -55,21 +56,28 @@ for(i in 1:length(map)){
 }
 envdata<-map[,notstr]
 if(ex[1]!="none"){envdata<-envdata[,!colnames(envdata)%%in%%ex]}
+envdata<-na.omit(envdata)
+groups<-groups[match(rownames(envdata),rownames(groups)),]
+
 
 dat=dat[,-c(1,length(dat))]
-dat=t(dat)[match(rownames(groups),rownames(t(dat))),]
+dat=t(dat)[match(rownames(envdata),rownames(t(dat))),]
+
 
 #clean na
 dat<-dat[!is.na(groups),]
 envdata<-envdata[!is.na(groups),]
-groups<-groups[!is.na(groups),]
+groups<-groups[!is.na(groups)]
 
 dca <- decorana(veg = dat)
+
 dcam <- max(dca$rproj)
+
 if (dcam > 4){
   cca <- cca(formula=dat~.,data=envdata, scale = TRUE, na.action = na.exclude)
   pre <- "CCA"
 }else{
+
   cca <- rda(formula=dat~.,data=envdata,scale = TRUE, na.action = na.exclude)
   pre <- "RDA"
 }

@@ -34,56 +34,66 @@ for(i in 1:length(map)){
 }
 envdata<-map[,notstr]
 if(ex[1]!="none"){envdata<-envdata[,!colnames(envdata)%in%ex]}
+#envdata<-na.omit(envdata)
 dat=t(dat)[match(rownames(envdata),rownames(t(dat))),]
-
-
 
 
 ######correlation statics
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 
-LEN<-dim(envdata)[2]
-dat_for_cor<-data.frame(envdata,dat, row.names = NULL, check.rows = T, check.names = F, stringsAsFactors = default.stringsAsFactors())
+LEN<-ncol(envdata)
+dat_for_cor<-data.frame(envdata,dat, check.rows = T, check.names = F)
 
 
 cor_allft<-corr.test(dat_for_cor,method ="spearman",adjust="fdr")
-cor_allft_r<-data.frame(cor_allft$r,check.names = F)
-cor_allft_r<-cor_allft_r[-c(1:LEN),]
-cor_allft_r<-cor_allft_r[,-c(LEN+1:dim(cor_allft_r)[2])]
+cor_allft_r<-cor_allft$r
+cor_allft_r<-cor_allft_r[-c(1:LEN),-c(LEN+1:dim(cor_allft_r)[2])]
 
-cor_allft_p<-data.frame(cor_allft$p,check.names = F)
-cor_allft_p<-cor_allft_p[-c(1:LEN),]
-cor_allft_p<-cor_allft_p[,-c(LEN+1:dim(cor_allft_p)[2])]
+cor_allft_p<-cor_allft$p
+cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
 
 
-if(opt$num<dim(cor_allft_r)[1]){
-  ifcor<-colSums(t(cor_allft_p<0.05))
-  sel<-(ifcor>=sort(ifcor,T)[opt$num]&ifcor>0)
-  cor_allft_r<-cor_allft_r[sel,]
-  cor_allft_p<-cor_allft_p[sel,]
-  annotation_row<-annotation_row[sel]
-}else{
-  ifcor<-colSums(t(cor_allft_p<0.05))
-  sel<-(ifcor>0)
-  cor_allft_r<-cor_allft_r[sel,]
-  cor_allft_p<-cor_allft_p[sel,]
-  annotation_row<-annotation_row[sel]
-}
+
 
 write.table(cor_allft_r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
 write.table(cor_allft_p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
 
 
-heat_s<-cor_allft_p
-cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
-for(i in 1:dim(cor_allft_p)[1]){
-  for(j in 1:dim(cor_allft_p)[2]){
-    ifelse(cor_allft_p[i,j]<0.05,
-           ifelse(cor_allft_p[i,j]>=0.01,heat_s[i,j]<-"*",
-                  ifelse(cor_allft_p[i,j]>=0.001,heat_s[i,j]<-"**",heat_s[i,j]<-"***")),
-           heat_s[i,j]<-"")
-  }
-}
+ifcor<-colSums(t(cor_allft_p<0.05))
+ifna<-colSums(t(is.na(cor_allft_p)))
+order_pos<-order(ifcor,decreasing=TRUE)
+order_pos<-order_pos[ifcor[order_pos]>=1&ifna[order_pos]==0]
+selected_pos<-head(order_pos,opt$num)
+cor_allft_r<-cor_allft_r[selected_pos,]
+cor_allft_p<-cor_allft_p[selected_pos,]
+annotation_row<-annotation_row[selected_pos]
+#if(opt$num<dim(cor_allft_r)[1]){
+#  ifcor<-colSums(t(cor_allft_p<0.05))
+#  sel<-(ifcor>=sort(ifcor,T)[opt$num]&ifcor>0)
+#  cor_allft_r<-cor_allft_r[sel,]
+#  cor_allft_p<-cor_allft_p[sel,]
+#  annotation_row<-annotation_row[sel]
+#}else{
+#  ifcor<-colSums(t(cor_allft_p<0.05))
+#  sel<-(ifcor>0)
+#  cor_allft_r<-cor_allft_r[sel,]
+#  cor_allft_p<-cor_allft_p[sel,]
+#  annotation_row<-annotation_row[sel]
+#}
+cor_allft_p[cor_allft_r<opt$minr]<-1
+
+sig_label<-function(x){ifelse(x<0.001,"***",ifelse(x<0.01,"**",ifelse(x<0.05,"*","")))}
+heat_s<-sig_label(cor_allft_p)
+#heat_s<-cor_allft_p
+#cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
+#for(i in 1:dim(cor_allft_p)[1]){
+#  for(j in 1:dim(cor_allft_p)[2]){
+#    ifelse(cor_allft_p[i,j]<0.05,
+#           ifelse(cor_allft_p[i,j]>=0.01,heat_s[i,j]<-"*",
+#                  ifelse(cor_allft_p[i,j]>=0.001,heat_s[i,j]<-"**",heat_s[i,j]<-"***")),
+#           heat_s[i,j]<-"")
+#  }
+#}
 
 rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
 annotation_row =data.frame(Phylum=annotation_row)

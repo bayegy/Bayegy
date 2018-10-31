@@ -40,7 +40,7 @@ tax_levels["7"]="Species"
 #tax_levels1["s"]="Species"
 
 
-if [ -z "$8" ]; then
+if [ -z "$9" ]; then
 	echo "##########
 
 		  Please prepare the directory structure before starting the program like below:
@@ -60,7 +60,7 @@ if [ -z "$8" ]; then
 		8) Specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 		9) Specify the type of classifier, either silva or gg
 		Sample Usage:
-		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/Silva/338-806/silva-132-99-338-806-classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none silva
+		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none gg
 		"
 	exit 0
 else
@@ -430,7 +430,8 @@ function assign_taxa() {
 			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R -m $map -c $category_1 -i ./alpha/alpha-summary.tsv -o ./alpha/;
 		done;
 
-
+	echo "HAHAHHAHAHAHHHAHAH"
+	Rscript ${SCRIPTPATH}/beta_heatmap.R $mapping_file
 	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.txt R_output/weighted_unifrac_matrix.txt R_output/unweighted_unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 
 	rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
@@ -478,8 +479,8 @@ function assign_taxa() {
 	for category_1 in $category_set;
 		do echo $category_1;
 		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  -i ./exported/feature-table.taxonomy.txt -m $mapping_file -c $category_1 -o ./4-VennAndFlower;
-		Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j F -b T -o ./2-ANOVA_And_Duncan
-		Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j F -b F -o ./2-ANOVA_And_Duncan
+		Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b T -o ./2-ANOVA_And_Duncan
+		Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b F -o ./2-ANOVA_And_Duncan
 		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
 		done;
 
@@ -506,7 +507,7 @@ function assign_taxa() {
 			for category_1 in $category_set;
 				do echo $category_1;
 					Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt;
-					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 3;  plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
 					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
 				done;
 			cd ../../

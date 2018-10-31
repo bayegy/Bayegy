@@ -10,6 +10,7 @@ option_list <- list(
   make_option(c("-e", "--add-se"),metavar = "logical",dest="se", help="If TRUE, add SE error bar, otherwise add SD error bar. default = TRUE",default = "TRUE"),
   make_option(c("-a", "--alpha"),metavar = "float",dest="alpha", help="Alpha for significance. default=0.05",default=0.05),
   make_option(c("-b", "--output-by-L1"),metavar = "logical",dest="bl", help="IF TRUE, output barplot for each pathway of L1 level. If FALSE, output only one plot anyway. Or use auto to determine by the number of siginficant function (10)",default="auto"),
+  make_option(c("-s", "--scale"),metavar = "logical",dest="scale", help="IF TRUE, scale the data before plot.",default="F"),
   make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files. default=./",default="./")
 )
 
@@ -26,20 +27,30 @@ if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 func<-read.table(opt$func,comment.char="",quote = "",skip = 1,check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 map<-read.table(opt$map,sep="\t",na.strings="",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 group<-map[opt$group]
+group<-na.omit(group)
+#clean na of group
 
 rownames(func)<-func[,ncol(func)]
 func<-func[,-c(1,ncol(func))]
 #清理数据
+func<-func[,match(rownames(group),colnames(func))]
+#clean na of func
 func<-apply(func,2,function(x){x/sum(x)})
 #求相对丰度
 func<-t(func)
 func<-func[,colSums(func>0)>=nrow(func)*0.5]
 #剔除观测样本数小于50%总样本数的功能
 if(as.logical(opt$log)){
+  func<-func-min(func)
   min2<-min(func[func!=0])
   func<-log(func+min2,base = 10)-log(min2,base = 10)
 }
 #log转化，使得尽量符合正太分布
+if(as.logical(opt$scale)){
+  func<-scale(func,center=T,scale=T)
+}
+#normalize the data, make the plot easier to compare
+
 func<-data.frame(t(func),check.names = F)
 group<-group[match(colnames(func),rownames(group)),]
 N_sample<-ncol(func)
@@ -110,6 +121,7 @@ if(how==1){
       bar_data$se<-as.vector(sum_se)
       bar_data$sig<-as.vector(res)
       bar_data<-bar_data[order(bar_data$pathway),]
+#      print(bar_data$group)
       p1<-ifelse(0.2*N_group*N_res+2<50,0.2*N_group*N_res+2,49.9)
       p2<-max(bar_data$mean)/18
       cud<-0.8/(2*N_group)
@@ -124,8 +136,8 @@ if(how==1){
         theme(text = element_text(size = 12),
               panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
               axis.line = element_line(),panel.border =  element_blank(),
-              axis.text.x = element_text(angle = 90,size = 9,vjust = 0.5,hjust = 1))
-      ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),height = 7,width = p1)  
+              axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))
+      ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
       if(as.logical(opt$se)){
         colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
       }else{
@@ -167,8 +179,8 @@ if(how==1){
       theme(text = element_text(size = 12),
             panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
             axis.line = element_line(),panel.border =  element_blank(),
-            axis.text.x = element_text(angle = 90,size = 9,vjust = 0.5,hjust = 1))
-    ggsave(plot = p,paste(opt$out,'/',opt$group,"_all_significant_pathway_barplot_of_duncan.pdf",sep = ""),height = 7,width = p1)  
+            axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))
+    ggsave(plot = p,paste(opt$out,'/',opt$group,"_all_significant_pathway_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
     if(as.logical(opt$se)){
       colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
     }else{

@@ -18,9 +18,9 @@ library(stringr)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 
 if(!is.null(opt$data)){
-  data<- read.table(opt$data,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings='')
+  data<- read.table(opt$data,quote='',comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings='')
 }else{
-  data<- read.table(opt$otu,skip = 1,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings='')
+  data<- read.table(opt$otu,quote='',skip = 1,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings='')
 }
 
 
