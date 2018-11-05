@@ -473,6 +473,13 @@ function assign_taxa() {
 
 	cd ../../
 
+	echo "##############################################################\nCorrelation analysis" 
+	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+		do echo $n7;
+		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
+		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
+		done;
+
 
 	echo "#############################################################\nAdditional plot"
 	mkdir 4-VennAndFlower
@@ -484,12 +491,6 @@ function assign_taxa() {
 		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
 		done;
 
-	echo "##############################################################\nCorrelation analysis" 
-	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
-		do echo $n7;
-		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
-		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
-		done;
 
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2

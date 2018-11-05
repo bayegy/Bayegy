@@ -45,7 +45,11 @@ if (!is.null(opt$group)){
   library(sva)
   map<-read.table(opt$map,comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",na.strings='')
   map<-map[,-ncol(map)]
-  map<-map[match(colnames(data),map[,1]),]
+  #map<-map[match(colnames(data),map[,1]),]
+  pos<-match(map[,1],colnames(data))
+  data<-data[,pos]
+#  data<-apply(data,2,function(x){x/sum(x)})
+
 
   notstr=c()
   for(i in 1:ncol(map)){
@@ -70,7 +74,7 @@ if (!is.null(opt$group)){
 
 
 data<-data.frame(backdata[,1],data,backdata[,2],check.names = F)
-colnames(data)[c(1,length(data))]<-colname_backdata
+colnames(data)[c(1,ncol(data))]<-colname_backdata
 if(!is.null(opt$data)){
   write.table(data,paste(opt$out,'/','Filtered_or_corrected_feature_table.txt',sep = ''),sep = '\t',quote = F,row.names = F)
 }else{

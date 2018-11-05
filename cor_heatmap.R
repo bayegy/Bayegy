@@ -19,7 +19,7 @@ library(stringr)
 ########prepare the cor data
 ex<-str_split(opt$ex,",")[[1]]
 
-dat <- read.table(as.character(opt$otu),comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+dat <- read.table(as.character(opt$otu),quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 dat<-dat[dat[,1]!="Others"&dat[,1]!="unclassified",]
 dat<-dat[!duplicated(dat[,1]),]
 rownames(dat)=dat[,1]
@@ -30,7 +30,7 @@ dat=dat[,-c(1,length(dat))]
 map<-read.table(as.character(opt$map),sep="\t",na.strings="",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 notstr=c()
 for(i in 1:length(map)){
-	notstr[i]=!is.character(map[,i])
+	notstr[i]=is.numeric(map[,i])
 }
 envdata<-map[,notstr]
 if(ex[1]!="none"){envdata<-envdata[,!colnames(envdata)%in%ex]}
@@ -58,6 +58,7 @@ cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
 write.table(cor_allft_r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
 write.table(cor_allft_p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
 
+cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
 
 ifcor<-colSums(t(cor_allft_p<0.05))
 ifna<-colSums(t(is.na(cor_allft_p)))
@@ -80,7 +81,7 @@ annotation_row<-annotation_row[selected_pos]
 #  cor_allft_p<-cor_allft_p[sel,]
 #  annotation_row<-annotation_row[sel]
 #}
-cor_allft_p[cor_allft_r<opt$minr]<-1
+
 
 sig_label<-function(x){ifelse(x<0.001,"***",ifelse(x<0.01,"**",ifelse(x<0.05,"*","")))}
 heat_s<-sig_label(cor_allft_p)
@@ -99,7 +100,7 @@ rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
 annotation_row =data.frame(Phylum=annotation_row)
 rownames(annotation_row) = rownames(cor_allft_r) 
 ####corrlation plot
-pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=5+0.5*dim(cor_allft_r)[1],width=7+0.3*dim(cor_allft_r)[2])
+pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=5+0.4*dim(cor_allft_r)[1],width=7+1*dim(cor_allft_r)[2])
 pheatmap(cor_allft_r,fontsize=12,annotation_row = annotation_row,border_color = "black",
          display_numbers = heat_s,fontsize_row =17,fontsize_col = 17,
          fontsize_number = 22,

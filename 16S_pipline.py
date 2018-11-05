@@ -51,7 +51,7 @@ options.ref = os.path.abspath(options.ref)
 options.outdir = os.path.abspath(options.outdir)
 scriptpath = sys.path[0]
 
-#os.system('''sed -i -e 's/ //g' %s''' % (options.map))
+os.system('''sed -i -e 's/ //g' %s''' % (options.map))
 
 if not options.manifest:
   #options.sp = re.sub('\(', '\\\(', options.sp)
@@ -71,8 +71,8 @@ if not options.manifest:
                 (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.type))
       if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
         os.makedirs(options.outdir + '/' + 'All_Results_Summary')
-      os.system('''mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
-                (options.outdir, c, options.outdir, c))
+      os.system('''rm -r %s/All_Results_Summary/%s_Result_AmpliconSequencing; mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
+                (options.outdir, c, options.outdir, c, options.outdir, c))
 
   else:
     if not os.path.exists(options.outdir + '/Results'):
