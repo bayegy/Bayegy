@@ -216,7 +216,7 @@
 				在本实验中得到的测序数据经过barcode拆分后获得的有效序列信息统计，如图3-1所示:
 			</p>
 
-			<p align="center"><img src="../../Figure3-1.png" width="800" height="400"></p>
+			<p align="center"><img src="../../Figure3-1.png" width="640" height="480"></p>
 			<p align="center"><strong>图3-1 数据拆分序列数目统计</strong></p>
 			<dd style="font-size:80%;">
 				说明：在数据按照barcode拆分之后每个样品的实际所含的序列数量统计。X轴代表样品所含序列数目的区间，Y轴代表在这个所含序列数目的区间有多少个样品。<a href="../../../1-QCStats/1-Stats-demux/Summary_请点此文件查看.html">点击此处查看具体的样本测序量统计及序列测序质量统计结果（推荐）。</a>
@@ -383,7 +383,7 @@
 			<p>
 				Beta Diversity是对不同样品间的微生物群落构成进行比较<sup>[18-24]</sup>。根据样本的OTU丰度信息计算Bray Curtis，Weighted  Unifrac和Unweighted Unifrac距离来评估不同样品间的微生物群落构差异。Bray Curtis距离是生态学上反应群落之间差异性最常用的指标，只考虑了物种的丰度信息。Unweighted Unifrac距离是基于物种系统进化关系进行计算的样本间的距离，只考虑了物种的有无。Weighted Unifrac距离是结合OTU的丰度信息和系统进化关系获得的样本间的距离。Unweighted Unifrac距离对稀有物种比较敏感，而Bray Curtis和Weighted  Unifrac距离则对丰度较高的物种更加敏感。Weighted Unifrac距离，<a>Unweighted Unifrac</a>距离及Bray Curtis距离作为Beta多样性距离是衡量两个样品间的相异系数的指标  ，其值越小，表示这两个样品在物种多样性方面存在的差异越小。图6-1为不同样品之间以上三种距离热图的展示。详细的数值可以查看结果目录<a href="../../../4-BetaDiversity/1-BetaDiversitySummary/">./4-BetaDiversity/1-BetaDiversitySummary/</a>。
 			</p>
-			<p align="center"><img src="../../Figure6-1.png" width="800" height="600"></p>
+			<p align="center"><img src="../../Figure6-1.png" width="800" height="500"></p>
 			<p align="center"><strong>图6-1 Beta多样性指数热图</strong></p>
 			<dd style="font-size:80%;">
 				说明：热图方格的颜色代表样品两两之间的相异系数，相异系数越小的两个样品，物种多样性的差异越小。从上到下，在热图中分别代表Bray Curtis 我们基于Bray Curtis距离,Unweighted Unifrac距离和Weighted Unifrac距离。 
@@ -454,9 +454,9 @@
 				<a>选取关注的</a>OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)绘制进化关系树图，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。此外分析也生成了用于iTOL制图的文件。<sup>[25,26]</sup>客户可以点击<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a>查看完整信息。
 			</p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="600">
+			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="1100">
 				<param name="SRC" value="..\..\Figure7-1.pdf" >
-				<embed width="100%" height="600" fullscreen="yes" src="..\..\Figure7-1.pdf"><noembed></noembed></embed>
+				<embed width="100%" height="1100" fullscreen="yes" src="..\..\Figure7-1.pdf"><noembed></noembed></embed>
 			</object>
 				 
 			<p align="center"><strong>图7-1 系统发育进化树及组间丰度分布热图</strong></p>
@@ -470,7 +470,7 @@
 			<p>
 				CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 <sup>[27-29]</sup>
 			</p>
-			<p align="center"><img src="../../Figure8-1.png" width="800" height="600"></p>
+			<p align="center"><img src="../../Figure8-1.png" width="800" height="622"></p>
 			<h3 align="center">图8-1 属水平物种CCA/RDA排序图</h3>
 			<dd style="font-size:80%;">
 				说明：在CCA/RDA物种排序图内，环境因子用箭头表示，箭头连线的长度代表某个环境因子与群落分布和种类分布间相关程度的大小（解释方差的大小），箭头越长，说明相关性越大，反之越小。箭头连线和排序轴的夹角代表某个环境因子与排序轴的相关性大小，夹角越小，相关性越高；反之越低。环境因子之间的夹角为锐角时表示两个环境因子之间呈正相关关系，钝角时呈负相关关系。每个点代表一个物种，点越大，对应物种丰度越高，灰色点代表丰度较低的物种，未在图中注释物种名称，将物种投影到各个环境因子，对应的值即为该物种倾向于存在的环境（喜欢的环境）。或者说，将物种点与原点连线，物种间，物种与环境因子间，环境因子间的夹角的余弦值近似于相关系数，至于有多近似，就要看RDA1/CCA1和RDA2/CCA2两个坐标轴的解释方差百分比有多大，越大越近似。对于样本排序图（请查看<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>），样本点之间的距离近似于菌群结构差异程度，样本点投影到环境因子对应的值近似于该样本真实的环境因子值。
@@ -481,9 +481,9 @@
 				相关性热图可以用于分析环境因子或其他临床表型数据与微生物群落或物种之间是否显著相关，然后计算环境因子与微生物物种间的Spearman相关系数，并用热图展示（图8-2）。该分析可以挑选出与某种环境因子或疾病显著相关的物种，同时提供环境因子的数据，比如 pH值、温度值、临床因子等。<sup>[30-32]</sup> 
 			</p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="600">
+			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="1100">
 				<param name="SRC" value="..\..\Figure8-2.pdf" >
-				<embed width="100%" height="600" fullscreen="yes" src="..\..\Figure8-2.pdf"><noembed></noembed></embed>
+				<embed width="100%" height="1100" fullscreen="yes" src="..\..\Figure8-2.pdf"><noembed></noembed></embed>
 			</object>
 			 
 			<p align="center"><strong>图8-2 属水平微生物物种与表型之间的相互关系热图</strong></p>
@@ -497,9 +497,9 @@
 				<a>基于物种样本间的相对丰度进行Spearman获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建</a>（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。同时我们也提供基于相对组成成分数据的相关性计算（CCLasso/SPARCC），并用Cytoscape进行定制化可视化分析（属于VIP分析）。<sup>[33]</sup> 
 			</p>
 			<p align="center">
-				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="600">
+				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="800">
 					<param name="SRC" value="..\..\Figure8-3.pdf" >
-					<embed width="100%" height="600" fullscreen="yes" src="..\..\Figure8-3.pdf"><noembed></noembed></embed>
+					<embed width="100%" height="800" fullscreen="yes" src="..\..\Figure8-3.pdf"><noembed></noembed></embed>
 				</object>
 			</p>
 
@@ -546,9 +546,9 @@
 			</p>
 
 			<p>
-				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="600">
+				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="700">
 					<param name="SRC" value="..\..\Figure9-2.pdf" >
-					<embed width="100%" height="500" fullscreen="yes" src="..\..\Figure9-2.pdf"><noembed></noembed></embed>
+					<embed width="100%" height="700" fullscreen="yes" src="..\..\Figure9-2.pdf"><noembed></noembed></embed>
 				</object>
 			</p>
 			<p align="center"><strong>图9-2 基于KEGG L1水平的PCA分析结果展示</strong></p>
