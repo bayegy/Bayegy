@@ -135,28 +135,19 @@
 					<li><a href="#a8.5">8.5 AYASDI拓扑数据分析（VIP分析）</a></li>
 				</div>
 			</div>
-			
-			<div class="AccordionPanel">
-				<div class="AccordionPanelTab"><li><a href="#analysis">九 样品微生物组成功能预测分析</a></li></div>
-				<div class="AccordionPanelContent">
-					<li><a href="#a9.1">9.1 预测微生物群落功能</a></li>
-					<li><a href="#a9.2">9.2 预测功能PCA分析</a></li>
-					<li><a href="#a9.3">9.3 组间功能差异性分析</a></li>
-				</div>
-			</div>
 
 			</div>
 			
 			<div class="AccordionPanel">
-				<div class="AccordionPanelTab"><li><a href="#a10">十 参考文献</a></li></div>
+				<div class="AccordionPanelTab"><li><a href="#a10">九 参考文献</a></li></div>
 			</div>
 
 			<div class="AccordionPanel">
-				<div class="AccordionPanelTab"><li><a href="#a11">十一 交付结果目录结构</a></li></div>
+				<div class="AccordionPanelTab"><li><a href="#a11">十 交付结果目录结构</a></li></div>
 			</div>
 			
 			<div class="AccordionPanel">
-				<div class="AccordionPanelTab"><li><a href="#a12">十二 联系我们</a></li></div>
+				<div class="AccordionPanelTab"><li><a href="#a12">十一 联系我们</a></li></div>
 			</div>
 
 			<script type="text/javascript">
@@ -529,41 +520,7 @@
 			<dd style="font-size:80%;">&nbsp;</dd>
 
 			<hr>
-			<h2 align="left">
-				九 样品微生物组成功能预测分析(<a href="../../../7-FunctionAnalysis">7-FunctionAnalysis目录</a>)
-			</h2>
-
-			<h3><a id="a9.1"></a>9.1 预测微生物群落功能</h3>
-			<p>
-				PICRUSt的原理是基于已测细菌基因组的16S rRNA序列，推断它们的共同祖先的基因功能谱，对Greengenes数据库中其它未测物种的基因功能谱进行推断，构建古菌和细菌域全谱系的基因功能预测谱，最后，将测序得到的菌群组成映射到数据库中，对菌群代谢功能进行预测<sup>[37-39]</sup> 。KEGG功能根据注释深度可以分为三级，图9-1展示的是产生的L1级别功能预测组成的柱形图。其他注释等级可查看目录<a href="../../../7-FunctionAnalysis/1-KEGG_Pathway/">./7-FunctionAnalysis/1-KEGG_Pathway/</a>。 
-			</p>
-			<p align="center"><img src="../../Figure9-1.png" width="800" height="600"></p>
-			<p align="center"><strong>图9-1 KEGG L1微生物群落功能预测组成柱形图 </strong></p>
-			<dd style="font-size:80%;">说明：从上至下依次为KEGG结果展示，纵轴表示注释到某类型的功能的相对比例；横轴表示样品名称；各颜色区块对应的功能类别见右侧图例。</dd>
-			<h3><a id="a9.2"></a>9.2 预测功能PCA分析</h3>
-			<p>
-				基于已知物种的16S物种信息和KEGG功能信息，可以获得环境样本的KEGG功能种类及其相对丰度信息。基于KEGG功能及其代谢途径相对丰度，可以进行样本间KEGG代谢途径PCA分析，图9-2是基于KEGG 功能级别的功能PCA图。其他注释等级的PCA图可查看目录<a href="../../../7-FunctionAnalysis/2-PCAPlots/">/7-FunctionAnalysis/2-PCAPlots/</a>。 
-			</p>
-
-			<p>
-				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="700">
-					<param name="SRC" value="..\..\Figure9-2.pdf" >
-					<embed width="100%" height="700" fullscreen="yes" src="..\..\Figure9-2.pdf"><noembed></noembed></embed>
-				</object>
-			</p>
-			<p align="center"><strong>图9-2 基于KEGG L1水平的PCA分析结果展示</strong></p>
-			<dd style="font-size:80%;">
-				说明：横坐标（x）表示第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标（y）表示第二主成分，百分比表示第二主成分对样品差异的贡献值；图中的每个点表示一个样品，同一个组的样品使用同一种颜色表示。箭头方向和长度代表该预测功能(功能名称英文首字母缩写)在该方向的样本/组别中的主导能力程度，长度约长代表主导的能力越大。
-			</dd>
-
-			<h3><a id="a9.3"></a>9.3 组间功能差异性分析</h3>
-			<p>
-				在得到KEGG功能注释后，结合分组信息，利用Krsuskal Wallis和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。除此之外，为了方便用户进行个性化地比较分析，分析结果中也提供了用于在样本之间功能差异比较的STAMP软件的输入文件<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
-			</p>
-
-
-			<hr>
-			<h2><a id="a10"></a>十 参考文献</h2>
+			<h2><a id="a10"></a>九 参考文献</h2>
 
 			<p>
 				1.		Bokulich,  N. A. et al. Quality-filtering vastly improves diversity estimates from  Illumina amplicon sequencing. Nat. Methods 10, 57–59 (2012).<br>
@@ -602,13 +559,10 @@
 				<br>34.		Fang H., et al., CCLasso: correlation inference for compositional data through Lasso. Bioinformatics. 31(19):3172-3180 (2015).<br>
 				<br>35.		Feng et al. Gut microbiome development along the colorectal adenoma-carcinoma  sequence. Nature communications 6: 6528  (2015) . <br>
 				<br>36.		<a href="https://www.ayasdi.com/">https://www.ayasdi.com/</a><br>
-				<br>37.    	Langille,  M. G. I. et al. Predictive functional profiling of microbial communities using  16S rRNA marker gene sequences. Nat. Biotechnol. 31, 814–821 (2013).<br>
-				<br>38.    	Comeau,  A. M., Douglas, G. M. &amp; Langille, M. G. I. Microbiome Helper: a Custom and  Streamlined Workflow for Microbiome Research. mSystems 2, e00127-16 (2017).<br>
-				<br>39.    	Parks,  D. H., Tyson, G. W., Hugenholtz, P. &amp; Beiko, R. G. STAMP: statistical  analysis of taxonomic and functional profiles. Bioinformatics 30, 3123–4 (2014).<br>
 			</p>
 
 			<hr>
-			<h2><a id="a11"></a>十一 交付结果目录结构 </h2>
+			<h2><a id="a11"></a>十 交付结果目录结构 </h2>
 			<p>交付数据分为若干个子目录。详情可查看交付目录下的Result_README.pdf。 </p>
 			<p>
 				<strong>|</strong><strong>Result_AmpliconSequencing/  </strong><strong>[</strong><strong>主要的结果文件</strong><strong>]</strong><br>
@@ -618,12 +572,11 @@
 				|-- 4-BetaDiversity / [Beta多样性分析分析结果主要相关信息]<br>
 				|-- 5-Phylogenetics / [系统进化分析结果主要相关信息]<br>
 				|-- 6-AssociationAnalysis / [关联统计分析主要相关信息]<br>
-				|-- 7-FunctionAnalysis / [样品微生物组成功能预测分析主要相关信息]<br>
-				|-- 8-FiguresTablesForReport / [本报告的图表文件夹]
+				|-- 7-FiguresTablesForReport / [本报告的图表文件夹]
 			</p>
 
 			<hr>
-			<h2><a id="a12"></a>十二 联系我们</h2>
+			<h2><a id="a12"></a>十一 联系我们</h2>
 			<p>
 				地址：广东省深圳市南山区南海大道3688号 <br>
 				邮编：518060<br>

@@ -430,7 +430,7 @@ function assign_taxa() {
 			Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R -m $map -c $category_1 -i ./alpha/alpha-summary.tsv -o ./alpha/;
 		done;
 
-	echo "HAHAHHAHAHAHHHAHAH"
+
 	Rscript ${SCRIPTPATH}/beta_heatmap.R $mapping_file
 	perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.txt R_output/weighted_unifrac_matrix.txt R_output/unweighted_unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 

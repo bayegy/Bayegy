@@ -25,11 +25,11 @@ p.add_argument('-r', '--reverse-file-pattern', dest='rp', default=r'\.2\.fq$', m
                help='The regular expression representing reverse sequence in file names,Supply this parameter together with -i -s -f. This option will be ignored if --manifest is specifed')
 p.add_argument('-d', '--sample-depth', dest='depth', default='auto', metavar='<int or str>',
                help='Depth for subsampleing. If "auto" is supplied, the min OTU frequency of samples will be caculated and apply to this parameter')
-p.add_argument('--classifier', dest='classifier', default='/home/admin1/database_16S/Silva/338-806/silva-132-99-338-806-classifier.qza', metavar='<path>',
+p.add_argument('--classifier', dest='classifier', default='/home/admin1/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza', metavar='<path>',
                help='Path of the classifier for alignment and assigning taxonomy')
 p.add_argument('--ref-seqs', dest='ref', default='/home/admin1/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza', metavar='<path>',
                help='Path of the reference sequences for close reference alignment')
-p.add_argument('--classifier-type', dest='type', default='silva', metavar='<str>',
+p.add_argument('--classifier-type', dest='type', default='gg', metavar='<str>',
                help='Specify the type of classifier, either silva or gg')
 p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='./',
                help='specify the output directory')
@@ -71,8 +71,8 @@ if not options.manifest:
                 (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.type))
       if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
         os.makedirs(options.outdir + '/' + 'All_Results_Summary')
-      os.system('''mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
-                (options.outdir, c, options.outdir, c))
+      os.system('''rm -r %s/All_Results_Summary/%s_Result_AmpliconSequencing; mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
+                (options.outdir, c, options.outdir, c, options.outdir, c))
 
   else:
     if not os.path.exists(options.outdir + '/Results'):
