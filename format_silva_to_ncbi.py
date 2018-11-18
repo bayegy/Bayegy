@@ -4,14 +4,14 @@ import sys
 import os
 # argument:
 p = argparse.ArgumentParser()
-p.add_argument('-u', '--unite-taxonomy', dest='unite', metavar='txt',
-               help='unite taxonomy')
+p.add_argument('-n', '--ncbi-taxonomy', dest='ncbi', metavar='txt',
+               help='ncbi taxonomy')
 p.add_argument('-s', '--silva-taxonomy', dest='silva', metavar='txt',
                help='silva taxonomy')
 p.add_argument('-c', '--clean_unclassified', dest='clean', action='store_true',
                help='Supply this to clean the unclassified levels')
 p.add_argument('-r', '--ref-seqs', dest='ref', default=False,
-               help='Supply this to clean the refrence sequences not belong to Fungi')
+               help='Supply this to clean the taxonomy not found in ncbi, and clean corresponding refference sequences, too')
 p.add_argument('-o', '--out-dir', dest='out', metavar='directory', default='./',
                help='out directory')
 
@@ -23,15 +23,28 @@ if not os.path.exists(options.out):
     os.makedirs(options.out)
 
 
-unites = []
+ncbis = []
 
-with open(options.unite, 'r') as unite:
-    for line in unite:
-        li = re.split('\t *', line)
-        li = re.sub('Incertae', 'unidentified', li[1])
-        unites.append(li)
+with open(options.ncbi, 'r') as ncbi:
+    for ln, line in enumerate(ncbi):
+        if ln > 0:
+            li = re.split('\t *', line)
+            li = re.sub(' *; *', ';', li[1])
+            li = re.sub('__;', '__Incertae_Sedis;', li)
+            li = re.sub(' ', '_', li)
+            ncbis.append(li)
 
 levels = ['k__', 'p__', 'c__', 'o__', 'f__', 'g__', 's__']
+
+
+notspecies = ['Incertae', 'Ambiguous', 'uncultured', 'unclassified', 'unidentified']
+
+
+def checklevel(level):
+    for ncls in notspecies:
+        if not level.find(ncls) == -1:
+            return(False)
+    return(True)
 
 
 def clean_tax(tax):
@@ -57,24 +70,20 @@ def adjust_species(tax):
 
 
 def merge_tax(tax):
-    if re.search('D_3__Fungi', tax):
-        hind_tax = []
-        tax = re.search('D_3__Fungi.*', tax).group()
-        tax = re.sub('unidentified', '', tax)
-        tax = re.sub('; *D_\d+__ *[;\n].*', '', tax)
-        tax = re.sub('D_\d+__', '', tax)
-        tax = re.split(';', tax)
-        tax = [l.strip() for l in tax]
-        for ta in reversed(tax):
-            ta = re.sub(' ', '_', ta)
-            hind_tax = [ta] + hind_tax
-            for ref in unites:
+    hind_tax = ['unclassified', 'unclassified', 'unclassified', 'unclassified', 'unclassified', 'unclassified']
+    tax = re.sub('; *D_\d+__ *[;\n].*', '', tax)
+    tax = re.sub('D_\d+__', '', tax)
+    tax = re.split(';', tax)
+    tax = [l.strip() for l in tax]
+    for ta in reversed(tax):
+        ta = re.sub(' ', '_', ta)
+        hind_tax = [ta] + hind_tax
+        if checklevel(ta):
+            for ref in ncbis:
                 if re.search('__' + ta + ' *[;\n]', ref):
                     pre_tax = re.search('(^.*__' + ta + ')' + ' *[;\n]', ref).group(1)
                     del hind_tax[0]
-                    if len(hind_tax) > 0:
-                        hind_tax = hind_tax + ['unclassified', 'unclassified',
-                                               'unclassified', 'unclassified', 'unclassified', 'unclassified']
+                    if len(hind_tax) > 6:
                         n_l = 7 - len(re.split(';', pre_tax))
                         f_hind_tax = []
                         for ite in zip(levels[-n_l:], hind_tax[:n_l]):
@@ -82,12 +91,10 @@ def merge_tax(tax):
                         return(pre_tax + ';' + ';'.join(f_hind_tax) + '\n')
                     else:
                         return(pre_tax + '\n')
+    if options.ref:
+        return(False)
     else:
-        if not options.ref:
-            #   return(tax)
-            return('Unassigned' + '\n')
-        else:
-            return(False)
+        return('Unassigned' + '\n')
 
 
 s_otuid = []
@@ -101,6 +108,7 @@ with open(options.silva, 'r') as silva, open(options.out + '/' + 'transformed_si
                 taxonomy = clean_tax(taxonomy)
             out.write(li[0].strip() + '\t' + taxonomy)
             s_otuid.append(li[0].strip())
+
 
 if options.ref:
     with open('%s/filtered_ref_seqs.fasta' % (options.out), 'w') as fout, open(options.ref, 'r') as ref:

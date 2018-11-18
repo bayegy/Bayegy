@@ -52,7 +52,7 @@ os.system('Rscript tree.R')
 
 
 #######align and mask#####
-os.system("qiime tools export  %s --output-dir %s/" % (options.repseqs, options.outdir))
+#os.system("qiime tools export  %s --output-dir %s/" % (options.repseqs, options.outdir))
 
 
 #######select rep-seqs####
@@ -63,7 +63,7 @@ with open('%s/selected_features_reseqs.fasta' % (options.outdir), 'w') as fout:
   s_otuid = re.split('\n', s_otuid)
   sn = []
   ln = 1
-  for line in open("%s/aligned-dna-sequences.fasta" % (options.outdir), 'r'):
+  for line in open(options.repseqs, 'r'):
 
     line = re.sub('\n$', '', line)
     line = re.sub('^>', '', line)

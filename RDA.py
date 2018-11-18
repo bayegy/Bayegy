@@ -43,6 +43,8 @@ library(ggplot2)
 library(RColorBrewer)
 ex<-str_split("%s",",")[[1]]
 dat <- read.table("%s", header = TRUE, sep = "\\t",comment.char = "",check.names = F)
+dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
+
 dat<-dat[!duplicated(dat[,1]),]
 
 rownames(dat)=dat[,1]
@@ -151,8 +153,8 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
 
 p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
@@ -174,8 +176,8 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 9,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 9,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }else{
 envis[,1]<-envis[,1]*3.5
 envis[,2]<-envis[,2]*3.5
@@ -196,8 +198,8 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 9,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
 
 p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
@@ -219,8 +221,8 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 9,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 9,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
 ''' % (options.exclude, options.input, options.meta, options.group, options.output,
        options.group, options.group, options.group, options.group, options.number,

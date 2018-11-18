@@ -22,6 +22,8 @@ p.add_argument('-n', '--groups', dest='number', default=3, metavar='{int,groups}
                help='Number of groups, OR names of groups seprated by commas')
 p.add_argument('-c', '--count-of-samples', dest='count', default=30, metavar='int',
                help='Count of samples')
+p.add_argument('-d', '--delimmiter', dest='sep', default='', metavar='string',
+               help='delimmiter between group and number in sample id')
 p.add_argument('-o', '--output', dest='out', metavar='<directory>', default='./',
                help='The path of output files')
 options = p.parse_args()
@@ -67,7 +69,7 @@ else:
   nos = int(options.count)
   each = math.ceil(nos / nog)
   group1 = [a for a in group for j in range(each)]
-  sample = [a + '_' + str(j + 1) for a in group for j in range(each)]
+  sample = [a + options.sep + str(j + 1) for a in group for j in range(each)]
   mapp = pd.DataFrame({"#SampleID": sample[:nos], "Group": group1[:nos]})
   mapp.insert(2, "Description", sample[:nos])
   mapp.to_csv(options.out + '/' + 'sample-metadata.tsv', sep='\t', index=False)

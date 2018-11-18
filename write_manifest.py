@@ -65,7 +65,7 @@ for root, dirs, files in os.walk(options.input):
         except KeyError:
           ff += 1
 fout.close()
-
+print("The following samples were not found in fastq files:")
 
 with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.tsv', 'w') as outfile:
   miss = 0
@@ -82,6 +82,7 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
         li[0] = li[fc]
         outfile.write('\t'.join(li) + '\n')
       else:
+        print(li[0])
         miss += 1
 
 

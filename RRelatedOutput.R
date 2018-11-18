@@ -52,11 +52,18 @@ print(rs)
 
 
 ########################Using Phyloseq
-qiimedata = import_qiime(txt, map, tre, rs)
+gpt = import_qiime(txt, map, tre, rs)
 
-gpt <- subset_taxa(qiimedata, Kingdom=="Bacteria")
+
+
+otu<-gpt@otu_table@.Data
+sum_of_otus<-colSums(t(otu))
+selected_otu<-names(sum_of_otus)[sum_of_otus>10]
+gpt <- prune_taxa(selected_otu, gpt)
+
+#gpt <- subset_taxa(qiimedata, Kingdom=="Bacteria")
 #gpt <- prune_taxa(names(sort(taxa_sums(gpt),TRUE)[1:30]), gpt)
-gpt <- prune_taxa(names(sort(taxa_sums(gpt),TRUE)), gpt)
+#gpt <- prune_taxa(names(sort(taxa_sums(gpt),TRUE)), gpt)
 
 #head(tax_table(gpt)[,2])
 #head(tax_table(gpt)[1,])
@@ -176,8 +183,8 @@ A = read.table(map, header = T,row.names = 1,comment.char = "",sep = "\t",check.
 Y = A[category1][,1]
 
 tX<-tX[match(rownames(A),rownames(tX)),]
-taxonomy<-taxonomy[colSums(tX)>0]
-tX<-tX[,colSums(tX)>0]
+taxonomy<-taxonomy[colSums(tX)>10]
+tX<-tX[,colSums(tX)>10]
 
 #print(dim(tX)[2])
 #print(length(taxonomy))

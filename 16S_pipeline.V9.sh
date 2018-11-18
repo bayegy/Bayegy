@@ -115,8 +115,8 @@ function assign_taxa() {
 	#echo "##############################################################\n#Demultiplexing the paired-end sequence file"
 	#qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-
-	source activate qiime2-2018.8
+<<com1
+	source activate qiime2-2018.11
 
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
@@ -299,7 +299,7 @@ function assign_taxa() {
 
 
 	source deactivate
-	source activate qiime2-2018.8
+	source activate qiime2-2018.11
 	echo "ANCOM analaysis for differential OTU"
 	mkdir exported/ANCOM
 	for n2 in 2 3 4 5 6 7;
@@ -352,7 +352,7 @@ function assign_taxa() {
 
 
 	source deactivate
-	source activate qiime2-2018.8
+	source activate qiime2-2018.11
 	echo "##############################################################\n#Make phylogenetic trees for ITOL"
 	mkdir phylogeny
 	qiime feature-table filter-features --i-table table.qza --p-min-frequency $min_freq --o-filtered-table phylogeny/table.${min_freq}.qza
@@ -374,6 +374,7 @@ function assign_taxa() {
 	perl ${SCRIPTPATH}/generate_file_Itol.pl phylogeny/feature-table.taxonomy.txt 
 
 
+	qiime tools export --input-path masked-aligned-rep-seqs.qza --output-path ./
 	echo "##############################################################\n#export all qzv files into clickable folders"
 	#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
@@ -488,9 +489,9 @@ function assign_taxa() {
 		Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  -i ./exported/feature-table.taxonomy.txt -m $mapping_file -c $category_1 -o ./4-VennAndFlower;
 		Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b T -o ./2-ANOVA_And_Duncan
 		Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b F -o ./2-ANOVA_And_Duncan
-		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r masked-aligned-rep-seqs.qza -o AdditionalPhylogeny/ -n 30
+		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r aligned-dna-sequences.fasta -o AdditionalPhylogeny/ -n 30
 		done;
-
+com1
 
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2

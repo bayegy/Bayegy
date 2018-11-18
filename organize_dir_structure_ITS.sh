@@ -66,15 +66,11 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/ \
 	./Result_AmpliconSequencing/5-Phylogenetics/ \
 	./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/ \
-	./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/ \
-	./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/ \
-	./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
-	./Result_AmpliconSequencing/8-FiguresTablesForReport \
+	./Result_AmpliconSequencing/7-FiguresTablesForReport \
  	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Phyloseq \
 	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2 \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20 \
-	./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest
+	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20
 
 
 	echo "Start organize the files for deliverables ..."
@@ -169,10 +165,10 @@ organize_deliverable_structure() {
 
 	#cp -r /Result_AmpliconSequencing/6-AssociationAnalysis
 
-	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
-	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
-	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
-	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
+#	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
+#	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
+#	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
+#	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
@@ -183,7 +179,7 @@ organize_deliverable_structure() {
 	rm ./Result_AmpliconSequencing/2-AbundanceAnalysis/3-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
 	cp -rp 2-CorrelationHeatmap/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
-	cp -rp 2-ANOVA_And_Duncan/ ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
+#	cp -rp 2-ANOVA_And_Duncan/ ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
 	cp -rp alpha-rarefaction-ggplot2/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
 	
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
@@ -203,14 +199,14 @@ organize_deliverable_structure() {
 	###rename the pcoa results
 	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*emperor* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-Plots-from-QIIME2
 	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-Plots-from-R
-	#######################For 8-FiguresTablesForReport
+	#######################For 7-FiguresTablesForReport
 
-	cp -rp ${SCRIPTPATH}/Report/src Result_AmpliconSequencing/8-FiguresTablesForReport/
-	cp ${SCRIPTPATH}/Report/结题报告.html Result_AmpliconSequencing/
+	cp -rp ${SCRIPTPATH}/Report_ITS/src Result_AmpliconSequencing/7-FiguresTablesForReport/
+	cp ${SCRIPTPATH}/Report_ITS/结题报告.html Result_AmpliconSequencing/
 
 
 
-	cd ./Result_AmpliconSequencing/8-FiguresTablesForReport
+	cd ./Result_AmpliconSequencing/7-FiguresTablesForReport
 	cp -rp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/${category_1}-table-Phylum.${number}/ page4
 	cp -rp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/ page4-2
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
@@ -227,8 +223,6 @@ organize_deliverable_structure() {
 	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}_*_bacteria_location_plot.png Figure8-1.png
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/Correlation_heatmap.pdf Figure8-2.pdf
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
-	cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure9-1.png
-	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure9-2.pdf
 	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
 
 

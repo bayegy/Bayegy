@@ -12,10 +12,10 @@ min_freq=$3
 category_set=${4//,/ }
 category_report=($category_set)
 reference_trained=$(readlink -f $5)
-close_reference_trained=$(readlink -f $6)
-manifest_file=$(readlink -f $7)
-not_rda=$8
-classifier_type=$9
+#close_reference_trained=$(readlink -f $6)
+manifest_file=$(readlink -f $6)
+not_rda=$7
+#classifier_type=$8
 echo "Check wheather your categories are the following:"
 for i in $category_set;do echo $i;done
 
@@ -40,7 +40,7 @@ tax_levels["7"]="Species"
 #tax_levels1["s"]="Species"
 
 
-if [ -z "$9" ]; then
+if [ -z "$7" ]; then
 	echo "##########
 
 		  Please prepare the directory structure before starting the program like below:
@@ -55,12 +55,10 @@ if [ -z "$9" ]; then
 		3) Mininum frequence for OTU to be selected. (Suggested value: 1000)
 		4) The name of categories in the mapping file seprated by commas.
 		5) Path of the classifier for alignment.
-		6) Path of the reference sequences for close reference alignment.
-		7) Path of the manifest file.
-		8) Specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
-		9) Specify the type of classifier, either silva or gg
+		6) Path of the manifest file.
+		7) Specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 		Sample Usage:
-		bash ~/github/Bayegy/ITS_pipeline.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none gg
+		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none gg
 		"
 	exit 0
 else
@@ -117,7 +115,7 @@ function assign_taxa() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	source activate qiime2-2018.11
-<<com1
+
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -167,9 +165,9 @@ function assign_taxa() {
 	echo "##############################################################\n#Classify the taxonomy"
 	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
-	if [[ $classifier_type == 'silva' ]];
-		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
-	fi;
+#	if [[ $classifier_type != 'gg' ]];
+	python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c
+#	fi;
 
 	qiime metadata tabulate   --m-input-file taxonomy.qza   --o-visualization taxonomy.qzv
 
@@ -408,7 +406,7 @@ COMMENT
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
 		done;
-com1
+
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
 	source activate qm2
@@ -518,5 +516,5 @@ COMMENT1
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
-	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
+	sh ${SCRIPTPATH}/organize_dir_structure_ITS.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
 
