@@ -80,7 +80,7 @@ else:
 fout = open(options.out + '/' + 'manifest.txt', 'w')
 nfile = 0
 ff = 0
-id_sets = []
+#id_sets = []
 fout.write('sample-id,absolute-filepath,direction\n')
 for root, dirs, files in os.walk(options.input):
   if len(dirs) == 0:
@@ -97,7 +97,7 @@ for root, dirs, files in os.walk(options.input):
             nfile += 1
           elif re.search(fp, fl):
             fout.write("%s,%s,forward\n" % (sn, info))
-            id_sets.append(pre_id)
+#            id_sets.append(pre_id)
             nfile += 1
         except KeyError:
           ff += 1
@@ -105,7 +105,6 @@ fout.close()
 
 if options.meta:
   with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.tsv', 'w') as outfile:
-    miss = 0
     for line in enumerate(mp):
       li = re.split('\t', line[1].strip())
       li = [l.strip() for l in li]
@@ -115,11 +114,8 @@ if options.meta:
         li[fc] = "Description"
         outfile.write('\t'.join(li) + '\n')
       else:
-        if li[0] in id_sets:
-          outfile.write('\t'.join(li) + '\n')
-        else:
-          miss += 1
-  print('\n    %s samples were removed from sample-metadata, as the ids of samples were not found in forward fastq files\' names' % (miss))
+        li[0] = li[fc]
+        outfile.write('\t'.join(li) + '\n')
 
 
 emm = "\n    %s fastq files were writed" % (nfile)

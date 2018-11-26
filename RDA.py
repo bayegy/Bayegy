@@ -50,26 +50,28 @@ dat<-dat[!duplicated(dat[,1]),]
 rownames(dat)=dat[,1]
 map<-read.table("%s",header = T,na.strings="",sep = "\\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 
-groups<-map["%s"]
 
 notstr=c()
 for(i in 1:length(map)){
   notstr[i]=is.numeric(map[,i])
 }
-envdata<-map[,notstr]
-if(ex[1]!="none"){envdata<-envdata[,!colnames(envdata)%%in%%ex]}
-envdata<-na.omit(envdata)
-groups<-groups[match(rownames(envdata),rownames(groups)),]
+
+if(ex[1]!="none"){
+  notstr=notstr&(!colnames(map)%%in%%ex)
+}
+
+sel=c("%s",colnames(map)[notstr])
 
 
-dat=dat[,-c(1,length(dat))]
-dat=t(dat)[match(rownames(envdata),rownames(t(dat))),]
+data=map[sel]
+data=na.omit(data)
+
+dat=dat[,-c(1,ncol(dat))]
+dat=t(dat)[match(rownames(data),colnames(dat)),]
 
 
-#clean na
-dat<-dat[!is.na(groups),]
-envdata<-envdata[!is.na(groups),]
-groups<-groups[!is.na(groups)]
+groups<-data[,1]
+envdata<-data[sel[-1]]
 
 dca <- decorana(veg = dat)
 
@@ -123,7 +125,6 @@ print(paste("The threshold of abundance is:",cut))
 
 #envis=data.frame(envfit$vectors$arrows)#Envis seem to be the same length after permutation
 envis=data.frame(new$biplot)
-
 envis$id=rownames(envis)
 
 
@@ -132,6 +133,8 @@ pc1 = cca$CCA$eig[1]/sum(cca$CCA$eig) * 100
 pc2 = cca$CCA$eig[2]/sum(cca$CCA$eig) * 100
 xlab <- paste(pre, "1: ", round(pc1, digits = 2), "%%", sep = "")
 ylab <- paste(pre, "2: ", round(pc2, digits = 2), "%%", sep = "")
+
+
 
 if(pre=="RDA"){
 envis[,1]<-envis[,1]*0.5

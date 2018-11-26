@@ -5,8 +5,8 @@ option_list <- list(
     make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-e", "--exclude"),metavar="string",dest="ex", help="Specify the numeric variables excluded from plot and seprated by commas in mapping file",default="none"),
-    make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most related species you want to plot, default is 20",default=20),
-    make_option(c("-r", "--min-cor"),metavar="float", dest="minr",help="Min correlation coefficent to label significance, default is 0.4",default=0.4),
+    make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most related species you want to plot, default is 20",default=30),
+    make_option(c("-r", "--min-cor"),metavar="float", dest="minr",help="Min correlation coefficent to label significance, default is 0",default=0),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
@@ -32,10 +32,15 @@ notstr=c()
 for(i in 1:length(map)){
 	notstr[i]=is.numeric(map[,i])
 }
-envdata<-map[,notstr]
-if(ex[1]!="none"){envdata<-envdata[,!colnames(envdata)%in%ex]}
+
+if(ex[1]!="none"){
+    notstr<-notstr&!colnames(map)%in%ex
+}
+
+envdata<-map[colnames(map)[notstr]]
+
 #envdata<-na.omit(envdata)
-dat=t(dat)[match(rownames(envdata),rownames(t(dat))),]
+dat=t(dat)[match(rownames(envdata),colnames(dat)),]
 
 
 ######correlation statics
@@ -51,8 +56,6 @@ cor_allft_r<-cor_allft_r[-c(1:LEN),-c(LEN+1:dim(cor_allft_r)[2])]
 
 cor_allft_p<-cor_allft$p
 cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
-
-
 
 
 write.table(cor_allft_r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")

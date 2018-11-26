@@ -115,7 +115,7 @@ function assign_taxa() {
 	#echo "##############################################################\n#Demultiplexing the paired-end sequence file"
 	#qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-<<com1
+
 	source activate qiime2-2018.11
 
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
@@ -468,7 +468,7 @@ function assign_taxa() {
 		mkdir RDA/${n6}
 		cp otu_table.${n6}.absolute.txt RDA/${n6}
 		cd RDA/${n6}
-		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 25 -e $not_rda;done;
+		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 30 -e $not_rda;done;
 		cd ../../
 	done;
 
@@ -478,7 +478,7 @@ function assign_taxa() {
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
 		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
-		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 20 -m $mapping_file -e $not_rda;
+		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 30 -m $mapping_file -e $not_rda;
 		done;
 
 
@@ -491,7 +491,7 @@ function assign_taxa() {
 		Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b F -o ./2-ANOVA_And_Duncan
 		python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r aligned-dna-sequences.fasta -o AdditionalPhylogeny/ -n 30
 		done;
-com1
+
 
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
