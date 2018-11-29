@@ -11,30 +11,40 @@ library(stringr)
 #opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to write the input file of Lefse."))
 #if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 ag<-commandArgs(T)
-if(length(ag)<3){
-  print("please specify: 
-1.collapsed bacteria taxonomy file
-2.mapping file
-3.column name in mapping file of group seprated by ','
-4.path of out file")
+if(length(ag)<5){
+  write("please specify: 
+1.Input file, with taxonomy at last column, id or short name at first column
+2.Mapping file
+3.Categories name seprated by ',' in mapping file
+4.Path of out file
+5.Use 'T' to Skip the first line(e.g. comment line) of input file, 'F' not
+Sample Usage: 
+Rscript write_data_for_lefse.R  otu_table_with_comment.txt  mapping_file.txt  Group1  Group1_table_for_lefse.txt T", stdout())
 }else{
 meta<-read.table(ag[2],na.strings="",row.names=1,header = T,sep = "\t",comment.char = "",check.names = F,stringsAsFactors = F)
 group<-str_split(ag[3],",")[[1]]
-if(length(group)==1){
-  meta<-na.omit(meta[group])
-}else{
-  meta<-na.omit(meta[,colnames(meta)%in%group])
-}
+
+meta<-na.omit(meta[group])
+
 meta<-data.frame(Subject=rownames(meta),meta)
-data<-read.table(ag[1],header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
+if(as.logical(ag[5])){
+	data<-read.table(ag[1],skip=1,header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
+}else{
+	data<-read.table(ag[1],header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
+}
 data<-data[data[,1]!="Others"&data[,1]!="unclassified",]
-data<-data[,c(length(data),2:(length(data)-1))]
+data<-data[,c(ncol(data),2:(ncol(data)-1))]
+data[,1]<-str_replace(data[,1],"; *[a-z]__ *;.*$","")
+data[,1]<-str_replace(data[,1],"; *[a-z]__ *$","")
 data[,1]<-str_replace(data[,1],";$","")
 data[,1]<-str_replace_all(data[,1],";","|")
-#data<-data[-dim(data)[1],]
 
 meta<-t(meta)
 data<-data[,c(1,match(meta[1,],colnames(data)))]
+
+otu_sum<-colSums(t(data[,-1])>0)
+data<-data[otu_sum>0.25*(ncol(data)-1),]
+
 write.table(meta,file = ag[4],row.names = T,col.names = F,quote = F,sep = "\t",append = F)
 write.table(data,file = ag[4],row.names = F,col.names = F,quote = F,sep = "\t",append = T)
 

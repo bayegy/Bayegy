@@ -497,22 +497,23 @@ COMMENT1
 	echo "##############################################################\n#Run LEFSE for Group"
 	source deactivate
 	source activate lefse
-	cd exported/Relative
-	mkdir Lefse/
-	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
-		do echo $n7;
-			mkdir Lefse/${n7}
-			cp otu_table.${n7}.relative.txt Lefse/${n7}
-			cd Lefse/${n7}
-			for category_1 in $category_set;
-				do echo $category_1;
-					Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt;
-					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
-					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
-				done;
-			cd ../../
+	mkdir -p LEfSe/Genus/
+	for category_1 in $category_set;
+		do echo $category_1;
+			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/Absolute/otu_table.Genus.absolute.txt  $mapping_file  $category_1  LEfSe/Genus/${category_1}_table_for_lefse.txt F;
+			base="${category_1}_Genus_LEfSe_LDA2"; format_input.py LEfSe/Genus/${category_1}_table_for_lefse.txt LEfSe/Genus/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/Genus/${base}.lefseinput.txt LEfSe/Genus/${base}.LDA.txt -l 2;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.png; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
+			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.pdf; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
 		done;
-	cd ../../
+
+	mkdir -p LEfSe/OTU/
+	for category_1 in $category_set;
+		do echo $category_1;
+			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/feature-table.taxonomy.txt  $mapping_file  $category_1  LEfSe/OTU/${category_1}_table_for_lefse.txt T;
+			#Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/Absolute/otu_table.Genus.absolute.txt  $mapping_file  $category_1  LEfSe/OTU/${category_1}_table_for_lefse.txt F;
+			base="${category_1}_OTU_LEfSe_LDA4"; format_input.py LEfSe/OTU/${category_1}_table_for_lefse.txt LEfSe/OTU/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/OTU/${base}.lefseinput.txt LEfSe/OTU/${base}.LDA.txt -l 4;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.png; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.pdf; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+		done;
+
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./

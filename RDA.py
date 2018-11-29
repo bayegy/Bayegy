@@ -137,8 +137,8 @@ ylab <- paste(pre, "2: ", round(pc2, digits = 2), "%%", sep = "")
 
 
 if(pre=="RDA"){
-envis[,1]<-envis[,1]*0.5
-envis[,2]<-envis[,2]*0.5
+envis[,1]<-envis[,1]*0.35
+envis[,2]<-envis[,2]*0.35
 p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
   geom_point(aes(x=RDA1,y=RDA2,color=%s),size=3) +
   #geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+

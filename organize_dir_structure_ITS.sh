@@ -114,7 +114,7 @@ organize_deliverable_structure() {
 	cp -r exported/DiffAbundance/kruskal_wallis_*txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/3-KruskalWallis/
 
 	#cp lefse result ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
-	cp -r exported/Relative/Lefse/*/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
+	cp -r LEfSe/* ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
 	cp -r exported/DiffAbundance/DESeq2_*txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/5-DESeq2/
 
 	cp -r alpha/alpha-summary.tsv R_output/*alpha_diversity_* ./Result_AmpliconSequencing/3-AlphaDiversity/1-AlphaDiversitySummary/
@@ -213,7 +213,7 @@ organize_deliverable_structure() {
 	cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
 	cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
 	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20/otu_table.Phylum.relative.png Figure4-2.png
-	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Phylum/${category_1}_Phylum_lefse.png Figure4-3.png
+	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/OTU/${category_1}_OTU_LEfSe_LDA4.pdf Figure4-3.pdf
 	cp ../2-AbundanceAnalysis/3-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png

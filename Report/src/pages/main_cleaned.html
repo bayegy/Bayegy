@@ -305,13 +305,22 @@
 			</dd>
 
 			<p>
-				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验，Kruskal Wallis和ANOVA提供总的p值，校正p值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe和DESeq2方法也是非参数检验，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（默认为LDA>3的微生物），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
+				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：在进行丰度差异比较之前，我们先筛除观测样本小于总样本25%的物种（Filter the species observed in less than 25% of total samples）。ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验，Kruskal Wallis和ANOVA提供总的p值，校正p值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,本报告中，OTU，LDA>4，Genus Table, LDA>2），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
 			</p>
 
-			<p align="center"><img src="../../Figure4-3.png" width="800" height="500"></p>
+			<!-- <p align="center"><img src="../../Figure4-3.pdf" width="800" height="500"></p> -->
+
+			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="800">
+				<param name="SRC" value="../../Figure4-3.pdf" >
+				<embed width="100%" height="800" fullscreen="yes" src="../../Figure4-3.pdf">
+					<noembed></noembed>
+				</embed>
+			</object>
+
+
 			<p align="center"><strong>图4-3 LEfSe分析LDA柱形图</strong></p>
 			<dd style="font-size:80%;">
-				说明：每一横向柱形体代表一个物种，柱形体的长度对应LDA值，LDA值越高则差异越大。柱形的颜色对应该物种是哪个分组的特征微生物，特征微生物表示在对应分组中的丰度相对较高。
+				说明：每一横向柱形体代表一个物种，柱形体的长度对应LDA值，LDA值越高则差异越大。柱形的颜色对应该物种是哪个分组的特征微生物，特征微生物(Biomarkers)表示在对应分组中的丰度相对较高。
 			</dd>		
 
 		 	<br>
@@ -454,9 +463,9 @@
 				<a>选取关注的</a>OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)绘制进化关系树图，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。此外分析也生成了用于iTOL制图的文件。<sup>[25,26]</sup>客户可以点击<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a>查看完整信息。
 			</p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="1100">
+			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="1000">
 				<param name="SRC" value="..\..\Figure7-1.pdf" >
-				<embed width="100%" height="1100" fullscreen="yes" src="..\..\Figure7-1.pdf"><noembed></noembed></embed>
+				<embed width="100%" height="1000" fullscreen="yes" src="..\..\Figure7-1.pdf"><noembed></noembed></embed>
 			</object>
 				 
 			<p align="center"><strong>图7-1 系统发育进化树及组间丰度分布热图</strong></p>
@@ -468,7 +477,7 @@
 			<h2 style="color:#F00">温馨提示：如果没有提供环境因子将没有相关性热图和CCA/RDA</h2>
 			<h3 align="left"><a id="a8.1"></a>8.1 CCA/RDA分析</h3>
 			<p>
-				CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 <sup>[27-29]</sup>
+				CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。本报告先进行DCA分析，看最大轴的值是否大于4,如果大于4.0，就选CCA，否则选RDA。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 <sup>[27-29]</sup>
 			</p>
 			<p align="center"><img src="../../Figure8-1.png" width="800" height="800"></p>
 			<h3 align="center">图8-1 属水平物种CCA/RDA排序图</h3>
@@ -481,9 +490,9 @@
 				相关性热图可以用于分析环境因子或其他临床表型数据与微生物群落或物种之间是否显著相关，然后计算环境因子与微生物物种间的Spearman相关系数，并用热图展示（图8-2）。该分析可以挑选出与某种环境因子或疾病显著相关的物种，同时提供环境因子的数据，比如 pH值、温度值、临床因子等。<sup>[30-32]</sup> 
 			</p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="800">
+			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="400">
 				<param name="SRC" value="..\..\Figure8-2.pdf" >
-				<embed width="100%" height="1100" fullscreen="yes" src="..\..\Figure8-2.pdf"><noembed></noembed></embed>
+				<embed width="100%" height="400" fullscreen="yes" src="..\..\Figure8-2.pdf"><noembed></noembed></embed>
 			</object>
 			 
 			<p align="center"><strong>图8-2 属水平微生物物种与表型之间的相互关系热图</strong></p>
@@ -497,9 +506,9 @@
 				<a>基于物种样本间的相对丰度进行Spearman获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建</a>（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。同时我们也提供基于相对组成成分数据的相关性计算（CCLasso/SPARCC），并用Cytoscape进行定制化可视化分析（属于VIP分析）。<sup>[33]</sup> 
 			</p>
 			<p align="center">
-				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="800">
+				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="700">
 					<param name="SRC" value="..\..\Figure8-3.pdf" >
-					<embed width="100%" height="800" fullscreen="yes" src="..\..\Figure8-3.pdf"><noembed></noembed></embed>
+					<embed width="100%" height="700" fullscreen="yes" src="..\..\Figure8-3.pdf"><noembed></noembed></embed>
 				</object>
 			</p>
 
@@ -558,7 +567,7 @@
 
 			<h3><a id="a9.3"></a>9.3 组间功能差异性分析</h3>
 			<p>
-				在得到KEGG功能注释后，结合分组信息，利用Krsuskal Wallis和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。除此之外，为了方便用户进行个性化地比较分析，分析结果中也提供了用于在样本之间功能差异比较的STAMP软件的输入文件<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
+				在得到KEGG功能注释后，结合分组信息，利用Krsuskal Wallis和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。除此之外，为了方便用户进行个性化地比较分析，分析结果中也提供了用于在样本之间功能差异比较的STAMP软件的输入文件。在进行ANOVA和Duncan检验之前，我们先筛除观测样本小于总样本50%的代谢通路（Filter the pathways observed in less than 50% of total samples），再基于相对丰度进行差异分析。<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
 			</p>
 
 
