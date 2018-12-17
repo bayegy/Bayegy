@@ -378,6 +378,8 @@ function assign_taxa() {
 	echo "##############################################################\n#export all qzv files into clickable folders"
 	#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 	for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
+
+
 	echo "##############################################################\n#Run Qiime1 for differOTU analysis"
 	source deactivate
 	source activate qm1
@@ -405,9 +407,22 @@ function assign_taxa() {
 			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
 
+#			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
+			done;
+
+
+		for category_1 in $category_set;
+			do echo $category_1;
+			#Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
+#			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s kruskal_wallis -o exported/DiffAbundance/kruskal_wallis_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
+#			group_significance.py -i filtered_otu_table.biom -m $mapping_file -c $category_1 -s ANOVA -o exported/DiffAbundance/ANOVA_${category_1}_DiffAbundance_${tax_levels[${n4}]}.txt --biom_samples_are_superset --print_non_overlap;
+
 			python ${SCRIPTPATH}/auto_DESeq.py -m $mapping_file -g $category_1 -l ${tax_levels[${n4}]};
 			done;
+
 		done;
+
+
 
 	echo "##############################################################\n#Run R script for additional R related figure generation"
 	source deactivate
@@ -468,7 +483,7 @@ function assign_taxa() {
 		mkdir RDA/${n6}
 		cp otu_table.${n6}.absolute.txt RDA/${n6}
 		cd RDA/${n6}
-		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 30 -e $not_rda;done;
+		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 25 -e $not_rda;done;
 		cd ../../
 	done;
 
@@ -478,11 +493,11 @@ function assign_taxa() {
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
 		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
-		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 30 -m $mapping_file -e $not_rda;
+		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 25 -m $mapping_file -e $not_rda;
 		done;
 
 
-	echo "#############################################################\nAdditional plot"
+	echo "###############################################################\nAdditional plot"
 	mkdir 4-VennAndFlower
 	for category_1 in $category_set;
 		do echo $category_1;
@@ -493,47 +508,77 @@ function assign_taxa() {
 		done;
 
 
+	echo "##############################################################\n#Barplot and RDA according to group mean"
+	mkdir Barplot-of-Group-Mean
+	for group in $category_set;
+	do echo $group;
+		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species"; 
+			do echo $n7;
+			Rscript ${SCRIPTPATH}/collapse_table_with_group_mean.R -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -c $group -o media_files -s T
+			perl -lane '$,="\t";pop(@F);print(@F)' media_files/abundance_table_collapsed_with_group_mean.txt > exported/Relative/otu_table.${n7}.relative.lastcolumn.txt; 
+			perl ${SCRIPTPATH}/get_table_head2.pl exported/Relative/otu_table.${n7}.relative.lastcolumn.txt 20 -trantab > exported/Relative/otu_table.${n7}.relative.lastcolumn.trans; 
+			perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/otu_table.${n7}.relative.lastcolumn.trans -style 1 -x_title "Group Name" -y_title "Sequence Number Percent (%)" -right -textup -rotate='-45' --y_mun 0.2,5 --micro_scale --percentage > Barplot-of-Group-Mean/${group}.${n7}.mean.barplot.svg
+		done;
+	done
+
+
+	for svg_file in Barplot-of-Group-Mean/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > Barplot-of-Group-Mean/${n}.png; done
+
+
+<<COMMENT
+	for n6 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+		do echo $n6;
+		Rscript ${SCRIPTPATH}/collapse_table_with_group_mean.R -i exported/Relative/otu_table.${n6}.relative.txt -m $mapping_file -c Group4 -o media_files -s F
+		for category_1 in Group3;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i media_files/abundance_table_collapsed_with_group_mean.txt -m media_files/map_collapsed_with_group_mean.txt -g $category_1 -o exported/Absolute/RDA/${n6} -n 25 -e $not_rda;done;
+	done;
+COMMENT
+
+
 	##########alpha rarefacation
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
 
 	echo "##############################################################\n#Run LEFSE for Group"
-#	source deactivate
-#	source activate lefse
-#	cd exported/Relative
-#	mkdir Lefse/
-#	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
-#		do echo $n7;
-#			mkdir Lefse/${n7}
-#			cp otu_table.${n7}.relative.txt Lefse/${n7}
-#			cd Lefse/${n7}
-#			for category_1 in $category_set;
-#				do echo $category_1;
-#					Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt;
-#					base=$(basename ${category_1}_${n7}_lefse.txt .txt); format_input.py ${base}.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
-#					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
-#				done;
-#			cd ../../
-#		done;
-#	cd ../../
-
 	source deactivate
 	source activate lefse
-	mkdir -p LEfSe/Genus/
-	for category_1 in $category_set;
-		do echo $category_1;
-			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/Absolute/otu_table.Genus.absolute.txt  $mapping_file  $category_1  LEfSe/Genus/${category_1}_table_for_lefse.txt F;
-			base="${category_1}_Genus_LEfSe_LDA2"; format_input.py LEfSe/Genus/${category_1}_table_for_lefse.txt LEfSe/Genus/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/Genus/${base}.lefseinput.txt LEfSe/Genus/${base}.LDA.txt -l 2;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.png; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
-			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.pdf; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
+	cd exported/Relative
+	mkdir Lefse/
+	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+		do echo $n7;
+			mkdir Lefse/${n7}
+			cp otu_table.${n7}.relative.txt Lefse/${n7}
+			cd Lefse/${n7}
+			for category_1 in $category_set;
+				do echo $category_1;
+					Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt F;
+					base="${category_1}_${n7}_lefse_LDA2"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  
+#					plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+					base="${category_1}_${n7}_lefse_LDA4"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 4;  
+#					plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+				done;
+			cd ../../
 		done;
+	cd ../../
 
-	mkdir -p LEfSe/OTU/
-	for category_1 in $category_set;
-		do echo $category_1;
-			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/feature-table.taxonomy.txt  $mapping_file  $category_1  LEfSe/OTU/${category_1}_table_for_lefse.txt T;
+#	source deactivate
+#	source activate lefse
+#	mkdir -p LEfSe/Genus/
+#	for category_1 in $category_set;
+#		do echo $category_1;
+#			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/Absolute/otu_table.Genus.absolute.txt  $mapping_file  $category_1  LEfSe/Genus/${category_1}_table_for_lefse.txt F;
+#			base="${category_1}_Genus_LEfSe_LDA2"; format_input.py LEfSe/Genus/${category_1}_table_for_lefse.txt LEfSe/Genus/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/Genus/${base}.lefseinput.txt LEfSe/Genus/${base}.LDA.txt -l 2;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.png; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
+#			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.pdf; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
+#		done;
+
+#	mkdir -p LEfSe/OTU/
+#	for category_1 in $category_set;
+#		do echo $category_1;
+#			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/feature-table.taxonomy.txt  $mapping_file  $category_1  LEfSe/OTU/${category_1}_table_for_lefse.txt T;
 			#Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/Absolute/otu_table.Genus.absolute.txt  $mapping_file  $category_1  LEfSe/OTU/${category_1}_table_for_lefse.txt F;
-			base="${category_1}_OTU_LEfSe_LDA4"; format_input.py LEfSe/OTU/${category_1}_table_for_lefse.txt LEfSe/OTU/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/OTU/${base}.lefseinput.txt LEfSe/OTU/${base}.LDA.txt -l 4;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.png; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
-			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.pdf; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
-		done;
+#			base="${category_1}_OTU_LEfSe_LDA4"; format_input.py LEfSe/OTU/${category_1}_table_for_lefse.txt LEfSe/OTU/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/OTU/${base}.lefseinput.txt LEfSe/OTU/${base}.LDA.txt -l 4;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.png; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
+#			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.pdf; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+#		done;
 
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./

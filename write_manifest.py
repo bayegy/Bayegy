@@ -30,7 +30,7 @@ with open(options.meta, 'r') as meta:
   for line in enumerate(meta):
     li = re.split('\t', line[1].strip())
     if line[0] > 0:
-      id_ds[li[0].strip()] = li[len(li) - 1].strip()
+      id_ds[li[0].strip().lower()] = li[len(li) - 1].strip()
 
 
 print("############################################################writting manifest\n\nThe regular expression for matching sample ID is %s, you should change -s if no fastq files were writed" % (options.sp))
@@ -52,7 +52,7 @@ for root, dirs, files in os.walk(options.input):
       if re.search(sp, fl):
         try:
           info = "%s/%s" % (root, fl)
-          pre_id = re.search(sp, fl).group(1)
+          pre_id = re.search(sp, fl).group(1).lower()
           sn = id_ds[pre_id]
           if re.search(rp, fl):
             fout.write("%s,%s,reverse\n" % (sn, info))
@@ -78,11 +78,11 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
       li[fc] = "Description"
       outfile.write('\t'.join(li) + '\n')
     else:
-      if li[0] in id_sets:
+      if li[0].lower() in id_sets:
         li[0] = li[fc]
         outfile.write('\t'.join(li) + '\n')
       else:
-        print(li[0])
+        print('    ' + li[0])
         miss += 1
 
 

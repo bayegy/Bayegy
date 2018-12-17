@@ -5,6 +5,7 @@ import sys
 import os
 import pandas as pd
 import math
+from functools import reduce
 # argument:
 p = argparse.ArgumentParser(
     description="This script is used to form manifest of 16S demuxed sequences for the use of qiime2")
@@ -66,10 +67,22 @@ else:
     group = re.split(',', options.number)
     group = [g.strip() for g in group]
     nog = len(group)
-  nos = int(options.count)
-  each = math.ceil(nos / nog)
-  group1 = [a for a in group for j in range(each)]
-  sample = [a + options.sep + str(j + 1) for a in group for j in range(each)]
+  try:
+    nos = int(options.count)
+    each = int(math.ceil(nos / nog))
+    group1 = [a for a in group for j in range(each)]
+    sample = [a + options.sep + str(j + 1) for a in group for j in range(each)]
+  except Exception:
+    def add(x, y):
+      return x + y
+    each = re.split(',', options.count)
+    group1 = [[m] * int(n) for m, n in zip(group, each)]
+    group1 = reduce(add, group1)
+    sample = [list(range(1, int(sl) + 1)) for sl in each]
+    sample = reduce(add, sample)
+    sample = [j + options.sep + str(h) for j, h in zip(group1, sample)]
+    nos = len(sample)
+
   mapp = pd.DataFrame({"#SampleID": sample[:nos], "Group": group1[:nos]})
   mapp.insert(2, "Description", sample[:nos])
   mapp.to_csv(options.out + '/' + 'sample-metadata.tsv', sep='\t', index=False)

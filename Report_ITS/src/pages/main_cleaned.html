@@ -296,7 +296,7 @@
 			</dd>
 
 			<p>
-				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：在进行丰度差异比较之前，我们先筛除观测样本小于总样本25%的物种（Filter the species observed in less than 25% of total samples）。ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验。Kruskal Wallis和ANOVA提供总的p值，校正p值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,本报告中，OTU，LDA>4，Genus Table, LDA>2），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
+				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验。Kruskal Wallis和ANOVA提供总的p值，校正p值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,为了方便客户选择，我们在结果文件夹中分别提供了阈值为2和4的结果），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
 			</p>
 
 			<!-- <p align="center"><img src="../../Figure4-3.pdf" width="800" height="500"></p> -->
