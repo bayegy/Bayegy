@@ -28,10 +28,19 @@ unites = []
 with open(options.unite, 'r') as unite:
     for line in unite:
         li = re.split('\t *', line)
-        li = re.sub('Incertae', 'unidentified', li[1])
-        unites.append(li)
+#        li = re.sub('Incertae', 'unidentified', li[1])
+        unites.append(li[1])
 
+
+notspecies = ['Incertae', 'Ambiguous', 'uncultured', 'unclassified', 'unidentified']
 levels = ['k__', 'p__', 'c__', 'o__', 'f__', 'g__', 's__']
+
+
+def checklevel(level):
+    for ncls in notspecies:
+        if not level.find(ncls) == -1:
+            return(False)
+    return(True)
 
 
 def clean_tax(tax):
@@ -60,28 +69,29 @@ def merge_tax(tax):
     if re.search('D_3__Fungi', tax):
         hind_tax = []
         tax = re.search('D_3__Fungi.*', tax).group()
-        tax = re.sub('unidentified', '', tax)
+#        tax = re.sub('unidentified', '', tax)
         tax = re.sub('; *D_\d+__ *[;\n].*', '', tax)
         tax = re.sub('D_\d+__', '', tax)
         tax = re.split(';', tax)
         tax = [l.strip() for l in tax]
         for ta in reversed(tax):
-            ta = re.sub(' ', '_', ta)
-            hind_tax = [ta] + hind_tax
-            for ref in unites:
-                if re.search('__' + ta + ' *[;\n]', ref):
-                    pre_tax = re.search('(^.*__' + ta + ')' + ' *[;\n]', ref).group(1)
-                    del hind_tax[0]
-                    if len(hind_tax) > 0:
-                        hind_tax = hind_tax + ['unclassified', 'unclassified',
-                                               'unclassified', 'unclassified', 'unclassified', 'unclassified']
-                        n_l = 7 - len(re.split(';', pre_tax))
-                        f_hind_tax = []
-                        for ite in zip(levels[-n_l:], hind_tax[:n_l]):
-                            f_hind_tax.append(ite[0] + ite[1])
-                        return(pre_tax + ';' + ';'.join(f_hind_tax) + '\n')
-                    else:
-                        return(pre_tax + '\n')
+            if checklevel(ta):
+                ta = re.sub(' ', '_', ta)
+                hind_tax = [ta] + hind_tax
+                for ref in unites:
+                    if re.search('__' + ta + ' *[;\n]', ref):
+                        pre_tax = re.search('(^.*__' + ta + ')' + ' *[;\n]', ref).group(1)
+                        del hind_tax[0]
+                        if len(hind_tax) > 0:
+                            hind_tax = hind_tax + ['unclassified', 'unclassified',
+                                                   'unclassified', 'unclassified', 'unclassified', 'unclassified']
+                            n_l = 7 - len(re.split(';', pre_tax))
+                            f_hind_tax = []
+                            for ite in zip(levels[-n_l:], hind_tax[:n_l]):
+                                f_hind_tax.append(ite[0] + ite[1])
+                            return(pre_tax + ';' + ';'.join(f_hind_tax) + '\n')
+                        else:
+                            return(pre_tax + '\n')
     else:
         if not options.ref:
             #   return(tax)
