@@ -7,6 +7,7 @@ option_list <- list(
     make_option(c("-e", "--exclude"),metavar="string",dest="ex", help="Specify the numeric variables excluded from plot and seprated by commas in mapping file",default="none"),
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most related species you want to plot, default is 20",default=30),
     make_option(c("-r", "--min-cor"),metavar="float", dest="minr",help="Min correlation coefficent to label significance, default is 0",default=0),
+    make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
@@ -16,6 +17,10 @@ library(pheatmap)
 library(psych)
 library(stringr)
 
+
+if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
+
+opt$out<-paste(opt$out,"/",opt$prefix,sep="")
 ########prepare the cor data
 ex<-str_split(opt$ex,",")[[1]]
 
@@ -44,7 +49,6 @@ dat=t(dat)[match(rownames(envdata),colnames(dat)),]
 
 
 ######correlation statics
-if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 
 LEN<-ncol(envdata)
 dat_for_cor<-data.frame(envdata,dat, check.rows = T, check.names = F)
@@ -58,8 +62,8 @@ cor_allft_p<-cor_allft$p
 cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
 
 
-write.table(cor_allft_r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
-write.table(cor_allft_p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
+write.table(cor_allft_r,paste(opt$out,"spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
+write.table(cor_allft_p,paste(opt$out,"fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
 
 cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
 
@@ -103,7 +107,7 @@ rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
 annotation_row =data.frame(Phylum=annotation_row)
 rownames(annotation_row) = rownames(cor_allft_r) 
 ####corrlation plot
-pdf(paste(opt$out,"/","Correlation_heatmap.pdf",sep = ""), height=5+0.5*dim(cor_allft_r)[1],width=6+1*dim(cor_allft_r)[2])
+pdf(paste(opt$out,"Correlation_heatmap.pdf",sep = ""), height=5+0.5*dim(cor_allft_r)[1],width=6+1*dim(cor_allft_r)[2])
 pheatmap(cor_allft_r,fontsize=12,annotation_row = annotation_row,border_color = "black",
          display_numbers = heat_s,fontsize_row =17,fontsize_col = 17,
          fontsize_number = 22,

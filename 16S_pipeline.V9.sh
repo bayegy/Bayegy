@@ -14,11 +14,13 @@ category_report=($category_set)
 reference_trained=$(readlink -f $5)
 close_reference_trained=$(readlink -f $6)
 manifest_file=$(readlink -f $7)
-not_rda=$8
+not_rda=${8//\;/ }
 classifier_type=$9
 echo "Check wheather your categories are the following:"
 for i in $category_set;do echo $i;done
 
+echo "Check wheather the group of enviromental factors excluded from rda are the following:"
+for i in $not_rda;do echo $i;done
 
 declare -A tax_aa;
 tax_aa=([k]=Kingdom [p]=Phylum [c]=Class [o]=Order [f]=Family [g]=Genus [s]=Species);
@@ -462,11 +464,11 @@ function assign_taxa() {
 
 	echo "##############################################################\n#Generate the absolute directory for enviromental factors relational analysis"
 
-	cd exported/
-	perl ${SCRIPTPATH}/stat_otu_tab.pl -unif min feature-table.taxonomy.txt --prefix Absolute/otu_table -nomat -abs -spestat Absolute/classified_stat.xls
+#	cd exported/
+	perl ${SCRIPTPATH}/stat_otu_tab.pl -unif min exported/feature-table.taxonomy.txt --prefix exported/Absolute/otu_table -nomat -abs -spestat exported/Absolute/classified_stat.xls
 
-	cd Absolute
-	for key in ${!tax_aa[*]};do mv otu_table.${key}.absolute.mat otu_table.${tax_aa[$key]}.absolute.txt;done;
+#	cd exported/Absolute/
+	for key in ${!tax_aa[*]};do mv exported/Absolute/otu_table.${key}.absolute.mat exported/Absolute/otu_table.${tax_aa[$key]}.absolute.txt;done;
 	#mv otu_table.k.absolute.mat otu_table.Kingdom.absolute.txt
 	#mv otu_table.p.absolute.mat otu_table.Pylumn.absolute.txt
 	#mv otu_table.c.absolute.mat otu_table.Class.absolute.txt
@@ -474,26 +476,37 @@ function assign_taxa() {
 	#mv otu_table.f.absolute.mat otu_table.Family.absolute.txt
 	#mv otu_table.g.absolute.mat otu_table.Genus.absolute.txt
 	#mv otu_table.s.absolute.mat otu_table.Species.absolute.txt
+#	mkdir RDA
+#	for n6 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+#		do echo $n6;
+#		mkdir RDA/${n6}
+#		cp otu_table.${n6}.absolute.txt RDA/${n6}
+#		cd RDA/${n6}
+#		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 25 -e $not_rda;done;
+#		cd ../../
+#	done;
+#	cd ../../
 
 
 
-	mkdir RDA
-	for n6 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
-		do echo $n6;
-		mkdir RDA/${n6}
-		cp otu_table.${n6}.absolute.txt RDA/${n6}
-		cd RDA/${n6}
-		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 25 -e $not_rda;done;
-		cd ../../
+
+	echo "##############################################################\nCorrelation analysis"
+	for nrda in $not_rda;
+		do eho $nrda;
+		prefix=${nrda//,/_}_excluded_;
+		prefix=${prefix//none_excluded_/};
+		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+			do echo $n7;
+			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 25 -m $mapping_file -e $nrda -p "$prefix";
+			for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -g $category_1 -o exported/Absolute/RDA/${n7} -n 30 -e $nrda -p "$prefix";done;
+		done;
 	done;
 
-	cd ../../
 
-	echo "##############################################################\nCorrelation analysis" 
+	echo "##############################################################\network analysis" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
 		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
-		Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 25 -m $mapping_file -e $not_rda;
 		done;
 
 

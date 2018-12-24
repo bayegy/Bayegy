@@ -21,6 +21,8 @@ p.add_argument('-n', '--number', dest='number', metavar='<int>', default='20',
                help='Specify how many species to be display, defaulf is 20')
 p.add_argument('-e', '--exclude', dest='exclude', metavar='<str>', default='none',
                help='Specify numeric variables excluded from rda seprated by commas,use "none" if all numeric variables is expected')
+p.add_argument('-p', '--prefix', dest='prefix', metavar='<int>', default="",
+               help='The prefix of output files, default if null')
 options = p.parse_args()
 
 if not options.input and options.group and options.meta:
@@ -32,7 +34,7 @@ else:
 if not os.path.exists(options.output):
   os.makedirs(options.output)
 
-
+options.output = options.output + '/' + options.prefix
 rscript = open('rda.R', 'w')
 
 print('''
@@ -43,7 +45,7 @@ library(ggplot2)
 library(RColorBrewer)
 ex<-str_split("%s",",")[[1]]
 dat <- read.table("%s", header = TRUE, sep = "\\t",comment.char = "",check.names = F)
-dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
+#dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
 
 dat<-dat[!duplicated(dat[,1]),]
 
@@ -88,13 +90,13 @@ if (dcam > 4){
 
 path="%s"
 ccascore <- scores(cca)
-write.table(ccascore$sites, file = paste(path,"/","%s_", pre, ".sample.txt", sep = ""), sep = "\\t")
-write.table(ccascore$species, file = paste(path,"/","%s_", pre, ".bacteria.txt", sep = ""), sep = "\\t")
+write.table(ccascore$sites, file = paste(path,"%s_", pre, ".sample.txt", sep = ""), sep = "\\t")
+write.table(ccascore$species, file = paste(path,"%s_", pre, ".bacteria.txt", sep = ""), sep = "\\t")
 envfit <- envfit(cca, envdata, permu = 2000, na.rm = TRUE)
 rp <- cbind(as.matrix(envfit$vectors$r), as.matrix(envfit$vectors$pvals))
 colnames(rp) <- c("r2", "Pr(>r)")
 env <- cbind(envfit$vectors$arrows, rp)
-write.table(as.data.frame(env), file = paste(path,"/", "%s_",pre, ".envfit.txt", sep = ""),sep = "\\t")
+write.table(as.data.frame(env), file = paste(path, "%s_",pre, ".envfit.txt", sep = ""),sep = "\\t")
 
 
 new<-cca$CCA
@@ -124,10 +126,11 @@ print(paste("The threshold of abundance is:",cut))
 
 
 #envis=data.frame(envfit$vectors$arrows)#Envis seem to be the same length after permutation
-envis=data.frame(new$biplot)
+#envis=data.frame(new$biplot)
+envis=data.frame(env)
+envis[,1]<-envis[,1]*envis[,3]
+envis[,2]<-envis[,2]*envis[,3]
 envis$id=rownames(envis)
-
-
 
 pc1 = cca$CCA$eig[1]/sum(cca$CCA$eig) * 100
 pc2 = cca$CCA$eig[2]/sum(cca$CCA$eig) * 100
@@ -156,8 +159,8 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
 envis[,1]<-envis[,1]*0.5
 envis[,2]<-envis[,2]*0.5
@@ -181,8 +184,8 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }else{
 envis[,1]<-envis[,1]*3.5
 envis[,2]<-envis[,2]*3.5
@@ -203,8 +206,8 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
 
 p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
@@ -226,8 +229,8 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
-ggsave(paste(path,"/","%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
 ''' % (options.exclude, options.input, options.meta, options.group, options.output,
        options.group, options.group, options.group, options.group, options.number,
