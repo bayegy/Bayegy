@@ -7,7 +7,7 @@ option_list <- list(
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
     make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most related species you want to plot, default is 20",default=20),
-    make_option(c("-a", "--add-posix"),action = "store_true", dest="add",help="add posix to the duplicated taxons"),
+    make_option(c("-a", "--add-posix"),metavar="logical", dest="add",help="add posix to the duplicated taxons",default=TRUE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
@@ -48,7 +48,10 @@ add_posix<-function(z){
 }
 
 
-if(opt$add){
+sum_abundance<-colSums(t(otu[,-c(1,ncol(otu))]))
+otu<-otu[order(sum_abundance,decreasing = T),]
+
+if(as.logical(opt$add)){
   otu[,1]<-add_posix(otu[,1])
 }else{
   otu<-otu[!duplicated(otu[,1]),]
@@ -60,10 +63,12 @@ otu<-t(otu[,-c(1,ncol(otu))])*100
 
 otu<-otu[match(rownames(group),rownames(otu)),]
 
-deod<-order(colSums(otu),decreasing = T)
-sel<-head(deod,as.numeric(opt$num))
-other<-deod[(as.numeric(opt$num)+1):length(deod)]
-otu<-data.frame(otu[,sel],Other=apply(otu[,other],1,sum),check.names = F,check.rows = T)
+#deod<-order(colSums(otu),decreasing = T)
+#sel<-head(deod,as.numeric(opt$num))
+#other<-deod[(as.numeric(opt$num)+1):length(deod)]
+#otu<-data.frame(otu[,sel],Other=apply(otu[,other],1,sum),check.names = F,check.rows = T)
+num<-as.numeric(opt$num)
+otu<-data.frame(otu[,1:num],Other=apply(otu[,(num+1):ncol(otu)],1,sum),check.names = F,check.rows = T)
 
 
 #otu<-data.frame(otu,group)
@@ -86,6 +91,6 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
         axis.text.x = element_text(angle = 90,size = 10,vjust = 0.5,hjust = 1))
 
 wd<-length(label_order)*0.2+4
-
+wd<-ifelse(wd<50,wd,49.9)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 
