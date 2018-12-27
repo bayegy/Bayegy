@@ -49,7 +49,7 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-RepresentiveSequence/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/ \
+	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/Heatmap-Qiime2/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/2-ANOVA/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/3-KruskalWallis/ \
@@ -109,7 +109,8 @@ organize_deliverable_structure() {
 	cp -r taxa-bar-plots.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/
 	cp -r exported/Relative/*relative.txt exported/Relative/otu*png ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20
 
-	cp -r exported/${number}/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/
+	cp -r exported/${number}/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/Heatmap-Qiime2/
+	cp -r Heatmap_top20 ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/
 
 	cp -r exported/ANCOM/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/
 
@@ -212,7 +213,7 @@ organize_deliverable_structure() {
 
 
 	cd ./Result_AmpliconSequencing/8-FiguresTablesForReport
-	cp -rp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/${category_1}-table-Phylum.${number}/ page4
+	cp -rp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/Heatmap-Qiime2/${category_1}-table-Phylum.${number}/ page4
 	cp -rp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/ page4-2
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
 	cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png

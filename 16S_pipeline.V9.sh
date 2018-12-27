@@ -489,7 +489,7 @@ function assign_taxa() {
 
 
 
-
+	source activate qm2
 	echo "##############################################################\nCorrelation analysis"
 	for nrda in $not_rda;
 		do eho $nrda;
@@ -498,15 +498,16 @@ function assign_taxa() {
 		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 			do echo $n7;
 			Rscript ${SCRIPTPATH}/cor_heatmap.R -i exported/Relative/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 25 -m $mapping_file -e $nrda -p "$prefix";
-			for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -g $category_1 -o exported/Absolute/RDA/${n7} -n 30 -e $nrda -p "$prefix";done;
+			for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -g $category_1 -o exported/Absolute/RDA/${n7} -n 25 -e $nrda -p "$prefix";done;
 		done;
 	done;
 
 
-	echo "##############################################################\network analysis" 
+	echo "##############################################################\network and abundance heatmap" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
 		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
+		Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Relative/otu_table.${n7}.relative.txt -o Heatmap_top20/${n7}/;
 		done;
 
 
@@ -551,6 +552,7 @@ COMMENT
 	Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
 
 	echo "##############################################################\n#Run LEFSE for Group"
+	source deactivate
 	source deactivate
 	source activate lefse
 	cd exported/Relative

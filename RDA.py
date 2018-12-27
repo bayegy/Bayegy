@@ -101,14 +101,18 @@ write.table(as.data.frame(env), file = paste(path, "%s_",pre, ".envfit.txt", sep
 
 new<-cca$CCA
 
-#samples=data.frame(ccascore$sites)
-samples=data.frame(new$u)
+#samples=data.frame(new$u)
+samples=data.frame(ccascore$sites)
+range_sam<-max(samples)-min(samples)
+#sum(rownames(samples)!=rownames(data))==0
 samples$id=rownames(samples)
 samples=data.frame(samples,%s=groups)
 
 
-#species=data.frame(ccascore$species)
-species=data.frame(new$v)
+
+#species=data.frame(new$v)
+species=data.frame(ccascore$species)
+range_spe<-max(species)-min(species)
 species$id=rownames(species)
 species<-species[match(colnames(dat),rownames(species)),]
 sum<-scale(colSums(dat))[,1]
@@ -130,6 +134,7 @@ print(paste("The threshold of abundance is:",cut))
 envis=data.frame(env)
 envis[,1]<-envis[,1]*envis[,3]
 envis[,2]<-envis[,2]*envis[,3]
+range_env<-max(envis[,c(1,2)])-min(envis[,c(1,2)])
 envis$id=rownames(envis)
 
 pc1 = cca$CCA$eig[1]/sum(cca$CCA$eig) * 100
@@ -139,9 +144,18 @@ ylab <- paste(pre, "2: ", round(pc2, digits = 2), "%%", sep = "")
 
 
 
+ratio_spe_env<-range_spe/range_env
+ratio_sam_env<-range_sam/range_env
+
+
+
+
+
+
 if(pre=="RDA"){
-envis[,1]<-envis[,1]*0.5
-envis[,2]<-envis[,2]*0.5
+envis[,1]<-envis[,1]*ratio_sam_env*0.85
+envis[,2]<-envis[,2]*ratio_sam_env*0.85
+
 p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
   geom_point(aes(x=RDA1,y=RDA2,color=%s),size=3) +
   #geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
@@ -151,7 +165,7 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
   labs(title=paste(pre," sample location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.2,"cm")))+
+                arrow = arrow(length = unit(0.1,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),
@@ -162,8 +176,8 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
 ggsave(paste(path,"%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
-envis[,1]<-envis[,1]*0.5
-envis[,2]<-envis[,2]*0.5
+envis[,1]<-envis[,1]*(1/ratio_sam_env)*ratio_spe_env
+envis[,2]<-envis[,2]*(1/ratio_sam_env)*ratio_spe_env
 
 p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
   geom_point(aes(x=RDA1,y=RDA2,size=abundance),color=rainbow(3)[1]) +
@@ -176,7 +190,7 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
   ggtitle(paste(pre," bacteria location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.2,"cm")))+
+                arrow = arrow(length = unit(0.1,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),
@@ -187,8 +201,11 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
 ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }else{
-envis[,1]<-envis[,1]*3.5
-envis[,2]<-envis[,2]*3.5
+envis[,1]<-envis[,1]*ratio_sam_env*0.85
+envis[,2]<-envis[,2]*ratio_sam_env*0.85
+
+#envis[,1]<-envis[,1]*3.5
+#envis[,2]<-envis[,2]*3.5
 p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
   geom_point(aes(x=CCA1,y=CCA2,color=%s),size=3) +
   #geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+
@@ -198,7 +215,7 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
   labs(title=paste(pre," sample location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.2,"cm")))+
+                arrow = arrow(length = unit(0.1,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),
@@ -209,6 +226,8 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
 ggsave(paste(path,"%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
+envis[,1]<-envis[,1]*(1/ratio_sam_env)*ratio_spe_env
+envis[,2]<-envis[,2]*(1/ratio_sam_env)*ratio_spe_env
 
 p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
   geom_point(aes(x=CCA1,y=CCA2,size=abundance),color=rainbow(3)[1]) +
@@ -221,7 +240,7 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
   ggtitle(paste(pre," bacteria location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.2,"cm")))+
+                arrow = arrow(length = unit(0.1,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),
