@@ -164,8 +164,8 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   labs(title=paste(pre," sample location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
-                color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.1,"cm")))+
+                color=brewer.pal(8,"Accent")[6],size=0.4,
+                arrow = arrow(length = unit(0.2,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),
@@ -189,8 +189,8 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   ggtitle(paste(pre," bacteria location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
-                color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.1,"cm")))+
+                color=brewer.pal(8,"Accent")[6],size=0.4,
+                arrow = arrow(length = unit(0.2,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),
@@ -214,8 +214,8 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   labs(title=paste(pre," sample location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
-                color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.1,"cm")))+
+                color=brewer.pal(8,"Accent")[6],size=0.4,
+                arrow = arrow(length = unit(0.2,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),
@@ -239,8 +239,8 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
   ggtitle(paste(pre," bacteria location plot",sep=""))+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
-                color=brewer.pal(8,"Accent")[6],size=1,
-                arrow = arrow(length = unit(0.1,"cm")))+
+                color=brewer.pal(8,"Accent")[6],size=0.4,
+                arrow = arrow(length = unit(0.2,"cm")))+
   theme(title = element_text(size = 15,vjust = 0.5,hjust = 0.5),
         axis.text = element_text(size = 15),
         text = element_text(size = 15),

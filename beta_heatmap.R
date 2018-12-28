@@ -25,11 +25,10 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   write.table(as.matrix(Dist), beta_outputtxtname , quote=FALSE, col.names=NA, sep="\t")
   
   Dist_read<-read.table(beta_outputtxtname, head=T)
-  pdf(beta_heatmap_outputpdfname)
+  pdf(beta_heatmap_outputpdfname,height = nrow(Dist_read)*0.3+3,width = ncol(Dist_read)*0.3+4)
   pheatmap(Dist_read,fontsize=10,border_color = "black",fontsize_row =10,
            cluster_rows=T,clustering_distance_rows="euclidean",
-           cluster_cols=T,clustering_distance_cols="euclidean",
-           clustering_method="centroid")
+           cluster_cols=T,clustering_distance_cols="euclidean")
   dev.off()
   
 }

@@ -119,7 +119,7 @@ function assign_taxa() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	source activate qiime2-2018.11
-
+<<com1
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -488,7 +488,7 @@ function assign_taxa() {
 #	cd ../../
 
 
-
+com1
 	source activate qm2
 	echo "##############################################################\nCorrelation analysis"
 	for nrda in $not_rda;
@@ -503,11 +503,14 @@ function assign_taxa() {
 	done;
 
 
+<<com2
+	source activate qm2
 	echo "##############################################################\network and abundance heatmap" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 		do echo $n7;
 		Rscript ${SCRIPTPATH}/network.R -c 0.5 -i exported/Relative/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
-		Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Relative/otu_table.${n7}.relative.txt -o Heatmap_top20/${n7}/;
+		#Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Relative/otu_table.${n7}.relative.txt -o Heatmap_top20/${n7}/;
+		Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/;
 		done;
 
 
@@ -528,6 +531,9 @@ function assign_taxa() {
 	do echo $group;
 		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species"; 
 			do echo $n7;
+			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $group -i exported/Relative/otu_table.${n7}.relative.txt -o taxa-bar-plots-top20-group-ordered/${n7}/ -p ${n7}_${group}_ordered_;
+
+
 			Rscript ${SCRIPTPATH}/collapse_table_with_group_mean.R -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -c $group -o media_files -s T
 			perl -lane '$,="\t";pop(@F);print(@F)' media_files/abundance_table_collapsed_with_group_mean.txt > exported/Relative/otu_table.${n7}.relative.lastcolumn.txt; 
 			perl ${SCRIPTPATH}/get_table_head2.pl exported/Relative/otu_table.${n7}.relative.lastcolumn.txt 20 -trantab > exported/Relative/otu_table.${n7}.relative.lastcolumn.trans; 
@@ -594,7 +600,7 @@ COMMENT
 #			base="${category_1}_OTU_LEfSe_LDA4"; format_input.py LEfSe/OTU/${category_1}_table_for_lefse.txt LEfSe/OTU/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/OTU/${base}.lefseinput.txt LEfSe/OTU/${base}.LDA.txt -l 4;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.png; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
 #			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.pdf; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
 #		done;
-
+com2
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq

@@ -33,8 +33,9 @@ if(!is.null(opt$mina)){
 	otu<-otu[,sel]
 }
 
-otu<-log((otu+min(otu[otu!=0]))*10000)
-otu<-scale(otu,center=T,scale=T)
+otu<-log(otu+1,base=10)
+#otu<-log((otu+min(otu[otu!=0]))*10000)
+#otu<-scale(otu,center=T,scale=T)
 
 #apply(otu,2,mean)
 #apply(otu,2,sd)
@@ -44,6 +45,5 @@ pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=7+0.5*dim(otu)[1],wi
 pheatmap(otu,fontsize=15,border_color = "black",
          fontsize_row =15,fontsize_col = 15,
          cluster_rows=T,clustering_distance_rows="euclidean",
-         cluster_cols=T,clustering_distance_cols="euclidean",
-         clustering_method="centroid")
+         cluster_cols=T,clustering_distance_cols="euclidean")
 dev.off()

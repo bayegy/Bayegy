@@ -112,6 +112,5 @@ pheatmap(cor_allft_r,fontsize=12,annotation_row = annotation_row,border_color = 
          display_numbers = heat_s,fontsize_row =17,fontsize_col = 17,
          fontsize_number = 22,
          cluster_rows=T,clustering_distance_rows="euclidean",
-         cluster_cols=T,clustering_distance_cols="euclidean",
-         clustering_method="centroid")
+         cluster_cols=T,clustering_distance_cols="euclidean")
 dev.off()

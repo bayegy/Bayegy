@@ -6,18 +6,18 @@ option_list <- list(
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
     make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
-    make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most related species you want to plot, default is 20",default=20),
-    make_option(c("-a", "--add-posix"),metavar="logical", dest="add",help="add posix to the duplicated taxons",default=TRUE),
+    make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of species needed to be plotted, default is 20",default=20),
+    make_option(c("-a", "--add-postfix"),metavar="logical", dest="add",help="add posix to the duplicated taxons",default=TRUE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
-opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to relate the bacteria species and enviromental factors(numeric), and a heatmap is used to visualize the rank correlation coefficent"))
+opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to draw the relative stack barplot of species"))
 
 library(ggplot2)
 library(stringr)
 library(reshape)
 library(RColorBrewer)
-display.brewer.all()
+#display.brewer.all()
 
 
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
@@ -32,7 +32,7 @@ map<-read.table(opt$map,quote="",row.names = 1,na.strings = "",comment.char="",c
 group<-na.omit(map[opt$group])
 label_order<-rownames(group)[order(group)]
 
-add_posix<-function(z){
+add_postfix<-function(z){
   i<-1
   ad<-function(x){
     x[duplicated(x)]<-str_replace(x[duplicated(x)],"_[0-9]+$","")
@@ -52,7 +52,7 @@ sum_abundance<-colSums(t(otu[,-c(1,ncol(otu))]))
 otu<-otu[order(sum_abundance,decreasing = T),]
 
 if(as.logical(opt$add)){
-  otu[,1]<-add_posix(otu[,1])
+  otu[,1]<-add_postfix(otu[,1])
 }else{
   otu<-otu[!duplicated(otu[,1]),]
 }
@@ -68,8 +68,11 @@ otu<-otu[match(rownames(group),rownames(otu)),]
 #other<-deod[(as.numeric(opt$num)+1):length(deod)]
 #otu<-data.frame(otu[,sel],Other=apply(otu[,other],1,sum),check.names = F,check.rows = T)
 num<-as.numeric(opt$num)
-otu<-data.frame(otu[,1:num],Other=apply(otu[,(num+1):ncol(otu)],1,sum),check.names = F,check.rows = T)
-
+if(num<ncol(otu)-1){
+  otu<-data.frame(otu[,1:num],Other=apply(otu[,(num+1):ncol(otu)],1,sum),check.names = F,check.rows = T)
+}else{
+  otu<-data.frame(otu,check.names = F,check.rows = T)
+}
 
 #otu<-data.frame(otu,group)
 otu$id<-rownames(otu)
@@ -88,7 +91,9 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
   theme(text = element_text(size = 10),
         panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
         axis.line = element_line(),panel.border =  element_blank(),
-        axis.text.x = element_text(angle = 90,size = 10,vjust = 0.5,hjust = 1))
+        axis.text.x = element_text(angle = 45,size = 10,hjust = 1))+
+  scale_y_continuous(limits=c(0,101), expand = c(0, 0))
+
 
 wd<-length(label_order)*0.2+4
 wd<-ifelse(wd<50,wd,49.9)

@@ -187,6 +187,7 @@ organize_deliverable_structure() {
 	cp -rp 2-ANOVA_And_Duncan/ ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
 	cp -rp alpha-rarefaction-ggplot2/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
 	cp -rp Barplot-of-Group-Mean/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20-group-mean
+	cp -rp taxa-bar-plots-top20-group-ordered/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/
 	rm ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20-group-mean/*svg
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
 	#cd ./Result_AmpliconSequencing/
