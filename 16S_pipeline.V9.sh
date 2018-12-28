@@ -1,6 +1,6 @@
 #/bin/sh -S
 #########
-#Please address any bugs to Cheng. 
+#Please address any bugs to Cheng.
 #Date 2018.9.13
 #########
 
@@ -119,7 +119,7 @@ function assign_taxa() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	source activate qiime2-2018.11
-<<com1
+
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -488,7 +488,7 @@ function assign_taxa() {
 #	cd ../../
 
 
-com1
+
 	source activate qm2
 	echo "##############################################################\nCorrelation analysis"
 	for nrda in $not_rda;
@@ -503,7 +503,6 @@ com1
 	done;
 
 
-<<com2
 	source activate qm2
 	echo "##############################################################\network and abundance heatmap" 
 	for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
@@ -600,7 +599,7 @@ COMMENT
 #			base="${category_1}_OTU_LEfSe_LDA4"; format_input.py LEfSe/OTU/${category_1}_table_for_lefse.txt LEfSe/OTU/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/OTU/${base}.lefseinput.txt LEfSe/OTU/${base}.LDA.txt -l 4;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.png; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
 #			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.pdf; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
 #		done;
-com2
+
 	echo "##############################################################\n#Organize the result files"
 	#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
 	sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq
