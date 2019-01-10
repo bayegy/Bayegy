@@ -7,7 +7,8 @@ option_list <- list(
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
     make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of species needed to be plotted, default is 20",default=20),
-    make_option(c("-a", "--add-postfix"),metavar="logical", dest="add",help="add posix to the duplicated taxons",default=TRUE),
+    make_option(c("-a", "--add-postfix"),metavar="logical", dest="add",help="add postfix to the duplicated taxons",default=TRUE),
+    make_option(c("-b", "--by-groupMean"),metavar="logical", dest="bym",help="Pass this to use the group mean to plot barplot",default=FALSE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
@@ -62,7 +63,12 @@ rownames(otu)<-otu[,1]
 otu<-t(otu[,-c(1,ncol(otu))])*100
 
 otu<-otu[match(rownames(group),rownames(otu)),]
-
+if(opt$bym){
+  otu<-data.frame(apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)}))
+  otu<-data.frame(t(apply(otu,1,function(x){x/sum(x)}))*100)
+  label_order<-ordered(rownames(otu))
+  #print(otu)
+}
 #deod<-order(colSums(otu),decreasing = T)
 #sel<-head(deod,as.numeric(opt$num))
 #other<-deod[(as.numeric(opt$num)+1):length(deod)]
@@ -95,7 +101,7 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
   scale_y_continuous(limits=c(0,101), expand = c(0, 0))
 
 
-wd<-length(label_order)*0.2+4
+wd<-ifelse(opt$by,length(label_order)*0.6+4,length(label_order)*0.2+4)
 wd<-ifelse(wd<50,wd,49.9)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 
