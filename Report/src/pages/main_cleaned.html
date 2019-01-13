@@ -58,21 +58,6 @@
 
 		<dd style="font-size:80%;">&nbsp;</dd>
 
-		<script>
-		document.getElementById("myBtn").addEventListener("click", function()
-		{
-			document.getElementById("nav").style.display=""
-			document.getElementById("emm").style.display=""
-			document.getElementById("section").style.margin="20px 20px 20px 340px"
-		});
-
-		document.getElementById("h").addEventListener("click", function()
-		{
-			document.getElementById("nav").style.display="none";
-			document.getElementById("emm").style.display="none";
-			document.getElementById("section").style.margin="20px"
-		});
-		</script>
 
 		<div class="noprint" id="nav">
 			<div class="AccordionPanel">
@@ -207,7 +192,7 @@
 
 			<hr>
 			<h2>
-				<a name="analysis" id="analysis">三</a> 测序数据预处理 (<a href="../../../1-QCStats">1-QCStats目录</a>)
+				<a name="analysis" id="analysis">三</a> 测序数据预处理 (<a href="../../../../1-OTUStats">../1-OTUStats目录</a>)
 			</h2>
 
 			<p>
@@ -216,15 +201,15 @@
 				在本实验中得到的测序数据经过barcode拆分后获得的有效序列信息统计，如图3-1所示:
 			</p>
 
-			<p align="center"><img src="../../Figure3-1.png" width="640" height="480"></p>
+			<p align="center"><img src="../../../../1-OTUStats/1-Stats-demux/demultiplex-summary.png" width="640" height="480"></p>
 			<p align="center"><strong>图3-1 数据拆分序列数目统计</strong></p>
 			<dd style="font-size:80%;">
-				说明：在数据按照barcode拆分之后每个样品的实际所含的序列数量统计。X轴代表样品所含序列数目的区间，Y轴代表在这个所含序列数目的区间有多少个样品。<a href="../../../1-QCStats/1-Stats-demux/Summary_请点此文件查看.html">点击此处查看具体的样本测序量统计及序列测序质量统计结果（推荐）。</a>
+				说明：在数据按照barcode拆分之后每个样品的实际所含的序列数量统计。X轴代表样品所含序列数目的区间，Y轴代表在这个所含序列数目的区间有多少个样品。<a href="../../../../1-OTUStats/1-Stats-demux/Summary_请点此文件查看.html">点击此处查看具体的样本测序量统计及序列测序质量统计结果（推荐）。</a>
 			</dd>
 
 
 			<p align="left">
-				使用Qiime2软件中的DADA2插件对所有样品的全部有效序列进行质量控制，去噪(纠正测序错误的序列)，拼接的序列并且去嵌合体，形成OTU。<sup>[7]</sup>DADA2每一步的结果统计信息可以通过<a href="../../../1-QCStats/2-Stats-dada2/Summary_请点此文件查看.html">点击此处打开新窗口查看</a>。
+				使用Qiime2软件中的DADA2插件对所有样品的全部有效序列进行质量控制，去噪(纠正测序错误的序列)，拼接的序列并且去嵌合体，形成OTU。<sup>[7]</sup>DADA2每一步的结果统计信息可以通过<a href="../../../../1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html">点击此处打开新窗口查看</a>。
 			</p>
 
 			<p>
@@ -233,7 +218,7 @@
 
 			<hr>
 			<h2 align="left">
-				四 物种的注释与评估(<a href="../../../2-AbundanceAnalysis">2-AundanceAnalysis目录</a>)
+				四 物种的注释与评估(<a href="../../../2-AbundanceAnalysis">2-AundanceAnalysis目录(主)</a>)
 			</h2>
 
 			<h3 align="left">
@@ -244,7 +229,7 @@
 				为了研究样品物种组成及多样性信息，对所有样品的全部的有效序列进行聚类/去噪，形成OTU，也可以称特征序列。选取OTU的代表性序列，与核糖体RNA数据库(Greengenes  Database 13_8版本[按99%序列相似性聚类])进行比对获得物种注释信息。<sup>[10]</sup>基于物种注释信息，去除注释为叶绿体、线粒体以及不能注释到界级别的OTU及其包含的序列。基于OTU的绝对丰度及注释信息，对每个样品在一共7个分类水平界门纲目科属种(Kingdom,Phylum,Class,Order,Family,Genus,Species)上的序列数目占总序列数的比例进行统计，可以有效的评估样本的物种注释分辨率（注释到属/种的比例越高表示样本的OTU注释效果越好），图4-1展示了每个样本中OTU在各分类水平注释的相对程度:
 			</p>
 
-			<p align="center"><img src="../../Figure4-1.png" width="800" height="400"></p>
+			<p align="center"><img src="../../../../1-OTUStats/Classified_stat_relative.png" width="800" height="400"></p>
 
 			<p align="center"><strong>图 4-1 各个样品在各分类水平上的序列注释程度柱形图</strong></p>
 
@@ -258,11 +243,11 @@
 			</p>
 
 			<p align="center">
-				<iframe src="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2/Summary_请点此文件查看.html" width="700" height="500"></iframe>
+				<iframe src="../../../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots_Qiime2/Summary_请点此文件查看.html" width="700" height="500"></iframe>
 			</p>
 
 			<p align="center">
-				<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2/Summary_请点此文件查看.html"><strong>图 4-2 各个样本在各分类水平的物种相对分布情况的柱形图（全部物种，点击此处打开新窗口查看）</a></strong>
+				<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots_Qiime2/Summary_请点此文件查看.html"><strong>图 4-2 各个样本在各分类水平的物种相对分布情况的柱形图（全部物种，点击此处打开新窗口查看）</a></strong>
 			</p>
 
 			<dd style="font-size:80%;">
@@ -270,12 +255,12 @@
 			</dd>
 
 
-			<p align="center"><img src="../../Figure4-2.png" width="800" height="400"></p>
+			<embed width="100%" height="400" fullscreen="yes" src="..\..\Figure4-2.pdf"></embed>
 
 			<p align="center"><strong>图 4-2 (补充) 各个样品在门水平上的相对分布情况柱形图（相对丰度前20的物种）</strong></p>
 
 			<dd style="font-size:80%;">
-				说明：通常在种/属水平因为分类种类过多而在图例中无法全部展示所有分类，特增加本图是对图4-2进行补充。横坐标(Sample Name)是样品名，纵坐标(Sequence Number Percent)表示注释到该门水平的序列数目占总注释数据的比率，柱状图自上而下的颜色顺序对应于右侧的图例颜色顺序。在门水平没有注释的序列被归为unclassified一类。图例中最多显示最优势的20个种类,余下的相对丰度较低的物种被归类为Other在图中展示。更多完整的物种分布情况请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots">./ 2-AundanceAnalysis/1-AbundanceSummary/3-Barplots/</a>。
+				说明：通常在种/属水平因为分类种类过多而在图例中无法全部展示所有分类，特增加本图是对图4-2进行补充。横坐标(Sample Name)是样品名，纵坐标(Sequence Number Percent)表示注释到该门水平的序列数目占总注释数据的比率，柱状图自上而下的颜色顺序对应于右侧的图例颜色顺序。在门水平没有注释的序列被归为unclassified一类。图例中最多显示最优势的20个种类,余下的相对丰度较低的物种被归类为Other在图中展示。更多完整的物种分布情况请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots">./ 2-AundanceAnalysis/1-AbundanceSummary/2-Barplots/</a>。
 			</dd>
 
 			<p>
@@ -285,7 +270,7 @@
 			<p align="center"><strong><a href="../../page4/Summary_请点此文件查看.html">门分类水平的热图聚类结果（点击此处打开新窗口查看）</a></strong></p>
 
 			<dd style="font-size:80%;">
-				说明：纵向为样品名称信息，同时也包括了分组信息。横向为OTU在该分类水平注释名称。图中上方的聚类树为OTU的系统发生关系及其物种注释，左侧的聚类树为样品聚类树，中间的热图是OTU的相对丰度热图，颜色与相对丰度的关系见图上方的刻度尺。</a>其他分类等级完整的热图聚类结果请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/">./2-AundanceAnalysis/1-AbundanceSummary/4-Heatmaps/</a>。
+				说明：纵向为样品名称信息，同时也包括了分组信息。横向为OTU在该分类水平注释名称。图中上方的聚类树为OTU的系统发生关系及其物种注释，左侧的聚类树为样品聚类树，中间的热图是OTU的相对丰度热图，颜色与相对丰度的关系见图上方的刻度尺。</a>其他分类等级完整的热图聚类结果请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/">./2-AundanceAnalysis/1-AbundanceSummary/3-Heatmaps/</a>。
 			</dd>
 			
 			<br><br>
@@ -310,7 +295,7 @@
 
 			<!-- <p align="center"><img src="../../Figure4-3.pdf" width="800" height="500"></p> -->
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="800">
+			<object  width="100%" height="800">
 				<param name="SRC" value="../../Figure4-3.pdf" >
 				<embed width="100%" height="800" fullscreen="yes" src="../../Figure4-3.pdf">
 					<noembed></noembed>
@@ -326,12 +311,12 @@
 		 	<br>
 			<h3><a id="a4.3"></a>4.3 样品共有物种分析</h3>
 			<p>
-				对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图（Venn diagram）分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现样本在OTU水平上的组成相似性及重叠情况（图4-3）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../2-AbundanceAnalysis/3-VennAndFlower"> ./2-AbundanceAnalysis/3-VennAndFlower</a>
+				对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图（Venn diagram）分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现样本在OTU水平上的组成相似性及重叠情况（图4-3）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../1-VennAndFlower"> ./1-AbundanceAnalysis/3-VennAndFlower</a>
 			</p>
 
-			<p align="center"><img src="../../Figure4-4.png" width="600" height="600"></p>
+			<p align="center"><img src="../../Figure4-4.png" width="600" height="600" alt="分组数量大于5，无法画Venn图"></p>
 			<p align="center"><strong>图4-4 共有或特有物种韦恩图展示（当分组数目小于等于5时）</strong></p>
-			<dd style="font-size:80%;">说明：韦恩图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。<a href="../../../2-AbundanceAnalysis/3-VennAndFlower">请点击打开新窗口查看韦恩图/花瓣图</a></dd>
+			<dd style="font-size:80%;">说明：韦恩图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。<a href="../../../1-VennAndFlower">请点击打开新窗口查看韦恩图/花瓣图</a></dd>
 			
 			<p>
 				查看各分类水平的物种在各个样本的分布情况请点击<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats">./2AundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/</a>。  
@@ -347,7 +332,7 @@
 			</p>
 
 			<p>
-				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="720">
+				<object  width="100%" height="720">
 					<param name="SRC" value="..\..\Figure5-1.pdf" >
 					<embed width="100%" height="360" fullscreen="yes" src="..\..\Figure5-1.pdf"><noembed></noembed></embed>
 				</object>
@@ -419,7 +404,7 @@
 				无度量多维标定法（NMDS）统计是一种适用于生态学研究的排序方法，类似于PCoA，通过样本的分布，或者基因的分布，可以看出组间差异，组内差异等。NMDS包括一类排序方法，其设计目的是为了克服以前的排序方法（即线性模型，包括PCoA）的缺点，NMDS的模型是非线性的，能更好地反映生态学数据的非线性结构。非度量多维尺度法是一种将多维空间的研究对象(样本或变量)简化到低维空间进行定位、分析和归类, 同时又保留对象间原始关系的数据分析方法。适用于无法获得研究对象间精确的相似性或相异性数据，仅能得到他们之间等级关系数据的情形，图6-2为基于Unweighted Unifrac距离进行的NMDS分析。
 			</p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="620">
+			<object  width="100%" height="620">
 				<param name="SRC" value="..\..\Figure6-2.pdf" >
 				<embed width="100%" height="600" fullscreen="yes" src="..\..\Figure6-2.pdf">
 					<noembed></noembed>
@@ -463,7 +448,7 @@
 				<a>选取关注的</a>OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)绘制进化关系树图，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。此外分析也生成了用于iTOL制图的文件。<sup>[25,26]</sup>客户可以点击<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a>查看完整信息。
 			</p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="1000">
+			<object  width="100%" height="1000">
 				<param name="SRC" value="..\..\Figure7-1.pdf" >
 				<embed width="100%" height="1000" fullscreen="yes" src="..\..\Figure7-1.pdf"><noembed></noembed></embed>
 			</object>
@@ -479,7 +464,7 @@
 			<p>
 				CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。本报告先进行DCA分析，看最大轴的值是否大于4,如果大于4.0，就选CCA，否则选RDA。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 <sup>[27-29]</sup>
 			</p>
-			<p align="center"><img src="../../Figure8-1.png" width="800" height="800"></p>
+			<p align="center"><img alt="未提供环境因子，没有此项分析" src="../../Figure8-1.png" width="800" height="800"></p>
 			<h3 align="center">图8-1 属水平物种CCA/RDA排序图</h3>
 			<dd style="font-size:80%;">
 				说明：在CCA/RDA物种排序图内，环境因子用箭头表示，箭头连线的长度代表某个环境因子与群落分布和种类分布间相关程度的大小（解释方差的大小），箭头越长，说明相关性越大，反之越小。箭头连线和排序轴的夹角代表某个环境因子与排序轴的相关性大小，夹角越小，相关性越高；反之越低。环境因子之间的夹角为锐角时表示两个环境因子之间呈正相关关系，钝角时呈负相关关系。每个点代表一个物种，点越大，对应物种丰度越高，灰色点代表丰度较低的物种，未在图中注释物种名称，将物种投影到各个环境因子，对应的值即为该物种倾向于存在的环境（喜欢的环境）。或者说，将物种点与原点连线，物种间，物种与环境因子间，环境因子间的夹角的余弦值近似于相关系数，至于有多近似，就要看RDA1/CCA1和RDA2/CCA2两个坐标轴的解释方差百分比有多大，越大越近似。对于样本排序图（请查看<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>），样本点之间的距离近似于菌群结构差异程度，样本点投影到环境因子对应的值近似于该样本真实的环境因子值。
@@ -490,11 +475,12 @@
 				相关性热图可以用于分析环境因子或其他临床表型数据与微生物群落或物种之间是否显著相关，然后计算环境因子与微生物物种间的Spearman相关系数，并用热图展示（图8-2）。该分析可以挑选出与某种环境因子或疾病显著相关的物种，同时提供环境因子的数据，比如 pH值、温度值、临床因子等。<sup>[30-32]</sup> 
 			</p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="400">
+			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="400" id="alta1">
 				<param name="SRC" value="..\..\Figure8-2.pdf" >
-				<embed width="100%" height="400" fullscreen="yes" src="..\..\Figure8-2.pdf"><noembed></noembed></embed>
+				<embed onload="hide()" width="100%" height="400" fullscreen="yes" src="..\..\Figure8-2.pdf"></embed>
 			</object>
-			 
+
+			<p align="center" style="display: block" id="alta2">未提供环境因子，没有此项分析</p>
 			<p align="center"><strong>图8-2 属水平微生物物种与表型之间的相互关系热图</strong></p>
 			<dd style="font-size:80%;">
 				说明：X轴上为环境因子，Y轴为物种。通过计算获得R值（秩相关）和校正错误发现率的P值。R值在图中以不同颜色展示，P值若小于0.05则用 * 号标出，右侧图例是不同R值的颜色区间，同时，左边的色条标注了物种所属门分类。* 0.01≤ P  &lt;0.05，** 0.001≤P  &lt; 0.01，*** P  &lt;  0.001。
@@ -506,7 +492,7 @@
 				<a>基于物种样本间的相对丰度进行Spearman获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建</a>（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。同时我们也提供基于相对组成成分数据的相关性计算（CCLasso/SPARCC），并用Cytoscape进行定制化可视化分析（属于VIP分析）。<sup>[33]</sup> 
 			</p>
 			<p align="center">
-				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="700">
+				<object  width="100%" height="700">
 					<param name="SRC" value="..\..\Figure8-3.pdf" >
 					<embed width="100%" height="700" fullscreen="yes" src="..\..\Figure8-3.pdf"><noembed></noembed></embed>
 				</object>
@@ -555,7 +541,7 @@
 			</p>
 
 			<p>
-				<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="700">
+				<object  width="100%" height="700">
 					<param name="SRC" value="..\..\Figure9-2.pdf" >
 					<embed width="100%" height="700" fullscreen="yes" src="..\..\Figure9-2.pdf"><noembed></noembed></embed>
 				</object>
@@ -621,8 +607,8 @@
 			<p>交付数据分为若干个子目录。详情可查看交付目录下的Result_README.pdf。 </p>
 			<p>
 				<strong>|</strong><strong>Result_AmpliconSequencing/  </strong><strong>[</strong><strong>主要的结果文件</strong><strong>]</strong><br>
-				|-- 1-QCStats / [拆分后数据主要相关信息]<br>
-				|-- 2-AundanceAnalysis / [整体物种的注释与评估主要相关信息]<br>
+				|-- 1-VennAndFlower / [韦恩图和花瓣图分析]<br>
+				|-- 2-AundanceAnalysis / [物种丰度统计和分析结果]<br>
 				|-- 3-AlphaDiversity / [Alpha多样性分析结果主要相关信息]<br>
 				|-- 4-BetaDiversity / [Beta多样性分析分析结果主要相关信息]<br>
 				|-- 5-Phylogenetics / [系统进化分析结果主要相关信息]<br>
@@ -642,5 +628,26 @@
 			<p>&nbsp;</p>
 			<!-- /blockquote -->
 		</div> 
+		<script>
+			function hide(){
+				document.getElementById("alta2").style.display="none"
+			}
+		</script>
+		<script>
+		document.getElementById("myBtn").addEventListener("click", function()
+		{
+			document.getElementById("nav").style.display=""
+			document.getElementById("emm").style.display=""
+			document.getElementById("section").style.margin="20px 20px 20px 340px"
+		});
+
+		document.getElementById("h").addEventListener("click", function()
+		{
+			document.getElementById("nav").style.display="none";
+			document.getElementById("emm").style.display="none";
+			document.getElementById("section").style.margin="20px"
+		});
+		</script>
+
 	</body>
 </html>
