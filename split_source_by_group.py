@@ -39,6 +39,7 @@ def iterin(a, b):
   return list(map(lambda x: x in list(b), a))
 
 
+mapd = mapd.ix[:, mapd.notna().sum() > 2]
 savepd(mapd, 'mapping_file.txt')
 
 print("Min abundance is %d" % (int(opt.mina)))

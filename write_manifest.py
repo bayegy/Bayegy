@@ -45,14 +45,16 @@ nfile = 0
 ff = 0
 id_sets = []
 fout.write('sample-id,absolute-filepath,direction\n')
+
+print("\nThe following samples were found in fastq files, but not found in sample-metadata:")
 for root, dirs, files in os.walk(options.input):
   if len(dirs) == 0:
     root = os.path.abspath(root)
     for fl in files:
       if re.search(sp, fl):
+        info = "%s/%s" % (root, fl)
+        pre_id = re.search(sp, fl).group(1).lower()
         try:
-          info = "%s/%s" % (root, fl)
-          pre_id = re.search(sp, fl).group(1).lower()
           sn = id_ds[pre_id]
           if re.search(rp, fl):
             fout.write("%s,%s,reverse\n" % (sn, info))
@@ -63,9 +65,11 @@ for root, dirs, files in os.walk(options.input):
             id_sets.append(pre_id)
             nfile += 1
         except KeyError:
+          print(pre_id)
           ff += 1
+
 fout.close()
-print("The following samples were not found in fastq files:")
+print("\nThe following samples were found in sample-metadata, but not found in fastq files:")
 
 with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.tsv', 'w') as outfile:
   miss = 0
@@ -85,7 +89,7 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
         print('    ' + li[0])
         miss += 1
 
-
+print("\nIn summary:")
 emm = "\n    %s fastq files were writed" % (nfile)
 emm1 = "\n    %s fastq files were filterd as the ids of samples were not found in mapping file" % (ff)
 print(emm)

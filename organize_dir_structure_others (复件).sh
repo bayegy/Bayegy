@@ -7,6 +7,7 @@ mapping_file=$1
 category_1=$2
 SCRIPTPATH=$3
 number=$4
+prefix=$5
 
 if [ -z "$3" ]; then
 	echo "##########
@@ -42,14 +43,15 @@ check_file() {
 }
 
 organize_deliverable_structure() {
-	rm -r ./Result_AmpliconSequencing
-	mkdir -p ./Result_AmpliconSequencing/ ./Result_AmpliconSequencing/1-QCStats/ \
+	if [ -d "./Result_AmpliconSequencing" ];then
+		rm -r ./Result_AmpliconSequencing;
+	fi;
+	mkdir -p ./Result_AmpliconSequencing/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/1-Absolute/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/2-Relative/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/ \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-RepresentiveSequence/ \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/ \
+	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/ \
+	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/Heatmap-Qiime2/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/2-ANOVA/ \
 	./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/3-KruskalWallis/ \
@@ -66,22 +68,18 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/ \
 	./Result_AmpliconSequencing/5-Phylogenetics/ \
 	./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/ \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/ \
-	./Result_AmpliconSequencing/7-FiguresTablesForReport \
+	./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/ \
+	./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/ \
+	./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/ \
+	./Result_AmpliconSequencing/8-FiguresTablesForReport \
  	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Phyloseq \
 	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2 \
-	./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20
+	./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest
 
 
 	echo "Start organize the files for deliverables ..."
-	
 	cp ${SCRIPTPATH}/Result_README.pdf ./Result_AmpliconSequencing/
 	cp $mapping_file ./Result_AmpliconSequencing/mapping_file.txt
-
-	cp -r demux.qzv* stats-dada2.qzv* ./Result_AmpliconSequencing/1-QCStats/
-
-	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png ./Result_AmpliconSequencing/2-AbundanceAnalysis/
-	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/feature-table.taxonomy.even.txt
 
 	cp exported/Absolute/*absolute.txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/1-Absolute/
 	#cp exported/Absolute/otu_table.p.absolute.mat ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/1-Absolute/feature-table.Phylum.absolute.txt
@@ -100,12 +98,11 @@ organize_deliverable_structure() {
 
 	cp -r exported/collapsed/*qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/
 
-	cp -r ./rep-seqs.qzv* ./exported/*nwk ./exported/dna-sequences.fasta ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-RepresentiveSequence/
+	cp -r taxa-bar-plots.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/
+	#cp -r exported/Relative/*relative.txt exported/Relative/otu*png ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20
 
-	cp -r taxa-bar-plots.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/
-	cp -r exported/Relative/*relative.txt exported/Relative/otu*png ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20
-
-	cp -r exported/${number}/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/
+	cp -r exported/${number}/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/Heatmap-Qiime2/
+	cp -r Heatmap_top20 ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/
 
 	cp -r exported/ANCOM/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/
 
@@ -114,7 +111,7 @@ organize_deliverable_structure() {
 	cp -r exported/DiffAbundance/kruskal_wallis_*txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/3-KruskalWallis/
 
 	#cp lefse result ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
-	cp -r LEfSe/* ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
+	cp -r exported/Relative/Lefse/*/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
 	cp -r exported/DiffAbundance/DESeq2_*txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/5-DESeq2/
 
 	cp -r alpha/alpha-summary.tsv R_output/*alpha_diversity_* ./Result_AmpliconSequencing/3-AlphaDiversity/1-AlphaDiversitySummary/
@@ -165,23 +162,25 @@ organize_deliverable_structure() {
 
 	#cp -r /Result_AmpliconSequencing/6-AssociationAnalysis
 
-#	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
-#	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
-#	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
-#	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
+	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
+	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
+	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
+	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
 	#rm ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/PCA.R ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/Rplots.pdf
 
 	cp AdditionalPhylogeny/*.pdf ./Result_AmpliconSequencing/5-Phylogenetics/
-	cp -rp 4-VennAndFlower/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/3-VennAndFlower
-	rm ./Result_AmpliconSequencing/2-AbundanceAnalysis/3-VennAndFlower/*.log
+	cp -rp 4-VennAndFlower/ ./Result_AmpliconSequencing/1-VennAndFlower
+	rm ./Result_AmpliconSequencing/1-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
 	cp -rp 2-CorrelationHeatmap/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
-#	cp -rp 2-ANOVA_And_Duncan/ ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
+	cp -rp 2-ANOVA_And_Duncan/ ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/
 	cp -rp alpha-rarefaction-ggplot2/ ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/
-	
+	cp -rp Barplot-of-Group-Mean/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20-group-mean
+	cp -rp taxa-bar-plots-top20-group-ordered/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20
+	#rm ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20-group-mean/*svg
 	#change index.html to a more obvious name, and organize the qzv.exported and qzv files.
 	#cd ./Result_AmpliconSequencing/
 	for f in $(find ./Result_AmpliconSequencing/ -type f -name "*qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); mv $f ${f}.exported; mv ${f}.exported ${dir}/${base}; done
@@ -191,40 +190,38 @@ organize_deliverable_structure() {
 
 
 	#minor adjustment of file structure
-	mv ./Result_AmpliconSequencing/1-QCStats/demux/ ./Result_AmpliconSequencing/1-QCStats/1-Stats-demux
-	mv ./Result_AmpliconSequencing/1-QCStats/stats-dada2 ./Result_AmpliconSequencing/1-QCStats/2-Stats-dada2
-	mv ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2
+	mv ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots_Qiime2
 	mv ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction ./Result_AmpliconSequencing/3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction-Qiime2
 	rm -r ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2/jaccard_emperor
 	###rename the pcoa results
 	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*emperor* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/1-Plots-from-QIIME2
 	#mv ./Result_AmpliconSequencing/4-BetaDiversity/*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/2-Plots-from-R
-	#######################For 7-FiguresTablesForReport
+	#######################For 8-FiguresTablesForReport
 
-	cp -rp ${SCRIPTPATH}/Report_ITS/src Result_AmpliconSequencing/7-FiguresTablesForReport/
-	cp ${SCRIPTPATH}/Report_ITS/结题报告.html Result_AmpliconSequencing/
+	cp -rp ${SCRIPTPATH}/Report/src Result_AmpliconSequencing/8-FiguresTablesForReport/
+	cp ${SCRIPTPATH}/Report/结题报告.html Result_AmpliconSequencing/
 
 
-
-	cd ./Result_AmpliconSequencing/7-FiguresTablesForReport
-	cp -rp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/${category_1}-table-Phylum.${number}/ page4
+	cd ./Result_AmpliconSequencing/8-FiguresTablesForReport
+	cp -rp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/Heatmap-Qiime2/${category_1}-table-Phylum.${number}/ page4
 	cp -rp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/ page4-2
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
-	cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
-	cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
-	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots-top20/otu_table.Phylum.relative.png Figure4-2.png
-	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/OTU/${category_1}_OTU_LEfSe_LDA4.pdf Figure4-3.pdf
-	cp ../2-AbundanceAnalysis/3-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
+	#cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
+	#cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
+	cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20/Phylum_${category_1}_ordered_barplot.pdf Figure4-2.pdf
+	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.pdf Figure4-3.pdf
+	cp ../1-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure6-1.png
 	cp ../4-BetaDiversity/3-NMDS/${category_1}_unweighted_unifrac_NMDS_without_labels.pdf Figure6-2.pdf
 	cp ../5-Phylogenetics/${category_1}_phylogenetic_tree_heatmap.pdf Figure7-1.pdf
-	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}_*_bacteria_location_plot.png Figure8-1.png
+	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}*bacteria_location_plot.png Figure8-1.png
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/Correlation_heatmap.pdf Figure8-2.pdf
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
+	cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure9-1.png
+	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure9-2.pdf
 	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
-
 
 	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Table3-1.qzv
 	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/collapsed-Species/collapsed-Species.qzv  Table3-2.qzv
@@ -234,8 +231,8 @@ organize_deliverable_structure() {
 	
 	#cp ../1-QCStats/1-Stats-demux/demux.qzv Figure2-1.qzv
 	
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Barplots/taxa-bar-plots_Qiime2/taxa-bar-plots.qzv Figure3-2.qzv
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/4-Heatmaps/${category_1}-table-Phylum.${number}/${category_1}-table-Phylum.${number}.qzv Figure3-3.qzv
+	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots_Qiime2/taxa-bar-plots.qzv Figure3-2.qzv
+	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/${category_1}-table-Phylum.${number}/${category_1}-table-Phylum.${number}.qzv Figure3-3.qzv
 	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Figure3-4.qzv
 	#cp ../3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction/alpha-rarefaction.qzv Figure3-6.qzv
 	#cp ../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/shannon-group-significance/shannon-group-significance.qzv Figure3-7.qzv

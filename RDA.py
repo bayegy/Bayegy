@@ -52,6 +52,8 @@ dat<-dat[!duplicated(dat[,1]),]
 rownames(dat)=dat[,1]
 map<-read.table("%s",header = T,na.strings="",sep = "\\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 
+colnames(map)[is.na(colnames(map))]<-"NA"
+
 
 notstr=c()
 for(i in 1:length(map)){
@@ -63,7 +65,6 @@ if(ex[1]!="none"){
 }
 
 sel=c("%s",colnames(map)[notstr])
-
 
 data=map[sel]
 data=na.omit(data)

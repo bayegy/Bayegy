@@ -25,7 +25,9 @@ p.add_argument('-r', '--reverse-file-pattern', dest='rp', default=r'\.2\.fq$', m
                help='The regular expression representing reverse sequence in file names,Supply this parameter together with -i -s -f. This option will be ignored if --manifest is specifed')
 p.add_argument('-d', '--sample-depth', dest='depth', default='auto', metavar='<int or str>',
                help='Depth for subsampleing. If "auto" is supplied, the min OTU frequency of samples will be caculated and apply to this parameter')
-p.add_argument('--classifier', dest='classifier', default='/home/admin1/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza', metavar='<path>',
+p.add_argument('-e', '--exclude', dest='exclude', default='none', metavar='<str>',
+               help='The variables excluded from RDA and correlation heatmap analysis, if more than one variable is expected, you should use comma as delimeters. if more than one run is expected, use semicolon as delimeters. example: "Var1,Var2;Var1,Var3". default is none, meaning no variable will be excluded.')
+p.add_argument('--classifier', dest='classifier', default='/home/admin1/database_18S/Silva/817-1196/silva_18s_817_1196_classifier.qza', metavar='<path>',
                help='Path of the classifier for alignment and assigning taxonomy')
 p.add_argument('--ref-seqs', dest='ref', default='/home/admin1/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza', metavar='<path>',
                help='Path of the reference sequences for close reference alignment')
@@ -67,8 +69,8 @@ if not options.manifest:
       os.system("python %s/write_manifest.py -i %s -m %s/cleaned_map.txt -o %s/%s_data -f '%s' -r '%s' -s '%s'" %
                 (scriptpath, options.input, options.outdir, options.outdir, c, options.fp, options.rp, options.sp))
       os.system('''cd %s/%s_Results&&sed -i -e '1s/%s/Group/g' ../%s_data/sample-metadata.tsv&&\
-  bash %s/16S_pipeline.V9.sh ../%s_data/sample-metadata.tsv %s 1000 Group %s %s ../%s_data/manifest.txt  none %s''' %
-                (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.type))
+  bash %s/others_pipeline.sh ../%s_data/sample-metadata.tsv %s 1000 Group %s %s ../%s_data/manifest.txt  "%s" %s''' %
+                (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.exclude, options.type))
       if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
         os.makedirs(options.outdir + '/' + 'All_Results_Summary')
       os.system('''rm -r %s/All_Results_Summary/%s_Result_AmpliconSequencing; mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
@@ -80,9 +82,9 @@ if not options.manifest:
     os.system("python %s/write_manifest.py -i %s -m %s -o %s/data -f '%s' -r '%s' -s '%s'" %
               (scriptpath, options.input, options.map, options.outdir, options.fp, options.rp, options.sp))
     os.system('''cd %s/Results&&\
-  bash %s/16S_pipeline.V9.sh ../data/sample-metadata.tsv %s 1000 %s %s %s ../data/manifest.txt  none %s''' %
-              (options.outdir, scriptpath, options.depth, options.group, options.classifier, options.ref, options.type))
+  bash %s/others_pipeline.sh ../data/sample-metadata.tsv %s 1000 %s %s %s ../data/manifest.txt  "%s" %s''' %
+              (options.outdir, scriptpath, options.depth, options.group, options.classifier, options.ref, options.exclude, options.type))
 else:
   os.system('''cd %s&&\
-  bash %s/16S_pipeline.V9.sh %s %s 1000 %s %s %s %s  none %s''' %
-            (options.outdir, scriptpath, options.map, options.depth, options.group, options.classifier, options.ref, options.manifest, options.type))
+  bash %s/others_pipeline.sh %s %s 1000 %s %s %s %s  "%s" %s''' %
+            (options.outdir, scriptpath, options.map, options.depth, options.group, options.classifier, options.ref, options.manifest, options.exclude, options.type))

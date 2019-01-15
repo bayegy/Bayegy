@@ -24,6 +24,8 @@ group<-dat[opt$g]
 rownames(group)<-dat[,1]
 sel<-(!is.na(group))
 dat<-dat[sel,]
+sel2<-(colSums(!is.na(dat))>2)
+dat<-dat[,sel2]
 write.table(dat,file = paste(opt$out,"/","cleaned_map.txt",sep = ""),row.names = F,col.names = T,quote = F,sep = "\t",append = F,na ="")
 
 if(!is.null(opt$i)){

@@ -33,6 +33,9 @@ dat=dat[,-c(1,length(dat))]
 
 
 map<-read.table(as.character(opt$map),sep="\t",na.strings="",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
+colnames(map)[is.na(colnames(map))]<-"NA"
+
+
 notstr=c()
 for(i in 1:length(map)){
 	notstr[i]=is.numeric(map[,i])
