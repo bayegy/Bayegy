@@ -118,7 +118,7 @@ function assign_taxa() {
 	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	source activate qiime2-2018.11
-<<com1
+
 	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
 	#check_file $manifest_file
 	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
@@ -137,7 +137,7 @@ function assign_taxa() {
 
 	#paired-end
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 210 --p-trunc-len-r 210 --p-trim-left-f 24 --p-trim-left-r 25 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 256 --p-trim-left-f 24 --p-trim-left-r 20 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 280 --p-trunc-len-r 250 --p-trim-left-f 30 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 0 --p-trunc-len-r 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
 
 
@@ -151,7 +151,7 @@ function assign_taxa() {
 	mv rep-seqs-dada2.qza rep-seqs.withCandM.qza
 	mv table-dada2.qza table.withCandM.qza
 
-com1
+
 
 	echo "##############################################################\n#Filter out Choloroplast and Mitochondira"
 	check_file $reference_trained
@@ -159,9 +159,9 @@ com1
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
-	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,PlantsandFungi,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,PlantsandFungi,Mammals,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
 	mv table-no-mitochondria-no-chloroplast.qza table.qza
-	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,PlantsandFungi,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,PlantsandFungi,Mammals,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
 
 	echo "##############################################################\n#Classify the taxonomy"
