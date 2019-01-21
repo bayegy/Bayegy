@@ -18,6 +18,8 @@ def clean_tax(tax):
         #    for ambi in ['Incertae', 'Ambiguous', 'uncultured', 'unclassified', 'unidentified']:
     for ambi in ['uncultured', 'Ambiguous', 'unidentified', 'unassigned', 'unclassified']:
         tax = re.sub(';[^;]*' + ambi + '.*', '', tax, flags=re.I)
+    tax = re.sub('[\-| ]+', '_', tax)
+    tax = re.sub(';$', '', tax)
     return(tax)
 
 
@@ -25,12 +27,10 @@ def trans(tar):
     level = {"D_0": "k", "D_1": "p", "D_2": "c", "D_3": "o", "D_4": "f", "D_5": "g", "D_6": "s"}
     for t in level.keys():
         tar = re.sub(t, level[t], tar)
-    tar = re.sub(' ', '-', tar)
-    tar = re.sub(';D_7.+', '', tar)
+    tar = re.sub('; *D_7.+', '', tar)
 #    for keyword in ['uncultured', 'Ambiguous', 'unidentified', 'unassigned', 'unclassified']:
 #        tar = re.sub(';[^;]*%s.*' % (keyword), '', tar, flags=re.I)
     tar = clean_tax(tar)
-    tar = re.sub(';$', '', tar)
     return(tar)
 
 
