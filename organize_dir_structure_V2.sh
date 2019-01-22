@@ -221,6 +221,8 @@ organize_deliverable_structure() {
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
 	cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure9-1.png
 	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure9-2.pdf
+	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
+
 	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
 
 	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Table3-1.qzv

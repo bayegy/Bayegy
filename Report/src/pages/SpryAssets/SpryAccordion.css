@@ -17,9 +17,9 @@
  * Accordion container.
  */
 .Accordion {
-	border-left: solid 1px gray;
-	border-right: solid 1px black;
-	border-bottom: solid 1px gray;
+	border-left: solid 0px gray;
+	border-right: solid 0px gray;
+	border-bottom: solid 0px gray;
 	overflow: hidden;
 }
 
@@ -57,7 +57,7 @@
 	border-top: solid 1px black;
 	border-bottom: solid 1px gray;
 	margin: 0px;
-	padding: 2px;
+	padding: 0px;
 	cursor: pointer;
 	-moz-user-select: none;
 	-khtml-user-select: none;
@@ -87,7 +87,7 @@
  * from panels as the user clicks on the tabs within the Accordion.
  */
 .AccordionPanelOpen .AccordionPanelTab {
-	background-color: #EEEEEE;
+	background-color: #DDDDDD;
 }
 
 /* This is an example of how to change the appearance of the panel tab as the
@@ -95,10 +95,10 @@
  * and removed from panel tab containers as the mouse enters and exits the tab container.
  */
 .AccordionPanelTabHover {
-	color: #555555;
+	color: #CCCCCC;
 }
 .AccordionPanelOpen .AccordionPanelTabHover {
-	color: #555555;
+	color: #EEEEEE;
 }
 
 /* This is an example of how to change the appearance of all the panel tabs when the
@@ -106,15 +106,17 @@
  * whenever the Accordion gains or loses keyboard focus.
  */
 .AccordionFocused .AccordionPanelTab {
-	background-color: #3399FF;
+	background-color: #CCCCCC;
 }
 
 /* This is an example of how to change the appearance of the panel tab that is
  * currently open when the Accordion has focus.
  */
+/*
 .AccordionFocused .AccordionPanelOpen .AccordionPanelTab {
-	background-color: #33CCFF;
+	background-color: #FFFFFF;
 }
+*/
 /* Rules for Printing */
 
 @media print {
