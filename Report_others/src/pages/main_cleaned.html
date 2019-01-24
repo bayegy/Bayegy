@@ -24,7 +24,11 @@
 		</style>
 
 		<style type="text/css">
-
+			a:link {color: #3299CC}
+			a:visited {color: #3299CC}
+			a:hover {color: #FF00FF}
+			a:active {color: #3299CC}
+			img{max-width:900px;height:auto;}
 			.noprint li a p dd{
 				font-family: Times New Roman, Times, serif;
 			}
@@ -245,8 +249,7 @@
 				说明：横坐标(Sample Name)是样品名，纵坐标(Relative Abundance)表示相对丰度。其他分类水平的物种相对丰度图也都可以通过交互式网页打开，并对样本或者OTU在图片中呈现的顺序根据元数据（包括分组信息）或者相对丰度的大小进行调节。Level 1，2，3，4，5，6，7依次代表分类水平界门纲目科属种。
 			</dd>
 
-
-			<embed width="100%" height="500" fullscreen="yes" src="..\..\Figure4-2.pdf"></embed>
+			<p align="center"><img src="../../Figure4-2.png" width="800" height="800"></p>
 
 			<p align="center"><strong>图 4-2 (补充) 各个样品在门水平上的相对分布情况柱形图（相对丰度前20的物种）</strong></p>
 
@@ -284,15 +287,7 @@
 				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验，Kruskal Wallis和ANOVA提供总的p值，校正p值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,为了方便客户选择，我们在结果文件夹中分别提供了阈值为2和4的结果），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
 			</p>
 
-			<!-- <p align="center"><img src="../../Figure4-3.pdf" width="800" height="500"></p> -->
-
-			<object  width="100%" height="800">
-				<param name="SRC" value="../../Figure4-3.pdf" >
-				<embed width="100%" height="800" fullscreen="yes" src="../../Figure4-3.pdf">
-					<noembed></noembed>
-				</embed>
-			</object>
-
+			<p align="center"><img src="../../Figure4-3.png" width="800" height="800"></p>
 
 			<p align="center"><strong>图4-3 LEfSe分析LDA柱形图</strong></p>
 			<dd style="font-size:80%;">
@@ -321,13 +316,8 @@
 			<p>
 				Alpha多样性指数是对某个样品中物种多样性的分析，包含样品中的物种组成的丰富度和均匀度两个因素，通常用<a></a><a>Observed </a>OTU，Shannon以及Faith&rsquo;s Phylogenetic Diversity等指数来评估某个样本的物种多样性，指数越高，表明样本的多样性越复杂。Observed OTU指数是指样本中实际测定得到的OTU数量，衡量样品中OTU丰富度的指数。Shannon指数,它的计算考虑到样品中的分类总数，和每个分类所占的比例。Faith&rsquo;s Phylogenetic Diversity是基于系统发生树来计算的一种多样性指数，它用各个样品中OTU的代表序列计算出构建系统发生树的距离，将某一样品中的所有代表序列的值加和，从而得到的数值。<sup>[15-17]</sup>对不同的样本Alpha多样性指数进行统计总结结果<a href="../../../3-AlphaDiversity/1-AlphaDiversitySummary/alpha-summary.tsv">请点击此处查看</a>。 
 			</p>
+			<p align="center"><img src="../../Figure5-1.png" width="800" height="800"></p>
 
-			<p>
-				<object  width="100%" height="720">
-					<param name="SRC" value="..\..\Figure5-1.pdf" >
-					<embed width="100%" height="360" fullscreen="yes" src="..\..\Figure5-1.pdf"><noembed></noembed></embed>
-				</object>
-			</p>
 			<p align="center"><strong>图5-1 Shannon指数的箱型图</strong></p>
 			<dd style="font-size:80%;">
 				说明：不同颜色代表不同的分组。其他Alpha多样性指数的箱型图请参见结果部分<a href="../../../3-AlphaDiversity/1-AlphaDiversitySummary/">./ 3-AlphaDiversity/1-AlphaDiversitySummary/</a>。
@@ -394,13 +384,7 @@
 			<p>
 				无度量多维标定法（NMDS）统计是一种适用于生态学研究的排序方法，类似于PCoA，通过样本的分布，或者基因的分布，可以看出组间差异，组内差异等。NMDS包括一类排序方法，其设计目的是为了克服以前的排序方法（即线性模型，包括PCoA）的缺点，NMDS的模型是非线性的，能更好地反映生态学数据的非线性结构。非度量多维尺度法是一种将多维空间的研究对象(样本或变量)简化到低维空间进行定位、分析和归类, 同时又保留对象间原始关系的数据分析方法。适用于无法获得研究对象间精确的相似性或相异性数据，仅能得到他们之间等级关系数据的情形，图6-2为基于Unweighted Unifrac距离进行的NMDS分析。
 			</p>
-
-			<object  width="100%" height="620">
-				<param name="SRC" value="..\..\Figure6-2.pdf" >
-				<embed width="100%" height="600" fullscreen="yes" src="..\..\Figure6-2.pdf">
-					<noembed></noembed>
-				</embed>
-			</object>
+			<p align="center"><img src="../../Figure6-2.png" width="800" height="800"></p>
 
 			<p align="center">图6-2 2D NMDS分析 </p>
 			<dd style="font-size:80%;">
@@ -438,12 +422,8 @@
 			<p>
 				<a>选取关注的</a>OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)绘制进化关系树图，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。此外分析也生成了用于iTOL制图的文件。<sup>[25,26]</sup>客户可以点击<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a>查看完整信息。
 			</p>
+			<p align="center"><img src="../../Figure7-1.png" width="800" height="800"></p>
 
-			<object  width="100%" height="1000">
-				<param name="SRC" value="..\..\Figure7-1.pdf" >
-				<embed width="100%" height="1000" fullscreen="yes" src="..\..\Figure7-1.pdf"><noembed></noembed></embed>
-			</object>
-				 
 			<p align="center"><strong>图7-1 系统发育进化树及组间丰度分布热图</strong></p>
 			<dd style="font-size:80%;">说明：左边为进化树，不同颜色的分支代表不同的门，每条末端的树枝代表一个OTU，末端注释了对应OTU所属的科分类，右边热图是标准化后的丰度，值越大代表相对丰度越高。丰度标准化：每个样本的绝对丰度减去该物种绝对丰度的平均值再除以标准差，从使得标准化之后的丰度平均值为0，标准差为1.</dd>
 			
@@ -465,13 +445,8 @@
 			<p>
 				相关性热图可以用于分析环境因子或其他临床表型数据与微生物群落或物种之间是否显著相关，然后计算环境因子与微生物物种间的Spearman相关系数，并用热图展示（图8-2）。该分析可以挑选出与某种环境因子或疾病显著相关的物种，同时提供环境因子的数据，比如 pH值、温度值、临床因子等。<sup>[30-32]</sup> 
 			</p>
+			<p align="center"><img alt="未提供环境因子,没有此项分析" src="../../Figure8-2.png" width="800" height="800"></p>
 
-			<object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" width="100%" height="400" id="alta1">
-				<param name="SRC" value="..\..\Figure8-2.pdf" >
-				<embed onload="hide()" width="100%" height="400" fullscreen="yes" src="..\..\Figure8-2.pdf"></embed>
-			</object>
-
-			<p align="center" style="display: block" id="alta2">未提供环境因子,没有此项分析</p>
 			<p align="center"><strong>图8-2 属水平微生物物种与表型之间的相互关系热图</strong></p>
 			<dd style="font-size:80%;">
 				说明：X轴上为环境因子，Y轴为物种。通过计算获得R值（秩相关）和校正错误发现率的P值。R值在图中以不同颜色展示，P值若小于0.05则用 * 号标出，右侧图例是不同R值的颜色区间，同时，左边的色条标注了物种所属门分类。* 0.01≤ P  &lt;0.05，** 0.001≤P  &lt; 0.01，*** P  &lt;  0.001。
@@ -480,14 +455,10 @@
 
 			<h3><a id="a8.3"></a>8.3 物种相互作用网络分析</h3>
 			<p>
-				<a>基于物种样本间的相对丰度进行Spearman获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建</a>（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。同时我们也提供基于相对组成成分数据的相关性计算（CCLasso/SPARCC），并用Cytoscape进行定制化可视化分析（属于VIP分析）。<sup>[33]</sup> 
+				基于物种样本间的相对丰度进行Spearman获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。同时我们也提供基于相对组成成分数据的相关性计算（CCLasso/SPARCC），并用Cytoscape进行定制化可视化分析（属于VIP分析）。<sup>[33]</sup> 
 			</p>
-			<p align="center">
-				<object  width="100%" height="700">
-					<param name="SRC" value="..\..\Figure8-3.pdf" >
-					<embed width="100%" height="700" fullscreen="yes" src="..\..\Figure8-3.pdf"><noembed></noembed></embed>
-				</object>
-			</p>
+			
+			<p align="center"><img src="../../Figure8-3.png" width="800" height="800"></p>
 
 			<p align="center"><strong>图8-3 属分类水平物种相互作用网络图</strong></p>
 			<dd style="font-size:80%;">
@@ -495,7 +466,7 @@
 			</dd>
 			<p>其它分类水平的相关网络图请查看<a href="../../../6-AssociationAnalysis/3-NetworkAnalysis">./6-AssociationAnalysis/3-NetworkAnalysis</a></p>
 
-			<h3 align="left"><a name="a8.4" id="a8.4"></a><a></a><a></a><a>8.4 Source tracker </a>分析（VIP分析）</h3>
+			<h3 align="left"><a name="a8.4" id="a8.4"></a>8.4 Source tracker分析（VIP分析）</h3>
 			<p>
 				使用基于贝叶斯算法的Source  tracker分析，可以寻找样本中的微生物可能来源及其在样本中分布的比例，该方法适用于寻找环境样本或微生物感染的临床样本的微生物物种来源，需要采集可能会影响样本微生物组成的相关联的环境样本（图8-4）。<sup>[34]</sup>  
 			</p>

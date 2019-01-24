@@ -206,27 +206,8 @@ organize_deliverable_structure() {
 	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}*bacteria_location_plot.png Figure8-1.png
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/Correlation_heatmap.pdf Figure8-2.pdf
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
+	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
 
-	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Table3-1.qzv
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/collapsed-Species/collapsed-Species.qzv  Table3-2.qzv
-	#cp ../3-AlphaDiversity/1-AlphaDiversitySummary/alpha-summary.tsv Table3-3.txt
-	#cp ../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/shannon-group-significance/shannon-group-significance.qzv Table3-4.qzv
-	#cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/unweighted_unifrac-permanova-${category_1}-significance.qzv Table3-5.qzv
-	
-	#cp ../1-QCStats/1-Stats-demux/demux.qzv Figure2-1.qzv
-	
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots_Qiime2/taxa-bar-plots.qzv Figure3-2.qzv
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/${category_1}-table-Phylum.${number}/${category_1}-table-Phylum.${number}.qzv Figure3-3.qzv
-	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Figure3-4.qzv
-	#cp ../3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction/alpha-rarefaction.qzv Figure3-6.qzv
-	#cp ../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/shannon-group-significance/shannon-group-significance.qzv Figure3-7.qzv
-	
-	#cp ../4-BetaDiversity/2-PCoA/unweighted_unifrac_emperor/unweighted_unifrac_emperor.qzv Figure3-9.qzv
-	#cp ../4-BetaDiversity/3-NMDS/${category_1}_unifrac_NMDS.pdf Figure3-10.pdf
-	#cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/unweighted_unifrac-permanova-${category_1}-significance.qzv Figure3-11.qzv
-	#cp ../5-Phylogenetics/1-MajorPhylums/Bacteria.phylogeny.pdf Figure3-12.pdf
-	#cp ../6-AssociationAnalysis/1-RDA/Genus/*_bacteria_location_plot.png Figure3-14.png
-	#cp ../6-AssociationAnalysis/permanova.pdf Figure3-15.pdf
 
 }
 
