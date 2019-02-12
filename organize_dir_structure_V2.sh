@@ -43,6 +43,7 @@ check_file() {
 }
 
 organize_deliverable_structure() {
+	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 	if [ -d "./Result_AmpliconSequencing" ];then
 		rm -r ./Result_AmpliconSequencing;
 	fi;
@@ -145,10 +146,14 @@ organize_deliverable_structure() {
 	#cp -r R_output/*wunifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
 	cp -r R_output/*PCA* R_output/*PLSDA* ./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/
 	#cp -r core-metrics-results/weighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
-	
+	cp -r exported/feature-table.taxonomy.txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_feature-table.taxonomy.txt
+	mv dna-sequences.fasta ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_representative-sequence.fasta
+	mv tree.nwk ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_rooted-tree.nwk
 	#cp -r R_output/Bacteria.phylogeny.pdf ./Result_AmpliconSequencing/5-Phylogenetics/1-MajorPhylums/
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/2-MajorOTUs/
-	cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/
+	
+
+	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/
 
 
 	cp -r exported/Absolute/RDA/* ./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/
@@ -162,10 +167,12 @@ organize_deliverable_structure() {
 
 	#cp -r /Result_AmpliconSequencing/6-AssociationAnalysis
 
-	cp -r closedRef_forPICRUSt/feature-table.metagenome.L* closedRef_forPICRUSt/percent.feature-table.metagenome*png ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
-	rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
+	cp -r closedRef_forPICRUSt/feature-table.metagenome.L1.txt closedRef_forPICRUSt/feature-table.metagenome.L2.txt closedRef_forPICRUSt/feature-table.metagenome.L3.txt ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
+	#rm ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*PCA* ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/*DunnTest*
+	cp -rp closedRef_forPICRUSt/function-bar-plots-top20-group-mean closedRef_forPICRUSt/function-bar-plots-top20  ./Result_AmpliconSequencing/7-FunctionAnalysis/1-KEGG_Pathway/
+
 	cp -r closedRef_forPICRUSt/*PCA*pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/
-	cp -r closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
+	cp -r closedRef_forPICRUSt/*DunnTest*txt ./Result_AmpliconSequencing/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.pdf
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
@@ -208,7 +215,7 @@ organize_deliverable_structure() {
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
 	#cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
 	#cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
-	cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20/Phylum_${category_1}_ordered_barplot.pdf Figure4-2.pdf
+	cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20-group-mean/${category_1}_Phylum_mean_barplot.pdf Figure4-2.pdf
 	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.pdf Figure4-3.pdf
 	cp ../1-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
@@ -219,10 +226,12 @@ organize_deliverable_structure() {
 	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}*bacteria_location_plot.png Figure8-1.png
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/Correlation_heatmap.pdf Figure8-2.pdf
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
-	cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure9-1.png
+	cp ../7-FunctionAnalysis/1-KEGG_Pathway/function-bar-plots-top20-group-mean/${category_1}_L1_mean_* Figure9-1.pdf
 	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure9-2.pdf
-	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
+	cp ../7-FunctionAnalysis/3-SignifcanceAnalysis/2-ANOVA_And_Duncan/${category_1}_all_significant_pathway_barplot_of_duncan.pdf Figure9-3.pdf
 
+	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
+	python $SCRIPTPATH/convert_to_html_table.py -i ../../1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html -o src/pages/table1.html -t dada2html
 	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
 
 	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Table3-1.qzv

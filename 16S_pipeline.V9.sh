@@ -112,7 +112,7 @@ function assign_taxa() {
 
 
 	source activate qiime2-2018.11
-
+<<COM1
 	echo "##############################################################\n#paired end analysis using DADA2"
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
@@ -171,7 +171,7 @@ comment1
 		else python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c;
 	fi;
 
-
+COM1
 	echo "##############################################################\n#Generate tree";
 	qiime alignment mafft   --i-sequences rep-seqs.qza   --o-alignment aligned-rep-seqs.qza
 	qiime alignment mask   --i-alignment aligned-rep-seqs.qza   --o-masked-alignment masked-aligned-rep-seqs.qza
@@ -389,8 +389,11 @@ comment1
 		for n3 in 1 2 3;
 			do echo $n3;
 			python ${SCRIPTPATH}/convert_percent.py -i feature-table.metagenome.L${n3}.txt;
-			perl ${SCRIPTPATH}/get_table_head2.pl percent.feature-table.metagenome.L${n3}.txt 35 -trantab > percent.feature-table.metagenome.L${n3}.tab
-			perl ${SCRIPTPATH}/top10_bar_diagram.pl  -right -grid -rotate='-45' -x_title 'Sample Name' -y_title 'Relative Abundance' --y_mun 0.25,4 --height 350 -table percent.feature-table.metagenome.L${n3}.tab > percent.feature-table.metagenome.L${n3}.svg
+			#perl ${SCRIPTPATH}/get_table_head2.pl percent.feature-table.metagenome.L${n3}.txt 35 -trantab > percent.feature-table.metagenome.L${n3}.tab
+			#perl ${SCRIPTPATH}/top10_bar_diagram.pl  -right -grid -rotate='-45' -x_title 'Sample Name' -y_title 'Relative Abundance' --y_mun 0.25,4 --height 350 -table percent.feature-table.metagenome.L${n3}.tab > percent.feature-table.metagenome.L${n3}.svg
+			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20/ -p L${n3}_${category_set}_ordered_ -b F -s T;
+			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20-group-mean/ -p ${category_set}_L${n3}_mean_ -b T -s T;
+
 			perl ${SCRIPTPATH}/cluster.pl  -BC -Z -x percent.feature-table.metagenome.L${n3}.txt > level1.relative.tree
 			perl ${SCRIPTPATH}/draw_tree.pl -bun 0.25,4 -bline -type 4  level1.relative.tree  percent.feature-table.metagenome.L${n3}.tab --flank_x 100 >  tree.feature-table.metagenome.L${n3}.svg
 			#${SCRIPTPATH}/PCA.R.pl ${PWD}/percent.feature-table.metagenome.L${n3}.txt 0.2 ${PWD}/PCA_L${n3}
@@ -407,6 +410,7 @@ comment1
 		source deactivate
 		source activate qiime2-2018.11
 		echo "##############################################################\n#Make phylogenetic trees for ITOL"
+<<COMMENT
 		mkdir phylogeny
 		qiime feature-table filter-features --i-table table.qza --p-min-frequency $min_freq --o-filtered-table phylogeny/table.${min_freq}.qza
 		qiime tools export --input-path phylogeny/table.${min_freq}.qza --output-path phylogeny
@@ -425,9 +429,11 @@ comment1
 		qiime tools export --input-path phylogeny/dna-sequences.${min_freq}.rooted-tree.qza --output-path phylogeny/
 		mv phylogeny/tree.nwk phylogeny/tree.rooted.nwk
 		perl ${SCRIPTPATH}/generate_file_Itol.pl phylogeny/feature-table.taxonomy.txt 
-
+COMMENT
 
 		qiime tools export --input-path masked-aligned-rep-seqs.qza --output-path ./
+		qiime tools export --input-path rep-seqs.qza --output-path ./
+		qiime tools export --input-path rooted-tree.qza --output-path ./
 		echo "##############################################################\n#export all qzv files into clickable folders"
 		#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 		for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
@@ -505,7 +511,7 @@ comment1
 
 		rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
 
-		python2 ${SCRIPTPATH}/biom_to_stamp.py -m KEGG_Pathways closedRef_forPICRUSt/feature-table.metagenome.biom > closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt
+		#python2 ${SCRIPTPATH}/biom_to_stamp.py -m KEGG_Pathways closedRef_forPICRUSt/feature-table.metagenome.biom > closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt
 		for n5 in 1 2 3;
 			do echo $n5;
 			for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/Function_PCA.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt//sample-metadata.PCA.txt -g $category_1;done;

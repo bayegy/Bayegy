@@ -144,7 +144,7 @@ organize_deliverable_structure() {
 	
 	#cp -r R_output/Bacteria.phylogeny.pdf ./Result_AmpliconSequencing/5-Phylogenetics/1-MajorPhylums/
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/2-MajorOTUs/
-	cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/
+	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/
 
 
 	cp -r exported/Absolute/RDA/* ./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/

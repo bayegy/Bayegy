@@ -24,13 +24,13 @@ options = p.parse_args()
 
 #os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
 if not os.path.exists(options.outdir):
-  os.makedirs(options.outdir)
+    os.makedirs(options.outdir)
 
 ########select otu####
 
 
 with open('tree.R', 'w') as rscript:
-  print('''
+    print('''
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-metadata["%s"]
@@ -46,8 +46,8 @@ hold<-sort(otusum,T)[%s]
 out<-data.frame(rownames(otu_table)[otusum>=hold])
 write.table(out,"%s/selected_features.txt",sep = "",row.names = F,col.names = F,quote = F)
 '''
-        % (options.input, options.metadata, options.group, options.num, options.outdir),
-        file=rscript)
+          % (options.input, options.metadata, options.group, options.num, options.outdir),
+          file=rscript)
 os.system('Rscript tree.R')
 
 
@@ -57,23 +57,23 @@ os.system('Rscript tree.R')
 
 #######select rep-seqs####
 with open('%s/selected_features_reseqs.fasta' % (options.outdir), 'w') as fout:
-  s_otuid = open('%s/selected_features.txt' % (options.outdir), 'r')
-  s_otuid = s_otuid.read()
+    s_otuid = open('%s/selected_features.txt' % (options.outdir), 'r')
+    s_otuid = s_otuid.read()
 
-  s_otuid = re.split('\n', s_otuid)
-  sn = []
-  ln = 1
-  for line in open(options.repseqs, 'r'):
+    s_otuid = re.split('\n', s_otuid)
+    sn = []
+    ln = 1
+    for line in open(options.repseqs, 'r'):
 
-    line = re.sub('\n$', '', line)
-    line = re.sub('^>', '', line)
-    if ln in sn:
-      fout.write(line + "\n")
+        line = re.sub('\n$', '', line)
+        line = re.sub('^>', '', line)
+        if ln in sn:
+            fout.write(line + "\n")
 
-    if line in s_otuid:
-      fout.write('>' + line + "\n")
-      sn.append(ln + 1)
-    ln += 1
+        if line in s_otuid:
+            fout.write('>' + line + "\n")
+            sn.append(ln + 1)
+        ln += 1
 
 
 ######form tree#####
@@ -85,7 +85,7 @@ qiime tools export %s/selected_rooted-tree.qza --output-dir %s/" % (options.outd
 
 ######visualize tree####
 with open('tree.R', 'w') as rscript:
-  print('''
+    print('''
 library("ggtree")
 library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
@@ -113,8 +113,8 @@ groupInfo <- split(rownames(otu_table), groupInfo)
 
 
 
-groupInfo1<-str_extract(tax,"f__[^;]{1,100}")
-groupInfo1[is.na(groupInfo1)]<-"Unclassfied_family"
+groupInfo1<-str_extract(tax,"g__[^;]{1,100}")
+groupInfo1[is.na(groupInfo1)]<-"Unclassfied_genus"
 groupInfo1 <- split(rownames(otu_table), groupInfo1)
 
 
@@ -148,7 +148,7 @@ p1<-gheatmap(p, data, offset = 0.18, width=0.8+par1*0.1, hjust=0.5,colnames_offs
 
 ggsave(p1,file="%s/%s", width=10, height=11)
 '''
-        % (options.input, options.metadata, options.group, options.num, options.outdir, options.outdir, str(options.group) + '_phylogenetic_tree_heatmap.pdf'),
-        file=rscript)
+          % (options.input, options.metadata, options.group, options.num, options.outdir, options.outdir, str(options.group) + '_phylogenetic_tree_heatmap.pdf'),
+          file=rscript)
 
 os.system('Rscript tree.R')

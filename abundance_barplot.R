@@ -8,6 +8,7 @@ option_list <- list(
     make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of species needed to be plotted, default is 20",default=20),
     make_option(c("-a", "--add-postfix"),metavar="logical", dest="add",help="add postfix to the duplicated taxons",default=TRUE),
+    make_option(c("-s", "--skip-first-line"),metavar="logical", dest="skip",help="If TRUE, skip the first line when read the input file.",default=FALSE),
     make_option(c("-b", "--by-groupMean"),metavar="logical", dest="bym",help="Pass this to use the group mean to plot barplot",default=FALSE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
@@ -24,8 +25,12 @@ library(RColorBrewer)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 opt$out<-paste(opt$out,"/",opt$prefix,sep="")
 
-otu <- read.table(opt$otu,quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 #otu <- read.table("otu_table.Genus.relative.txt",quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+if(as.logical(opt$skip)){
+  otu <-read.table(opt$otu,quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t",skip = 1)
+}else{
+  otu <-read.table(opt$otu,quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+}
 
 map<-read.table(opt$map,quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 #map<-read.table("mapping_file.txt",quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
@@ -60,12 +65,15 @@ if(as.logical(opt$add)){
 
 #otu<-otu[otu[,1]!="Others"&otu[,1]!="unclassified",]
 rownames(otu)<-otu[,1]
-otu<-t(otu[,-c(1,ncol(otu))])*100
+
+otu<-t(apply(otu[,-c(1,ncol(otu))],2,function(x){x/sum(x)}))*100
+
+#otu<-t(otu[,-c(1,ncol(otu))])*100
 
 otu<-otu[match(rownames(group),rownames(otu)),]
 if(opt$bym){
-  otu<-data.frame(apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)}))
-  otu<-data.frame(t(apply(otu,1,function(x){x/sum(x)}))*100)
+  otu<-data.frame(apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)}),check.names=F)
+  otu<-data.frame(t(apply(otu,1,function(x){x/sum(x)}))*100,check.names=F)
   label_order<-ordered(rownames(otu))
   #print(otu)
 }
@@ -82,6 +90,7 @@ if(num<ncol(otu)-1){
 
 #otu<-data.frame(otu,group)
 otu$id<-rownames(otu)
+p1<-max(nchar(colnames(otu)))*0.12+2
 #group<-map["Group1"]
 #opt$group<-"Group1"
 #otu<-melt(otu,id.vars = c("Group1","id"))
@@ -101,7 +110,7 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
   scale_y_continuous(limits=c(0,101), expand = c(0, 0))
 
 
-wd<-ifelse(opt$by,length(label_order)*0.6+5,length(label_order)*0.2+6)
+wd<-ifelse(opt$bym,length(label_order)*0.4+p1,length(label_order)*0.2+p1)
 wd<-ifelse(wd<50,wd,49.9)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 

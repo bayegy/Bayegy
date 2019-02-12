@@ -24,7 +24,7 @@ p.add_argument('-o', '--out', dest='out', metavar='<directory>',
 
 opt = p.parse_args()
 if not os.path.exists(opt.out):
-  os.makedirs(opt.out)
+    os.makedirs(opt.out)
 opt.out = opt.out + '/'
 mapd = read_csv(opt.map, sep='\t')
 
@@ -32,11 +32,11 @@ mapd = mapd.ix[mapd[opt.group].notna(), :]
 
 
 def savepd(tb, name):
-  tb.to_csv(opt.out + name, sep='\t', index=False)
+    tb.to_csv(opt.out + name, sep='\t', index=False)
 
 
 def iterin(a, b):
-  return list(map(lambda x: x in list(b), a))
+    return list(map(lambda x: x in list(b), a))
 
 
 mapd = mapd.ix[:, mapd.notna().sum() > 2]

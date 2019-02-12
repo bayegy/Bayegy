@@ -23,14 +23,14 @@ p.add_argument('-o', '--output', dest='out', metavar='<directory>', default='./'
 options = p.parse_args()
 
 if not os.path.exists(options.out):
-  os.makedirs(options.out)
+    os.makedirs(options.out)
 
 id_ds = {}
 with open(options.meta, 'r') as meta:
-  for line in enumerate(meta):
-    li = re.split('\t', line[1].strip())
-    if line[0] > 0:
-      id_ds[li[0].strip().lower()] = li[len(li) - 1].strip()
+    for line in enumerate(meta):
+        li = re.split('\t', line[1].strip())
+        if line[0] > 0:
+            id_ds[li[0].strip().lower()] = li[len(li) - 1].strip()
 
 
 print("############################################################writting manifest\n\nThe regular expression for matching sample ID is %s, you should change -s if no fastq files were writed" % (options.sp))
@@ -48,46 +48,46 @@ fout.write('sample-id,absolute-filepath,direction\n')
 
 print("\nThe following samples were found in fastq files, but not found in sample-metadata:")
 for root, dirs, files in os.walk(options.input):
-  if len(dirs) == 0:
-    root = os.path.abspath(root)
-    for fl in files:
-      if re.search(sp, fl):
-        info = "%s/%s" % (root, fl)
-        pre_id = re.search(sp, fl).group(1).lower()
-        try:
-          sn = id_ds[pre_id]
-          if re.search(rp, fl):
-            fout.write("%s,%s,reverse\n" % (sn, info))
-            # id_sets.append(pre_id)
-            nfile += 1
-          elif re.search(fp, fl):
-            fout.write("%s,%s,forward\n" % (sn, info))
-            id_sets.append(pre_id)
-            nfile += 1
-        except KeyError:
-          print(pre_id)
-          ff += 1
+    if len(dirs) == 0:
+        root = os.path.abspath(root)
+        for fl in files:
+            if re.search(sp, fl):
+                info = "%s/%s" % (root, fl)
+                pre_id = re.search(sp, fl).group(1).lower()
+                try:
+                    sn = id_ds[pre_id]
+                    if re.search(rp, fl):
+                        fout.write("%s,%s,reverse\n" % (sn, info))
+                        # id_sets.append(pre_id)
+                        nfile += 1
+                    elif re.search(fp, fl):
+                        fout.write("%s,%s,forward\n" % (sn, info))
+                        id_sets.append(pre_id)
+                        nfile += 1
+                except KeyError:
+                    print(pre_id)
+                    ff += 1
 
 fout.close()
 print("\nThe following samples were found in sample-metadata, but not found in fastq files:")
 
 with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.tsv', 'w') as outfile:
-  miss = 0
-  for line in enumerate(mp):
-    li = re.split('\t', line[1].strip())
-    li = [l.strip() for l in li]
-    fc = len(li) - 1
-    if line[0] == 0:
-      li[0] = "#SampleID"
-      li[fc] = "Description"
-      outfile.write('\t'.join(li) + '\n')
-    else:
-      if li[0].lower() in id_sets:
-        li[0] = li[fc]
-        outfile.write('\t'.join(li) + '\n')
-      else:
-        print('    ' + li[0])
-        miss += 1
+    miss = 0
+    for line in enumerate(mp):
+        li = re.split('\t', line[1].strip())
+        li = [l.strip() for l in li]
+        fc = len(li) - 1
+        if line[0] == 0:
+            li[0] = "#SampleID"
+            li[fc] = "Description"
+            outfile.write('\t'.join(li) + '\n')
+        else:
+            if li[0].lower() in id_sets:
+                li[0] = li[fc]
+                outfile.write('\t'.join(li) + '\n')
+            else:
+                print('    ' + li[0])
+                miss += 1
 
 print("\nIn summary:")
 emm = "\n    %s fastq files were writed" % (nfile)

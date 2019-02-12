@@ -33,9 +33,9 @@ meta<-na.omit(meta[group])
 
 meta<-data.frame(Subject=rownames(meta),meta)
 if(as.logical(ag[5])){
-	data<-read.table(ag[1],skip=1,header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
+	data<-read.table(ag[1],quote="",skip=1,header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
 }else{
-	data<-read.table(ag[1],header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
+	data<-read.table(ag[1],quote="",header = T,sep = "\t",comment.char = "",stringsAsFactors = F,check.names = F)
 }
 #calculate the relative abundance
 #data[,2:(ncol(data)-1)]=apply(data[,2:(ncol(data)-1)],2,function(x){x/sum(x)})
