@@ -171,7 +171,7 @@ comment1
 		else python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c;
 	fi;
 
-COM1
+
 	echo "##############################################################\n#Generate tree";
 	qiime alignment mafft   --i-sequences rep-seqs.qza   --o-alignment aligned-rep-seqs.qza
 	qiime alignment mask   --i-alignment aligned-rep-seqs.qza   --o-masked-alignment masked-aligned-rep-seqs.qza
@@ -214,7 +214,7 @@ COM1
 	mv ./Result_AmpliconSequencing/1-OTUStats/demux/ ./Result_AmpliconSequencing/1-OTUStats/1-Stats-demux
 	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png ./Result_AmpliconSequencing/1-OTUStats/
 	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/1-OTUStats/feature-table.taxonomy.even.txt
-
+COM1
 	echo "##############################################################\n#Generate the results of each group"
 	for category_set in $category_sum;
 		do echo $category_set;
@@ -227,7 +227,7 @@ COM1
 		mapping_file=$(readlink -f './mapping_file.txt');
 
 
-
+<<com2
 		qiime metadata tabulate   --m-input-file taxonomy.qza   --o-visualization taxonomy.qzv;
 
 		echo "##############################################################\n#Generate tree";
@@ -434,6 +434,7 @@ COMMENT
 		qiime tools export --input-path masked-aligned-rep-seqs.qza --output-path ./
 		qiime tools export --input-path rep-seqs.qza --output-path ./
 		qiime tools export --input-path rooted-tree.qza --output-path ./
+
 		echo "##############################################################\n#export all qzv files into clickable folders"
 		#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 		for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
@@ -660,6 +661,9 @@ COMMENT
 	#		done;
 
 
+com2
+		source deactivate
+		source activate qm2
 		category_report=($category_set)
 		echo "##############################################################\n#Organize the result files";
 		#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./

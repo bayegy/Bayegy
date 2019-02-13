@@ -42,7 +42,7 @@ check_file() {
 	fi
 }
 
-organize_deliverable_structure() {
+	echo "##############################################################\n#Organize the Result folder"
 	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 	if [ -d "./Result_AmpliconSequencing" ];then
 		rm -r ./Result_AmpliconSequencing;
@@ -147,8 +147,8 @@ organize_deliverable_structure() {
 	cp -r R_output/*PCA* R_output/*PLSDA* ./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/
 	#cp -r core-metrics-results/weighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 	cp -r exported/feature-table.taxonomy.txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_feature-table.taxonomy.txt
-	mv dna-sequences.fasta ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_representative-sequence.fasta
-	mv tree.nwk ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_rooted-tree.nwk
+	cp dna-sequences.fasta ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_representative-sequence.fasta
+	cp tree.nwk ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_rooted-tree.nwk
 	#cp -r R_output/Bacteria.phylogeny.pdf ./Result_AmpliconSequencing/5-Phylogenetics/1-MajorPhylums/
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/2-MajorOTUs/
 	
@@ -218,7 +218,7 @@ organize_deliverable_structure() {
 	cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20-group-mean/${category_1}_Phylum_mean_barplot.pdf Figure4-2.pdf
 	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.pdf Figure4-3.pdf
 	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.cladogram.pdf Figure4-4.pdf
-	cp ../1-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
+	cp ../1-VennAndFlower/${category_1}_Venn_plot.png Figure4-5.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure6-1.png
@@ -231,60 +231,10 @@ organize_deliverable_structure() {
 	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure9-2.pdf
 	cp ../7-FunctionAnalysis/3-SignifcanceAnalysis/2-ANOVA_And_Duncan/${category_1}_all_significant_pathway_barplot_of_duncan.pdf Figure9-3.pdf
 
+
+
 	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
-	source deactivate
-	source activate qm2
-	python $SCRIPTPATH/convert_to_html_table.py -i ../../1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html -o src/pages/table1.html -t dada2html
-	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
 
-	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Table3-1.qzv
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/1-AbundanceTable/3-CollapsedStats/collapsed-Species/collapsed-Species.qzv  Table3-2.qzv
-	#cp ../3-AlphaDiversity/1-AlphaDiversitySummary/alpha-summary.tsv Table3-3.txt
-	#cp ../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/shannon-group-significance/shannon-group-significance.qzv Table3-4.qzv
-	#cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/unweighted_unifrac-permanova-${category_1}-significance.qzv Table3-5.qzv
-	
-	#cp ../1-QCStats/1-Stats-demux/demux.qzv Figure2-1.qzv
-	
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots_Qiime2/taxa-bar-plots.qzv Figure3-2.qzv
-	#cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/${category_1}-table-Phylum.${number}/${category_1}-table-Phylum.${number}.qzv Figure3-3.qzv
-	#cp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/${category_1}.ANCOM.Genus.qzv Figure3-4.qzv
-	#cp ../3-AlphaDiversity/2-AlphaRarefaction/alpha-rarefaction/alpha-rarefaction.qzv Figure3-6.qzv
-	#cp ../3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/shannon-group-significance/shannon-group-significance.qzv Figure3-7.qzv
-	
-	#cp ../4-BetaDiversity/2-PCoA/unweighted_unifrac_emperor/unweighted_unifrac_emperor.qzv Figure3-9.qzv
-	#cp ../4-BetaDiversity/3-NMDS/${category_1}_unifrac_NMDS.pdf Figure3-10.pdf
-	#cp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/unweighted_unifrac-permanova-${category_1}-significance.qzv Figure3-11.qzv
-	#cp ../5-Phylogenetics/1-MajorPhylums/Bacteria.phylogeny.pdf Figure3-12.pdf
-	#cp ../6-AssociationAnalysis/1-RDA/Genus/*_bacteria_location_plot.png Figure3-14.png
-	#cp ../6-AssociationAnalysis/permanova.pdf Figure3-15.pdf
-	#cp ../7-FunctionAnalysis/1-KEGG_Pathway/percent.feature-table.metagenome.L1.png Figure3-19.png
-	#cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure3-20.pdf
-	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure3-21.png
+	python $SCRIPTPATH/convert_to_html_table.py -i ../../../Result_AmpliconSequencing/1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html -o src/pages/table1.html -t dada2html
 
-}
 
-MAIN() {
-
-	echo "##############################################################\n#Organize the Result folder"
-	organize_deliverable_structure
-<<COMMENT1
-	echo "##############################################################\n#Organize the Essential folder ----- part1"
-	mkdir Essential
-	mkdir Essential/1-Demux/ Essential/2-AbundanceAnalysis/ Essential/3-AlphaDiversity Essential/4-BetaDiversity
-	mkdir Essential/2-AbundanceAnalysis/OTUSummary Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis Essential/2-AbundanceAnalysis/OTUSummary/Heatmap Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis/ANCOM
-	cp -r demux.qzv.exported Essential/1-Demux/
-	cp -r taxa-bar-plots.qzv.exported Essential/2-AbundanceAnalysis/OTUSummary/
-	cp exported/feature-table.taxonomy.txt Essential/2-AbundanceAnalysis/OTUSummary/
-	cp -r exported/Relative Essential/2-AbundanceAnalysis/OTUSummary/
-	cp -r exported/exported/${number}/table-l2.${number} exported/exported/${number}/table-l6.${number} Essential/2-OTUTable/Heatmap
-	cp -r exported/ANCOM/ANCOM.l2.qzv.exported Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis/ANCOM/phylum
-	cp -r exported/ANCOM/ANCOM.l6.qzv.exported Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis/ANCOM/genus
-	cp exported/kruskal_wallis* exported/ANOVA* Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis
-	cp alpha/alpha-summary.tsv Essential/3-AlphaDiversity
-	cp R_output/bray_matrix.txt R_output/wunifrac_matrix.txt R_output/unifrac_matrix.txt R_output/*unifrac_NMDS.pdf R_output/bray_NMDS.pdf R_output/P*_plot.pdf Essential/4-BetaDiversity/
-
-	cp -r Essential Result
-COMMENT1
-}
-
-MAIN;

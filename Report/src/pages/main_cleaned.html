@@ -8,23 +8,7 @@
 		<meta charset="utf-8">
 		<title>微科服扩增子_样本_结题报告</title>
 
-		<script type="text/javascript">
 
-		var xmlhttp;
-		if (window.XMLHttpRequest)
-		  {// code for IE7+, Firefox, Chrome, Opera, Safari
-		  xmlhttp=new XMLHttpRequest();
-		  }
-		else
-		  {// code for IE6, IE5
-		  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-		  }
-
-		xmlhttp.open("GET","table1.html",false);
-		xmlhttp.send();
-		document.getElementById("table1").innerHTML=xmlhttp.responseText;
-
-		</script>
 
 		<link href="../css/css.css" rel="stylesheet" type="text/css" />
 		<link href="../css/table.css" rel="stylesheet" type="text/css" />
@@ -234,7 +218,7 @@
 
 
 			<p align="left">
-				使用Qiime2软件中的DADA2插件对所有样品的全部有效序列进行质量控制，去噪(纠正测序错误的序列)，拼接的序列并且去嵌合体，形成OTU，表3-1显示了该过程各个步骤之后剩余序列数目。<sup>[7]</sup>DADA2每一步的结果统计信息可以通过<a href="../../../../1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html">点击此处打开新窗口查看</a>。
+				使用Qiime2软件中的DADA2插件对所有样品的全部原始序列(input)进行质量控制(filtered)，去噪(纠正测序错误的序列,denoised)，拼接(merged),并且去嵌合体(non-chimeric)，形成OTU，表3-1显示了该过程各个步骤之后剩余序列数目。<sup>[7]</sup>DADA2每一步的结果统计信息可以通过<a href="../../../../1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html">点击此处打开新窗口查看</a>。
 			</p>
 			<br>
 			<p align="center"><strong>表 3-1 dada2去噪生成OTU的过程统计表格</strong></p>
@@ -331,7 +315,7 @@
 
 			<p align="center"><strong>图4-4 LEfSe分析cladogram图</strong></p>
 			<dd style="font-size:80%;">
-				说明：cladogram图由内到外，分别对应门纲目科属种不同的分类层级，层级间连线代表所属关系。每个圆圈节点代表一个物种，节点为黄色代表在分组间差异不显著，不为黄色则代表该物种是对应颜色分组的特征微生物（在该分组丰度显著较高）。有颜色的扇形区域标注了特征微生物的下属分类区间。
+				说明：cladogram图由内到外，分别对应界门纲目科属种不同的分类层级，层级间连线代表所属关系。每个圆圈节点代表一个物种，节点为黄色代表在分组间差异不显著，不为黄色则代表该物种是对应颜色分组的特征微生物（在该分组丰度显著较高）。有颜色的扇形区域标注了特征微生物的下属分类区间。
 			</dd>
 
 		 	<br>
@@ -340,8 +324,8 @@
 				对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图（Venn diagram）分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现样本在OTU水平上的组成相似性及重叠情况（图4-3）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../1-VennAndFlower"> ./1-AbundanceAnalysis/3-VennAndFlower</a>
 			</p>
 
-			<p align="center"><img src="../../Figure4-4.png" width="600" height="600" alt="分组数量大于5，无法画Venn图"></p>
-			<p align="center"><strong>图4-4 共有或特有物种韦恩图展示（当分组数目小于等于5时）</strong></p>
+			<p align="center"><img src="../../Figure4-5.png" width="600" height="600" alt="分组数量大于5，无法画Venn图"></p>
+			<p align="center"><strong>图4-5 共有或特有物种韦恩图展示（当分组数目小于等于5时）</strong></p>
 			<dd style="font-size:80%;">说明：韦恩图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。<a href="../../../1-VennAndFlower">请点击打开新窗口查看韦恩图/花瓣图</a></dd>
 			
 			<p>
@@ -639,6 +623,26 @@
 			<p>&nbsp;</p>
 			<!-- /blockquote -->
 		</div> 
+
+
+		<script type="text/javascript">
+
+		var xmlhttp;
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+		  xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+		  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+
+		xmlhttp.open("GET","table1.html",false);
+		xmlhttp.send();
+		document.getElementById("table1").innerHTML=xmlhttp.responseText;
+
+		</script>
+
 
 		<script>
 		document.getElementById("myBtn").addEventListener("click", function()
