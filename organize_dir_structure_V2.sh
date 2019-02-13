@@ -217,6 +217,7 @@ organize_deliverable_structure() {
 	#cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
 	cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20-group-mean/${category_1}_Phylum_mean_barplot.pdf Figure4-2.pdf
 	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.pdf Figure4-3.pdf
+	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.cladogram.pdf Figure4-4.pdf
 	cp ../1-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png
@@ -231,6 +232,8 @@ organize_deliverable_structure() {
 	cp ../7-FunctionAnalysis/3-SignifcanceAnalysis/2-ANOVA_And_Duncan/${category_1}_all_significant_pathway_barplot_of_duncan.pdf Figure9-3.pdf
 
 	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
+	source deactivate
+	source activate qm2
 	python $SCRIPTPATH/convert_to_html_table.py -i ../../1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html -o src/pages/table1.html -t dada2html
 	#cp ../7-FunctionAnalysis/3-TreeBasedPlots/tree.feature-table.metagenome.L1.png Figure9-3.png
 

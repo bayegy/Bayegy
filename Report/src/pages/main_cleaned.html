@@ -8,13 +8,6 @@
 		<meta charset="utf-8">
 		<title>微科服扩增子_样本_结题报告</title>
 
-		<link href="../css/css.css" rel="stylesheet" type="text/css" />
-		<script src="SpryAssets/SpryAccordion.js" type="text/javascript"></script>
-		<link href="SpryAssets/SpryAccordion.css" rel="stylesheet" type="text/css" />
-		<link href="SpryAssets/bootstrap.min.css" rel="stylesheet" type="text/css" />
-
-
-
 		<script type="text/javascript">
 
 		var xmlhttp;
@@ -32,6 +25,12 @@
 		document.getElementById("table1").innerHTML=xmlhttp.responseText;
 
 		</script>
+
+		<link href="../css/css.css" rel="stylesheet" type="text/css" />
+		<link href="../css/table.css" rel="stylesheet" type="text/css" />
+		<script src="SpryAssets/SpryAccordion.js" type="text/javascript"></script>
+		<link href="SpryAssets/SpryAccordion.css" rel="stylesheet" type="text/css" />
+		<!-- <link href="SpryAssets/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
 
 
 		<style media=print>
@@ -239,11 +238,11 @@
 			</p>
 			<br>
 			<p align="center"><strong>表 3-1 dada2去噪生成OTU的过程统计表格</strong></p>
-			<div id="table1">无法加载表格</div>
+			<div id="table1" align="center">无法加载表格</div>
 
 			<br>
-			<p>
-				<strong>重要 : 除了通过网页版报告，用户也可以通过本地文件夹查看结果。结果目录下的文件详细解释请参考<a href="../../../Result_README.pdf">./Result_README.pdf</a>文件。结果文件夹中包含的.qzv文件是Qiime2的专属可视化文件格式，可以通过网页<a href="https://view.qiime2.org/">https://view.qiime2.org/</a>进行交互性查看，也可以直接点开相应的qzv解压缩文件夹通过网页形式直接点开HTML文件&ldquo;Summary_请点此文件查看.html&rdquo;查看。网页报告只选取了部分代表性信息用于引导用户阅读，然而本地文件夹的结果目录中包含了大量其他有用的信息，请用户自行查看。</strong>
+			<p style="color:red;">
+				<strong>重要 : 除了通过网页版报告，用户也可以通过本地文件夹查看结果。结果目录下的文件详细解释请参考<a href="../../../Result_README.pdf">./Result_README.pdf</a>文件。结果文件夹中包含的.qzv文件是Qiime2的专属可视化文件格式，可以通过网页<a href="https://view.qiime2.org/">https://view.qiime2.org/</a>进行交互性查看(将qzv文件拖到指定区域即可)，也可以直接点开相应的qzv解压缩文件夹通过网页形式直接点开HTML文件Summary_请点此文件查看.html查看。网页报告只选取了部分代表性信息用于引导用户阅读，然而本地文件夹的结果目录中包含了大量其他有用的信息，网页中的图片能够进行多种个性化的调整（如颜色，背景，分组方式，视角等），建议好好探索和利用，以挖掘结果中的信息。</strong>
 			</p>
 
 			<hr>
@@ -318,7 +317,7 @@
 			</dd>
 
 			<p>
-				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验，Kruskal Wallis和ANOVA提供总的p值，校正p值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,为了方便客户选择，我们在结果文件夹中分别提供了阈值为2和4的结果），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
+				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：DESeq2、Kruskal Wallis和ANOVA的分析运用了qiime1 group_significance.py脚本，ANCOM的分析运用了qiime2 composition ancom命令。ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验。Kruskal Wallis和ANOVA提供检验统计量（Test-Statistic），总的p值（P），校正错误发现率p值（FDR_P），Bonferroni校正p值（Bonferroni_P），及各分组均值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,为了方便客户选择，我们在结果文件夹中分别提供了阈值为2和4的结果），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2结果表格的文件名称格式为DESeq2_Group2_Between_x_and_y_DiffAbundance_分类水平.txt，那么baseMean可以理解为x的均值，log2FoldChange对应log2(y/x)，lfcSE对应log2FoldChange的标准误，stat对应检验统计量，pvalue 和padj分别对应p值和校正p值。DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。DESeq2 和ANCOM两种方法都是基于比例来进行差异分析的，相较于传统的相对丰度，比例的好处在于，样本中某一个物种丰度发生变化，在统计上并不会影响另一个物种的丰度，而相对丰度则不然。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
 			</p>
 
 			<p align="center"><img src="../../Figure4-3.png" width="800" height="500"></p> 
@@ -326,7 +325,14 @@
 			<p align="center"><strong>图4-3 LEfSe分析LDA柱形图</strong></p>
 			<dd style="font-size:80%;">
 				说明：每一横向柱形体代表一个物种，柱形体的长度对应LDA值，LDA值越高则差异越大。柱形的颜色对应该物种是哪个分组的特征微生物，特征微生物(Biomarkers)表示在对应分组中的丰度相对较高。
-			</dd>		
+			</dd>
+
+			<p align="center"><img src="../../Figure4-4.png" width="800" height="500"></p> 
+
+			<p align="center"><strong>图4-4 LEfSe分析cladogram图</strong></p>
+			<dd style="font-size:80%;">
+				说明：cladogram图由内到外，分别对应门纲目科属种不同的分类层级，层级间连线代表所属关系。每个圆圈节点代表一个物种，节点为黄色代表在分组间差异不显著，不为黄色则代表该物种是对应颜色分组的特征微生物（在该分组丰度显著较高）。有颜色的扇形区域标注了特征微生物的下属分类区间。
+			</dd>
 
 		 	<br>
 			<h3><a id="a4.3"></a>4.3 样品共有物种分析</h3>
@@ -348,7 +354,7 @@
 			<h3><a id="a5.1"></a>5.1 Alpha多样性指数统计分析</h3>
 			
 			<p>
-				Alpha多样性指数是对某个样品中物种多样性的分析，包含样品中的物种组成的丰富度和均匀度两个因素，通常用<a></a><a>Observed </a>OTU，Shannon以及Faith&rsquo;s Phylogenetic Diversity等指数来评估某个样本的物种多样性，指数越高，表明样本的多样性越复杂。Observed OTU指数是指样本中实际测定得到的OTU数量，衡量样品中OTU丰富度的指数。Shannon指数,它的计算考虑到样品中的分类总数，和每个分类所占的比例。Faith&rsquo;s Phylogenetic Diversity是基于系统发生树来计算的一种多样性指数，它用各个样品中OTU的代表序列计算出构建系统发生树的距离，将某一样品中的所有代表序列的值加和，从而得到的数值。<sup>[15-17]</sup>对不同的样本Alpha多样性指数进行统计总结结果<a href="../../../3-AlphaDiversity/1-AlphaDiversitySummary/alpha-summary.tsv">请点击此处查看</a>。 
+				Alpha多样性以及Beta多样性的分析主要用qiime2 diversity插件完成。Alpha多样性指数是对某个样品中物种多样性的分析，包含样品中的物种组成的丰富度和均匀度两个因素，通常用ObservedOTU，Shannon以及Faith's Phylogenetic Diversity等指数来评估某个样本的物种多样性，指数越高，表明样本的多样性越复杂。Observed OTU指数是指样本中实际测定得到的OTU数量，衡量样品中OTU丰富度的指数。Shannon指数,它的计算考虑到样品中的分类总数，和每个分类所占的比例。Faith's Phylogenetic Diversity是基于系统发生树来计算的一种多样性指数，它用各个样品中OTU的代表序列计算出构建系统发生树的距离，将某一样品中的所有代表序列的值加和，从而得到的数值。<sup>[15-17]</sup>chao1指数是用来反映物种丰富度(物种的种类数量)的指标。它通过观测到的结果推算出一个理论的丰富度，这个丰富度更接近真实的丰富度。对不同的样本Alpha多样性指数进行统计总结结果<a href="../../../3-AlphaDiversity/1-AlphaDiversitySummary/alpha-summary.tsv">请点击此处查看</a>。 
 			</p>
 
 
@@ -401,7 +407,7 @@
 			</dd>
 			<dd style="font-size:80%;">&nbsp;</dd>
 			<p>
-				主坐标分析（PCoA），是一种与PCA类似的降维排序方法，从多维数据中提取出最主要元素和结构能够提取出最大程度反映样品间差异的三个坐标轴，从而将多维数据的差异反映在三维坐标图上，进而揭示复杂数据背景下的简单规律。区别在于PCA是基于样品的相似系数矩阵来寻找主坐标，而PCoA是基于距离矩阵来寻找主坐标。我们基于Bray Curtis距离、Weighted Unifrac距离和Unweighted Unifrac距离来进行PCoA分析，并选取贡献率最大的主坐标组合进行作图展示，图中样品的距离越接近，表示样品的物种组成结构越相似。分析结果文件夹分别提供了PCoA的2D和3D图，方便选择使用。 
+				Beta多样性NMDS及PCoA的分析，我们提供了qiime2及R语言Phyloseq包两种可视化结果。主坐标分析（PCoA），是一种与PCA类似的降维排序方法，从多维数据中提取出最主要元素和结构能够提取出最大程度反映样品间差异的三个坐标轴，从而将多维数据的差异反映在三维坐标图上，进而揭示复杂数据背景下的简单规律。区别在于PCA是基于样品的相似系数矩阵来寻找主坐标，而PCoA是基于距离矩阵来寻找主坐标。我们基于Bray Curtis距离、Weighted Unifrac距离和Unweighted Unifrac距离来进行PCoA分析，并选取贡献率最大的主坐标组合进行作图展示，图中样品的距离越接近，表示样品的物种组成结构越相似。分析结果文件夹分别提供了PCoA的2D和3D图，方便选择使用。 
 			</p>
 
 			<p align="center">
@@ -428,10 +434,10 @@
 			</dd>
 
 			<p>
-				PLS-DA分析,即偏最小二乘法判别分析，是一种用于判别分析的多变量统计分析方法,根据观察或测量到的若干变量值,来判断研究对象如何分类。PLS-DA属于有监督的分析方法,需要将检测样本按照类别进行分组,在计算数学模型时把各组加以区分,忽略组内的随机差异,突出组间系统差异,在观测因子远大于样本数量时具有较好的样本区分表现。基于全OTU水平的PLS-DA分析的坐标图也给予了提供，请参见结果目录<a href="../../../4-BetaDiversity/4-PLS-DA">./4-BetaDiversity/5-PLS-DA/</a>。 
+				PLS-DA的分析由R语言mixOmics包完成。PLS-DA分析,即偏最小二乘法判别分析，是一种用于判别分析的多变量统计分析方法,根据观察或测量到的若干变量值,来判断研究对象如何分类。PLS-DA属于有监督的分析方法,需要将检测样本按照类别进行分组,在计算数学模型时把各组加以区分,忽略组内的随机差异,突出组间系统差异,在观测因子远大于样本数量时具有较好的样本区分表现。同时PLS-DA会选择性忽略在分组间没有差异的微生物，所以其坐标图比PCoA图分的开，但是并不能代表微生物群整体的情况，只保留了分组间有差异的信息。基于所有丰度大于10的OTU，我们做了PLS-DA分析，我们提供了坐标图，AUC曲线，VIP（value importance in projection）表格，请参见结果目录<a href="../../../4-BetaDiversity/4-PLS-DA">./4-BetaDiversity/5-PLS-DA/</a>。 
 			</p>
 			<dd style="font-size:80%;">
-				说明：PLS-DA每个点代表一个样本，颜色相同的点属于同一分组，相同分组的点以椭圆标出。如果属于同一分组的样本彼此之间距离越近，同时不同分组的点之间的距离越远，表明分类模型效果越好。
+				说明：（1）PLS-DA坐标图每个点代表一个样本，颜色相同的点属于同一分组，相同分组的点以椭圆标出。如果属于同一分组的样本彼此之间距离越近，同时不同分组的点之间的距离越远，表明分类模型效果越好。<br>（2）在AUC曲线图中，右侧列出了各分组和其他所有分组进行判别分析的情况下，所得到的曲线下面积，该值越接近于1，说明区分效果越好，有多个微生物在分组间丰度有差异。<br>（3）同时，VIP表格中的VIP（重点看最后一列），体现了各个微生物在判别分析中的重要性，该值越大，表明该微生物在分组间差异越大。VIP大于1的微生物应该是重点关注的微生物。
 			</dd>
 
 			<br><br>
@@ -456,7 +462,7 @@
 			</h2>
 			<h3><a id="a7.1"></a>7.1 特定物种系统进化分析</h3>
 			<p>
-				<a>选取关注的</a>OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)绘制进化关系树图，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。客户可以点击<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a>查看完整信息。
+				进化树的绘制由R语言ggtree包完成。选取关注的OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)绘制进化关系树图，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。客户可以点击<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a>查看完整信息。
 			</p>
 			<p align="center"><img src="../../Figure7-1.png" width="800" height="800"></p>
  
@@ -469,7 +475,7 @@
 			<h2 style="color:#F00">温馨提示：如果没有提供环境因子将没有相关性热图和CCA/RDA</h2>
 			<h3 align="left"><a id="a8.1"></a>8.1 CCA/RDA分析</h3>
 			<p>
-				CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。本报告先进行DCA分析，看最大轴的值是否大于4,如果大于4.0，就选CCA，否则选RDA。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 <sup>[27-29]</sup>
+				CCA/RDA的分析主要依赖R语言VEGAN包，以及用ggplot2进行可视化。CCA/RDA(DCA判断用哪一种分析)分析是基于对应分析发展的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA是基于线性模型，CCA是基于单峰模型（图8-1）。本报告先进行DCA分析，看最大轴的值是否大于4,如果大于4.0，就选CCA，否则选RDA。该分析<a>主要用来反映菌群与</a>环境因子之间的关系，可以检测环境因子、样品、菌群三者之间的关系或者两两之间的关系，可得到影响样品分布的重要环境驱动因子。可以查看目录<a href="../../../6-AssociationAnalysis/1-RDA/">./6-AssociationAnalysis/1-RDA/</a>了解完整的各分类水平物种与环境因子的关系。 <sup>[27-29]</sup>
 			</p>
 			<p align="center"><img alt="未提供环境因子,没有此项分析" src="../../Figure8-1.png" width="800" height="800"></p>
 			<h3 align="center">图8-1 属水平物种CCA/RDA排序图</h3>
@@ -479,7 +485,7 @@
 
 			<h3 align="left"><a id="a8.2"></a>8.2 相关性热图分析 </h3>
 			<p>
-				相关性热图可以用于分析环境因子或其他临床表型数据与微生物群落或物种之间是否显著相关，然后计算环境因子与微生物物种间的Spearman相关系数，并用热图展示（图8-2）。该分析可以挑选出与某种环境因子或疾病显著相关的物种，同时提供环境因子的数据，比如 pH值、温度值、临床因子等。<sup>[30-32]</sup> 
+				相关性热图的绘制主要运用了R语言pheatmap包。相关性热图可以用于分析环境因子或其他临床表型数据与微生物群落或物种之间是否显著相关，然后计算环境因子与微生物物种间的Spearman相关系数，并用热图展示（图8-2）。该分析可以挑选出与某种环境因子或疾病显著相关的物种，同时提供环境因子的数据，比如 pH值、温度值、临床因子等。<sup>[30-32]</sup> 
 			</p>
 
 			<p align="center"><img alt="未提供环境因子,没有此项分析" src="../../Figure8-2.png" width="800" height="800"></p>
@@ -493,7 +499,7 @@
 
 			<h3><a id="a8.3"></a>8.3 物种相互作用网络分析</h3>
 			<p>
-				基于物种样本间的相对丰度进行Spearman获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。同时我们也提供基于相对组成成分数据的相关性计算（CCLasso/SPARCC），并用Cytoscape进行定制化可视化分析（属于VIP分析）。<sup>[33]</sup> 
+				相关网络主要运用R语言igraph包绘制。基于物种样本间的相对丰度进行Spearman获得样本内或样本组内的物种之间的相互关系，然后用展示物种间相互关系的可视化软件进行物种相互作用网络构建（图8-3）。该分析可以寻找相互拮抗或协同的物种，从而寻找环境样本中的微生物群体协同或相互抑制信息，例如针对某种疾病相关的微生物群落，就可以发现共同作用的微生物或相互抑制的微生物，为其治疗做指导。同时我们也提供基于相对组成成分数据的相关性计算（CCLasso/SPARCC），并用Cytoscape进行定制化可视化分析（属于VIP分析）。<sup>[33]</sup> 
 			</p>
 
 			<p align="center"><img src="../../Figure8-3.png" width="800" height="800"></p>
@@ -530,7 +536,7 @@
 
 			<h3><a id="a9.1"></a>9.1 预测微生物群落功能</h3>
 			<p>
-				PICRUSt的原理是基于已测细菌基因组的16S rRNA序列，推断它们的共同祖先的基因功能谱，对Greengenes数据库中其它未测物种的基因功能谱进行推断，构建古菌和细菌域全谱系的基因功能预测谱，最后，将测序得到的菌群组成映射到数据库中，对菌群代谢功能进行预测<sup>[37-38]</sup> 。KEGG功能根据注释深度可以分为三级，图9-1展示的是产生的L1级别功能预测组成的柱形图。其他注释等级可查看目录<a href="../../../7-FunctionAnalysis/1-KEGG_Pathway/">./7-FunctionAnalysis/1-KEGG_Pathway/</a>。 
+				PICRUSt的原理是基于已测细菌基因组的16S rRNA序列，推断它们的共同祖先的基因功能谱，对Greengenes数据库中其它未测物种的基因功能谱进行推断，构建古菌和细菌域全谱系的基因功能预测谱，最后，将测序得到的菌群组成映射到数据库中，对菌群代谢功能进行预测<sup>[37-38]</sup> 。KEGG功能根据注释深度可以分为三个分类层级，类似于微生物的分类层级。什么是分类层级？比如我们知道奶牛的数量，知道肉牛的数量，我们把奶牛的数量和肉牛的数量加起来得到了牛的数量，这里的奶牛和肉牛相当于L3分类层级，牛相当于L2分类层级，如果再把猪和牛的数量加起来得到脊椎动物的数量，脊椎动物相当于L1层级，以此类推。从L1到L3相当于一个细化分类的过程。看哪一个级别的结果比较好？通常看L3级别的结果，兼顾L3级别所属的L1级别分类。图9-1展示的是产生的L1级别功能预测组成的柱形图。其他注释等级可查看目录<a href="../../../7-FunctionAnalysis/1-KEGG_Pathway/">./7-FunctionAnalysis/1-KEGG_Pathway/</a>。 
 			</p>
 			<p align="center"><img src="../../Figure9-1.png" width="800" height="600"></p>
 			<p align="center"><strong>图9-1 KEGG L1微生物群落功能预测组成柱形图 </strong></p>
@@ -548,19 +554,21 @@
 
 			<h3><a id="a9.3"></a>9.3 组间功能差异性分析</h3>
 			<p>
-				在得到KEGG功能注释后，结合分组信息，利用Krsuskal Wallis和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。
-
+				在得到KEGG功能注释后，结合分组信息，利用ANOVA+Duncan和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。ANOVA+Duncan基于R语言agricolae包，在进行ANOVA+Duncan检验之前，我们先筛除观测样本小于总样本50%的代谢通路（Filter the pathways observed in less than 50% of total samples），再基于相对丰度进行差异分析。结果文件夹中也提供了根据L1水平，分别画的图，以减小一个图的面积。<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
+			</p>
 
 			<p align="center"><img alt="没有在分组间差异显著的通路" src="../../Figure9-3.png" width="800" height="800"></p>
 
 			<p align="center"><strong>图9-3 ANOVA和Duncan检验得到的所有显著差异的通路（L3水平）</strong></p>
-
-
-				图9-3是用ANOVA和Duncan检验得到的所有显著差异的通路（L3水平），横坐标为通路名字。对应每个通路，用不同颜色表示不同的分组，两个分组上方如果有相同的字母，则代表差异不显著，否则差异显著。在进行ANOVA和Duncan检验之前，我们先筛除观测样本小于总样本50%的代谢通路（Filter the pathways observed in less than 50% of total samples），再基于相对丰度进行差异分析。结果文件夹中也提供了根据L1水平，分别画的图，以减小一个图的面积。<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
-			</p>
+			<dd style="font-size:80%;">
+				说明：图9-3是用ANOVA和Duncan检验得到的所有显著差异的通路（L3水平），横坐标为通路名字。对应每个通路，用不同颜色表示不同的分组，两个分组上方如果有相同的字母，则代表差异不显著，否则差异显著。
+			</dd>
 
 
 			<hr>
+			<br>
+			<p style="color:red;"><strong>写在最后：如果您对图片中的字形，字号，字的内容（包括样本名称，分组名称），字的方向，图片中某个元素的位置，大小，方向，线条粗细等不涉及统计方法的方面不满意，或者想删除图中的某些元素，推荐使用AI软件（Adobe Illustrater）进行修改，所有的矢量图，包括pdf和svg，都是可以用AI进行排版和编辑的。可关注微科享领取教程。祝发文顺利！</strong></p>
+			<br>
 			<h2><a id="a10"></a>十 参考文献</h2>
 
 			<p>
