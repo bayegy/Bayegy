@@ -271,7 +271,7 @@
 			<p align="center"><strong>图 4-2 (补充) 各个分组在门水平上的相对分布情况柱形图（相对丰度前20的物种）</strong></p>
 
 			<dd style="font-size:80%;">
-				说明：通常在种/属水平因为分类种类过多而在图例中无法全部展示所有分类，特增加本图是对图4-2进行补充。横坐标(Sample Name)是样品名，纵坐标(Sequence Number Percent)表示注释到该门水平的序列数目占总注释数据的比率，柱状图自上而下的颜色顺序对应于右侧的图例颜色顺序。在门水平没有注释的序列被归为unclassified一类。图例中最多显示最优势的20个种类,余下的相对丰度较低的物种被归类为Other在图中展示。更多完整的物种分布情况请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots">./ 2-AundanceAnalysis/1-AbundanceSummary/2-Barplots/</a>。
+				说明：通常在种/属水平因为分类种类过多而在图例中无法全部展示所有分类，特增加本图是对图4-2进行补充。横坐标(Sample Name)是分组名，纵坐标(Sequence Number Percent)表示注释到该门水平的序列数目占总注释数据的比率，柱状图自上而下的颜色顺序对应于右侧的图例颜色顺序。在门水平没有注释的序列被归为unclassified一类。图例中最多显示最优势的20个种类,余下的相对丰度较低的物种被归类为Other在图中展示。更多完整的物种分布情况请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots">./ 2-AundanceAnalysis/1-AbundanceSummary/2-Barplots/</a>。
 			</dd>
 
 			<p>
@@ -418,15 +418,15 @@
 			</dd>
 
 			<p>
-				PLS-DA的分析由R语言mixOmics包完成。PLS-DA分析,即偏最小二乘法判别分析，是一种用于判别分析的多变量统计分析方法,根据观察或测量到的若干变量值,来判断研究对象如何分类。PLS-DA属于有监督的分析方法,需要将检测样本按照类别进行分组,在计算数学模型时把各组加以区分,忽略组内的随机差异,突出组间系统差异,在观测因子远大于样本数量时具有较好的样本区分表现。同时PLS-DA会选择性忽略在分组间没有差异的微生物，所以其坐标图比PCoA图分的开，但是并不能代表微生物群整体的情况，只保留了分组间有差异的信息。基于所有丰度大于10的OTU，我们做了PLS-DA分析，我们提供了坐标图，AUC曲线，VIP（value importance in projection）表格，请参见结果目录<a href="../../../4-BetaDiversity/4-PLS-DA">./4-BetaDiversity/5-PLS-DA/</a>。 
+				PLS-DA的分析由R语言mixOmics包完成。PLS-DA分析,即偏最小二乘法判别分析，是一种用于判别分析的多变量统计分析方法,根据观察或测量到的若干变量值,来判断研究对象如何分类。PLS-DA属于有监督的分析方法,需要将检测样本按照类别进行分组,在计算数学模型时把各组加以区分,忽略组内的随机差异,突出组间系统差异,在观测因子远大于样本数量时具有较好的样本区分表现。同时PLS-DA会选择性忽略在分组间没有差异的微生物，所以其坐标图比PCoA图分的开，但是并不能代表微生物群整体的情况，只保留了分组间有差异的信息。基于所有丰度大于10的OTU，我们做了PLS-DA分析，提供了坐标图，AUC曲线，VIP（variable importance in projection）表格，请参见结果目录<a href="../../../4-BetaDiversity/4-PLS-DA">./4-BetaDiversity/5-PLS-DA/</a>。 
 			</p>
 			<dd style="font-size:80%;">
-				说明：（1）PLS-DA坐标图每个点代表一个样本，颜色相同的点属于同一分组，相同分组的点以椭圆标出。如果属于同一分组的样本彼此之间距离越近，同时不同分组的点之间的距离越远，表明分类模型效果越好。<br>（2）在AUC曲线图中，右侧列出了各分组和其他所有分组进行判别分析的情况下，所得到的曲线下面积，该值越接近于1，说明区分效果越好，有多个微生物在分组间丰度有差异。<br>（3）同时，VIP表格中的VIP（重点看最后一列），体现了各个微生物在判别分析中的重要性，该值越大，表明该微生物在分组间差异越大。VIP大于1的微生物应该是重点关注的微生物。
+				说明：（1）PLS-DA坐标图每个点代表一个样本，颜色相同的点属于同一分组，相同分组的点以椭圆标出。如果属于同一分组的样本彼此之间距离越近，同时不同分组的点之间的距离越远，表明分类模型效果越好。<br>（2）在AUC曲线图中，右侧列出了各分组和其他所有分组进行判别分析的情况下，所得到的曲线下面积，该值越接近于1，说明区分效果越好，有多个微生物在分组间丰度有差异。<br>（3）同时，VIP表格中的VIP（重点看comp.2），体现了各个微生物在判别分析中的重要性，该值越大，表明该微生物在分组间差异越大。VIP大于1的微生物应该是重点关注的微生物。
 			</dd>
 
 			<br><br>
 			<h3 align="left"><a id="a6.2"></a>6.2 基于Beta多样性指数的组间菌群结构比较</h3>
-			<p>在得到整体的Beta多样性指数之后，接下来结合分组信息来用PERMANOVA方法和ANOSIM方法比较在各个样品分组之间的微生物组成结构是否有显著性差异。</p>
+			<p>在得到整体的Beta多样性指数之后，接下来结合分组信息来用PERMANOVA方法和ANOSIM方法比较在各个样品分组之间的微生物组成结构是否有显著性差异。PERMANOVA和ANOSIM的分析基于qiime2 "qiime diversity beta-group-significance"命令。</p>
 			
 			<p align="center">
 				<iframe src="../../page6-2/Summary_请点此文件查看.html" width="800" height="600"></iframe>
@@ -524,7 +524,7 @@
 			</p>
 			<p align="center"><img src="../../Figure9-1.png" width="800" height="600"></p>
 			<p align="center"><strong>图9-1 KEGG L1微生物群落功能预测组成柱形图 </strong></p>
-			<dd style="font-size:80%;">说明：从上至下依次为KEGG结果展示，纵轴表示注释到某类型的功能的相对比例；横轴表示样品名称；各颜色区块对应的功能类别见右侧图例。</dd>
+			<dd style="font-size:80%;">说明：从上至下依次为KEGG结果展示，纵轴表示注释到某类型的功能的相对比例；横轴表示分组名称；各颜色区块对应的功能类别见右侧图例。</dd>
 			<h3><a id="a9.2"></a>9.2 预测功能PCA分析</h3>
 			<p>
 				基于已知物种的16S物种信息和KEGG功能信息，可以获得环境样本的KEGG功能种类及其相对丰度信息。基于KEGG功能及其代谢途径相对丰度，可以进行样本间KEGG代谢途径PCA分析，图9-2是基于KEGG 功能级别的功能PCA图。其他注释等级的PCA图可查看目录<a href="../../../7-FunctionAnalysis/2-PCAPlots/">/7-FunctionAnalysis/2-PCAPlots/</a>。 
@@ -538,14 +538,14 @@
 
 			<h3><a id="a9.3"></a>9.3 组间功能差异性分析</h3>
 			<p>
-				在得到KEGG功能注释后，结合分组信息，利用ANOVA+Duncan和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。ANOVA+Duncan基于R语言agricolae包，在进行ANOVA+Duncan检验之前，我们先筛除观测样本小于总样本50%的代谢通路（Filter the pathways observed in less than 50% of total samples），再基于相对丰度进行差异分析。结果文件夹中也提供了根据L1水平，分别画的图，以减小一个图的面积。<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
+				在得到KEGG功能注释后，结合分组信息，利用ANOVA+Duncan和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。Dunn test分析基于R语言dunn.test包，其中，结果文件中KW_pvalue， DunnTest_comparison， DunnTest_Z， DunnTest_PValueAdjusted 分别为Kruskal-Wallis检验P值，DunnTest多重比较组对，DunnTest的检验统计量， DunnTest的校正后P值。ANOVA+Duncan基于R语言agricolae包，在进行ANOVA+Duncan检验之前，我们先筛除观测样本小于总样本50%的代谢通路（Filter the pathways observed in less than 50% of total samples），再基于相对丰度进行差异分析。结果文件夹中也提供了根据L1水平，分别画的图，以减小一个图的面积。<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
 			</p>
 
 			<p align="center"><img alt="没有在分组间差异显著的通路" src="../../Figure9-3.png" width="800" height="800"></p>
 
 			<p align="center"><strong>图9-3 ANOVA和Duncan检验得到的所有显著差异的通路（L3水平）</strong></p>
 			<dd style="font-size:80%;">
-				说明：图9-3是用ANOVA和Duncan检验得到的所有显著差异的通路（L3水平），横坐标为通路名字。对应每个通路，用不同颜色表示不同的分组，两个分组上方如果有相同的字母，则代表差异不显著，否则差异显著。
+				说明：图9-3是用ANOVA和Duncan检验得到的所有显著差异的通路（L3水平），当且仅当校正错误发现率后的p值（p.adj）小于0.05时，才会进一步做Duncan检验，并绘图。横坐标为通路名字，对应每个通路，用不同颜色表示不同的分组，两个分组上方如果有相同的字母，则代表差异不显著，否则差异显著。
 			</dd>
 
 

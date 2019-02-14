@@ -112,7 +112,7 @@ function assign_taxa() {
 
 
 	source activate qiime2-2018.11
-<<COM1
+
 	echo "##############################################################\n#paired end analysis using DADA2"
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
@@ -214,7 +214,7 @@ comment1
 	mv ./Result_AmpliconSequencing/1-OTUStats/demux/ ./Result_AmpliconSequencing/1-OTUStats/1-Stats-demux
 	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png ./Result_AmpliconSequencing/1-OTUStats/
 	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/1-OTUStats/feature-table.taxonomy.even.txt
-COM1
+
 	echo "##############################################################\n#Generate the results of each group"
 	for category_set in $category_sum;
 		do echo $category_set;
@@ -227,7 +227,7 @@ COM1
 		mapping_file=$(readlink -f './mapping_file.txt');
 
 
-<<com2
+
 		qiime metadata tabulate   --m-input-file taxonomy.qza   --o-visualization taxonomy.qzv;
 
 		echo "##############################################################\n#Generate tree";
@@ -661,7 +661,7 @@ COMMENT
 	#		done;
 
 
-com2
+
 		source deactivate
 		source activate qm2
 		category_report=($category_set)
