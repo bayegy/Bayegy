@@ -235,6 +235,4 @@ check_file() {
 
 	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
 
-	python $SCRIPTPATH/convert_to_html_table.py -i ../../../Result_AmpliconSequencing/1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html -o src/pages/table1.html -t dada2html
-
-
+	python ~/github/Bayegy/convert_to_html_table.py -i ../../../Result_AmpliconSequencing/1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html -o src/pages/main_cleaned.html -t dada2html -k '无法加载表格表3-1'

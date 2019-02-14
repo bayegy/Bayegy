@@ -11,8 +11,10 @@ p.add_argument('-i', '--input', dest='input', metavar='<path>',
                help='Path of input Table, either txt or html')
 p.add_argument('-t', '--type', dest='type', metavar='<str>', default="auto",
                help='The type of input file')
+p.add_argument('-k', '--key-word', dest='key', metavar='<str>', default="auto",
+               help='The key-word supposed to be replaced by this table in target html')
 p.add_argument('-o', '--output', dest='out', metavar='<directory>', default='./test.html',
-               help='The path of output files')
+               help='The path of target html to which this table will input')
 options = p.parse_args()
 
 
@@ -33,4 +35,10 @@ else:
     out_df = pd.DataFrame(json['data'])
     out_df.columns = columns
 
-out_df.to_html(options.out, index=False)
+table_html = out_df.to_html(index=False)
+
+with open(options.out, 'r') as f1:
+    target = f1.read()
+    target = target.replace(options.key, '\n' + table_html + '\n')
+with open(options.out, 'w') as f2:
+    f2.write(target)
