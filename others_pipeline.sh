@@ -110,44 +110,45 @@ function assign_taxa() {
 
 	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-	#echo "##############################################################\n#Demultiplexing the single-end sequence file"
-	#qiime demux emp-single --i-seqs emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
-	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-	#echo "##############################################################\n#Demultiplexing the paired-end sequence file"
-	#qiime demux emp-paired --i-seqs emp-paired-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
-	#qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
 	source activate qiime2-2018.11
 
-	echo "##############################################################\n#Set up the directory structure and prepare the raw fastq sequences."
-	#check_file $manifest_file
-	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --source-format SingleEndFastqManifestPhred64
-	#single-end
-	#qiime demux emp-single --i-seqs emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza --p-rev-comp-mapping-barcodes
-	#qiime demux emp-single --i-seqs ../database/emp-single-end-sequences.qza --m-barcodes-file $mapping_file --m-barcodes-column BarcodeSequence  --o-per-sample-sequences demux.qza
-	#qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --input-format SingleEndFastqManifestPhred33
-	#paired-end
+	echo "##############################################################\n#paired end analysis using DADA2"
+
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
-	echo "##############################################################\n#Use DADA2 for quality control and feature table construction"
-	#single-end
-	#qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 10 --p-trunc-len 265 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	#qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 17 --p-trunc-len 277 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
-
-	#paired-end
-	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 210 --p-trunc-len-r 210 --p-trim-left-f 24 --p-trim-left-r 25 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 280 --p-trunc-len-r 250 --p-trim-left-f 30 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
-	#qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 0 --p-trunc-len-r 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza
-
-
-	####Alternative methods of read-joining in QIIME 2
-	#qiime vsearch join-pairs --p-maxdiffs 5 --p-minovlen 15 --p-truncqual 2 --i-demultiplexed-seqs demux.qza --o-joined-sequences demux-joined.qza
-	#qiime demux summarize --i-data demux-joined.qza --o-visualization demux-joined.qzv
-	#qiime quality-filter q-score-joined --i-demux demux-joined.qza --o-filtered-sequences demux-joined-filtered.qza --o-filter-stats demux-joined-filter-stats.qza
-	#qiime deblur denoise-16S --i-demultiplexed-seqs demux-joined-filtered.qza --p-trim-length 420  --p-sample-stats --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza --o-stats stats-dada2.qza
-
+	qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza --p-trunc-len-f 245 --p-trunc-len-r 245 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
+
+
+
+<<com1
+	echo "##############################################################\n#Single end analysis using DADA2"
+	qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --input-format SingleEndFastqManifestPhred33
+	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
+	qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-trim-left 26 --p-trunc-len 240 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
+com1
+
+
+
+
+<<comment1
+	echo "############################################################\nAlternative methods of read-joining using deblur"
+	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
+	#qiime cutadapt trim-paired --i-demultiplexed-sequences demux.qza --p-front-f CCAGCASCYGCGGTAATTCC --p-front-r ACTTTCGTTCTTGATYRA --p-overlap 10 --o-trimmed-sequences trimmed-demux.qza
+	#qiime tools import   --type 'SampleData[JoinedSequencesWithQuality]'  --input-path $manifest_file --output-path demux-joined.qza --input-format SingleEndFastqManifestPhred33
+	qiime vsearch join-pairs --p-maxdiffs 5 --p-minovlen 15 --p-truncqual 2 --i-demultiplexed-seqs demux.qza --o-joined-sequences demux-joined.qza
+
+	qiime demux summarize --i-data demux-joined.qza --o-visualization demux.qzv
+	qiime quality-filter q-score-joined --i-demux demux-joined.qza --o-filtered-sequences demux-joined-filtered.qza --o-filter-stats demux-joined-filter-stats.qza
+	qiime deblur denoise-16S --i-demultiplexed-seqs demux-joined-filtered.qza --p-trim-length 400  --p-sample-stats --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza --o-stats stats-dada2.qza --p-jobs-to-start 16 --verbose
+	qiime deblur visualize-stats --i-deblur-stats stats-dada2.qza --o-visualization stats-dada2.qzv
+comment1
+
+
+
 	mv rep-seqs-dada2.qza rep-seqs.withCandM.qza
 	mv table-dada2.qza table.withCandM.qza
 
@@ -159,16 +160,18 @@ function assign_taxa() {
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
-	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,PlantsandFungi,Mammals,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Archaea,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
 	mv table-no-mitochondria-no-chloroplast.qza table.qza
-	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,PlantsandFungi,Mammals,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Archaea,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
 
 	echo "##############################################################\n#Classify the taxonomy"
 	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
-	#clean unclassified
-	python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c
+	if [[ $classifier_type == 'silva' ]];
+		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
+		else python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c;
+	fi;
 
 
 	echo "##############################################################\n#Generate tree";
@@ -328,6 +331,25 @@ function assign_taxa() {
 		perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/classified_stat_relative.xls -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > exported/Relative/Classified_stat_relative.svg
 
 		for key in ${!tax_aa[*]};do mv exported/Relative/otu_table.${key}.relative.mat exported/Relative/otu_table.${tax_aa[$key]}.relative.txt;done;
+			#mv exported/Relative/otu_table.p.relative.mat exported/Relative/otu_table.Phylum.relative.txt
+			#mv exported/Relative/otu_table.c.relative.mat exported/Relative/otu_table.Class.relative.txt
+			#mv exported/Relative/otu_table.o.relative.mat exported/Relative/otu_table.Order.relative.txt
+			#mv exported/Relative/otu_table.f.relative.mat exported/Relative/otu_table.Family.relative.txt
+			#mv exported/Relative/otu_table.g.relative.mat exported/Relative/otu_table.Genus.relative.txt
+			#mv exported/Relative/otu_table.s.relative.mat exported/Relative/otu_table.Species.relative.txt
+
+
+#		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species"; 
+#			do echo $n7; 
+			#echo "mv exported/Relative/otu_table.${n7}.relative.mat exported/Relative/otu_table.${tax_levels[${n7}]}.relative.txt"
+			#mv exported/Relative/otu_table.${n7}.relative.mat exported/Relative/otu_table.${tax_levels[${n7}]}.relative.txt
+			#echo ${tax_levels[$n7]}
+			#echo ${tax_levels[${n7}]}
+#			perl -lane '$,="\t";pop(@F);print(@F)' exported/Relative/otu_table.${n7}.relative.txt > exported/Relative/otu_table.${n7}.relative.lastcolumn.txt; 
+#			perl ${SCRIPTPATH}/get_table_head2.pl exported/Relative/otu_table.${n7}.relative.lastcolumn.txt 20 -trantab > exported/Relative/otu_table.${n7}.relative.lastcolumn.trans; 
+			#perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/otu_table.${n7}.relative.lastcolumn.trans -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,1 > exported/Relative/otu_table.${n7}.relative.svg;
+#			perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/otu_table.${n7}.relative.lastcolumn.trans -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent (%)" -right -textup -rotate='-45' --y_mun 0.2,5 --micro_scale --percentage > exported/Relative/otu_table.${n7}.relative.svg
+#		done;
 		for svg_file in exported/Relative/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > exported/Relative/${n}.png; done
 
 
@@ -347,10 +369,49 @@ function assign_taxa() {
 		done;
 
 
+		echo "##############################################################\n#Run for PICRUST analysis and STAMP visulization"
+		qiime vsearch cluster-features-closed-reference --i-sequences rep-seqs.qza --i-table table.qza --i-reference-sequences $close_reference_trained --p-perc-identity 0.97 --p-threads 0 --output-dir closedRef_forPICRUSt
+		qiime feature-table summarize --i-table closedRef_forPICRUSt/clustered_table.qza --o-visualization closedRef_forPICRUSt/clustered_table.qzv --m-sample-metadata-file $mapping_file
+		qiime feature-table tabulate-seqs   --i-data closedRef_forPICRUSt/unmatched_sequences.qza   --o-visualization closedRef_forPICRUSt/unmatched_sequences.qzv
+		qiime tools export --input-path closedRef_forPICRUSt/clustered_table.qza --output-path closedRef_forPICRUSt/
+		biom convert -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.txt --to-tsv
 
+<<COMMENT
 		source deactivate
-		source activate qiime2-2018.11
+		source activate qm2
+		normalize_by_copy_number.py -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.normalized.biom
+		predict_metagenomes.py -i closedRef_forPICRUSt/feature-table.normalized.biom -o closedRef_forPICRUSt/feature-table.metagenome.biom
+		categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L1.txt -c KEGG_Pathways -l 1 -f
+		categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L2.txt -c KEGG_Pathways -l 2 -f
+		categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L3.txt -c KEGG_Pathways -l 3 -f
+
+
+		cd closedRef_forPICRUSt
+
+		for n3 in 1 2 3;
+			do echo $n3;
+			python ${SCRIPTPATH}/convert_percent.py -i feature-table.metagenome.L${n3}.txt;
+			#perl ${SCRIPTPATH}/get_table_head2.pl percent.feature-table.metagenome.L${n3}.txt 35 -trantab > percent.feature-table.metagenome.L${n3}.tab
+			#perl ${SCRIPTPATH}/top10_bar_diagram.pl  -right -grid -rotate='-45' -x_title 'Sample Name' -y_title 'Relative Abundance' --y_mun 0.25,4 --height 350 -table percent.feature-table.metagenome.L${n3}.tab > percent.feature-table.metagenome.L${n3}.svg
+			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20/ -p L${n3}_${category_set}_ordered_ -b F -s T;
+			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20-group-mean/ -p ${category_set}_L${n3}_mean_ -b T -s T;
+
+			perl ${SCRIPTPATH}/cluster.pl  -BC -Z -x percent.feature-table.metagenome.L${n3}.txt > level1.relative.tree
+			perl ${SCRIPTPATH}/draw_tree.pl -bun 0.25,4 -bline -type 4  level1.relative.tree  percent.feature-table.metagenome.L${n3}.tab --flank_x 100 >  tree.feature-table.metagenome.L${n3}.svg
+			#${SCRIPTPATH}/PCA.R.pl ${PWD}/percent.feature-table.metagenome.L${n3}.txt 0.2 ${PWD}/PCA_L${n3}
+			cp $mapping_file ./sample-metadata.PCA.txt
+			perl -p -i.bak -e 's/#//' ./sample-metadata.PCA.txt
+			tail -n +2 feature-table.metagenome.L${n3}.txt | grep -v "disease"> feature-table.metagenome.L${n3}.PCA.txt
+			perl -p -i.bak -e 's/#OTU ID/KEGG_function/' feature-table.metagenome.L${n3}.PCA.txt
+		done;
+		for svg_file in *svg; do echo $svg_file; base=$(basename $svg_file .svg); rsvg-convert -h 3200 -b white $svg_file > ${base}.png; done
+
+		cd ..
+
+
+
 		echo "##############################################################\n#Make phylogenetic trees for ITOL"
+
 		mkdir phylogeny
 		qiime feature-table filter-features --i-table table.qza --p-min-frequency $min_freq --o-filtered-table phylogeny/table.${min_freq}.qza
 		qiime tools export --input-path phylogeny/table.${min_freq}.qza --output-path phylogeny
@@ -369,9 +430,14 @@ function assign_taxa() {
 		qiime tools export --input-path phylogeny/dna-sequences.${min_freq}.rooted-tree.qza --output-path phylogeny/
 		mv phylogeny/tree.nwk phylogeny/tree.rooted.nwk
 		perl ${SCRIPTPATH}/generate_file_Itol.pl phylogeny/feature-table.taxonomy.txt 
+COMMENT
 
-
+		source deactivate
+		source activate qiime2-2018.11
 		qiime tools export --input-path masked-aligned-rep-seqs.qza --output-path ./
+		qiime tools export --input-path rep-seqs.qza --output-path ./
+		qiime tools export --input-path rooted-tree.qza --output-path ./
+
 		echo "##############################################################\n#export all qzv files into clickable folders"
 		#for f in $(find . -type f -name "*.qzv"); do echo $f; qiime tools export $f --output-dir ${f}.exported; done
 		for f in $(find . -type f -name "*.qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); new=${dir}/${base}; qiime tools export --input-path $f --output-path ${new}.qzv.exported; done 
@@ -449,6 +515,7 @@ function assign_taxa() {
 
 		rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
 
+		#python2 ${SCRIPTPATH}/biom_to_stamp.py -m KEGG_Pathways closedRef_forPICRUSt/feature-table.metagenome.biom > closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt
 
 		echo "##############################################################\n#Generate the absolute directory for enviromental factors relational analysis"
 
@@ -464,6 +531,17 @@ function assign_taxa() {
 		#mv otu_table.f.absolute.mat otu_table.Family.absolute.txt
 		#mv otu_table.g.absolute.mat otu_table.Genus.absolute.txt
 		#mv otu_table.s.absolute.mat otu_table.Species.absolute.txt
+	#	mkdir RDA
+	#	for n6 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+	#		do echo $n6;
+	#		mkdir RDA/${n6}
+	#		cp otu_table.${n6}.absolute.txt RDA/${n6}
+	#		cd RDA/${n6}
+	#		for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i otu_table.${n6}.absolute.txt -m $mapping_file -g $category_1 -o ./ -n 25 -e $not_rda;done;
+	#		cd ../../
+	#	done;
+	#	cd ../../
+
 
 		source deactivate
 		source activate qm2
@@ -476,7 +554,7 @@ function assign_taxa() {
 		if [ ! $test == "all" ];then
 			echo "##############################################################\nCorrelation heatmap analysis"
 			for nrda in $not_rda;
-				do eho $nrda;
+				do echo $nrda;
 				prefix=${nrda//,/_}_excluded_;
 				prefix=${prefix//none_excluded_/};
 				for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
@@ -493,7 +571,7 @@ function assign_taxa() {
 			do echo $n7;
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i otu_table_forlefse/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
 			#Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Relative/otu_table.${n7}.relative.txt -o Heatmap_top20/${n7}/;
-			Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/;
+			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/;
 			done;
 
 
@@ -530,6 +608,9 @@ COMMENT
 		Rscript ${SCRIPTPATH}/alphararefaction.R -i alpha-rarefaction.qzv.exported -o alpha-rarefaction-ggplot2
 
 		echo "##############################################################\n#Run LEFSE for Group"
+
+		#perl ${SCRIPTPATH}/stat_otu_tab.pl -unif min exported/feature-table.taxonomy.txt -prefix otu_table_forlefse/otu_table
+		#for key in ${!tax_aa[*]};do mv otu_table_forlefse/otu_table.${key}.relative.mat otu_table_forlefse/otu_table.${tax_aa[$key]}.relative.txt;done;
 
 		source deactivate
 		source deactivate
@@ -575,6 +656,9 @@ COMMENT
 	#		done;
 
 
+
+		source deactivate
+		source activate qm2
 		category_report=($category_set)
 		echo "##############################################################\n#Organize the result files";
 		#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
@@ -583,6 +667,7 @@ COMMENT
 			rm -r ../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing;
 		fi;
 		mv Result_AmpliconSequencing ../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing
+
 
 
 		cd ../;

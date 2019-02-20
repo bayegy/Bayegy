@@ -42,7 +42,8 @@ check_file() {
 	fi
 }
 
-organize_deliverable_structure() {
+	echo "##############################################################\n#Organize the Result folder"
+	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 	if [ -d "./Result_AmpliconSequencing" ];then
 		rm -r ./Result_AmpliconSequencing;
 	fi;
@@ -70,7 +71,7 @@ organize_deliverable_structure() {
 	./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/ \
 	./Result_AmpliconSequencing/7-FiguresTablesForReport \
  	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Phyloseq \
-	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2
+	./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/PCoA-Qiime2 \
 
 
 	echo "Start organize the files for deliverables ..."
@@ -141,9 +142,13 @@ organize_deliverable_structure() {
 	#cp -r R_output/*wunifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
 	cp -r R_output/*PCA* R_output/*PLSDA* ./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/
 	#cp -r core-metrics-results/weighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
-	
+	cp -r exported/feature-table.taxonomy.txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_feature-table.taxonomy.txt
+	cp dna-sequences.fasta ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_representative-sequence.fasta
+	cp tree.nwk ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_rooted-tree.nwk
 	#cp -r R_output/Bacteria.phylogeny.pdf ./Result_AmpliconSequencing/5-Phylogenetics/1-MajorPhylums/
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/2-MajorOTUs/
+	
+
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/
 
 
@@ -157,6 +162,7 @@ organize_deliverable_structure() {
 	#cp -r exported/Absolute/s.rda.pdf ./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/Species.rda.pdf
 
 	#cp -r /Result_AmpliconSequencing/6-AssociationAnalysis
+
 
 
 	cp AdditionalPhylogeny/*.pdf ./Result_AmpliconSequencing/5-Phylogenetics/
@@ -186,7 +192,7 @@ organize_deliverable_structure() {
 	#######################For 7-FiguresTablesForReport
 
 	cp -rp ${SCRIPTPATH}/Report_others/src Result_AmpliconSequencing/7-FiguresTablesForReport/
-	cp ${SCRIPTPATH}/Report/结题报告.html Result_AmpliconSequencing/
+	cp ${SCRIPTPATH}/Report_others/结题报告.html Result_AmpliconSequencing/
 
 
 	cd ./Result_AmpliconSequencing/7-FiguresTablesForReport
@@ -195,9 +201,10 @@ organize_deliverable_structure() {
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
 	#cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
 	#cp ../2-AbundanceAnalysis/Classified_stat_relative.png Figure4-1.png
-	cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20/Phylum_${category_1}_ordered_barplot.pdf Figure4-2.pdf
+	cp ../2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20-group-mean/${category_1}_Phylum_mean_barplot.pdf Figure4-2.pdf
 	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.pdf Figure4-3.pdf
-	cp ../1-VennAndFlower/${category_1}_Venn_plot.png Figure4-4.png
+	cp ../2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/Genus/${category_1}_Genus_lefse_LDA2.cladogram.pdf Figure4-4.pdf
+	cp ../1-VennAndFlower/${category_1}_Venn_plot.png Figure4-5.png
 	cp ../3-AlphaDiversity/1-AlphaDiversitySummary/${category_1}_alpha_diversity_shannon.boxplot.pdf Figure5-1.pdf
 	cp ../3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/shannon_${category_1}_wilcox_compare_boxplot.png Figure5-2.png
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure6-1.png
@@ -206,33 +213,9 @@ organize_deliverable_structure() {
 	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}*bacteria_location_plot.png Figure8-1.png
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/Correlation_heatmap.pdf Figure8-2.pdf
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
+
+
+
 	if [ -f Figure4-2.pdf ];then echo "Converting pdf to png"; for pdfs in *.pdf; do echo $pdfs; base=$(basename $pdfs .pdf); convert  -density 300 -quality 80 $pdfs ${base}.png; rm $pdfs;done;fi;
 
-
-}
-
-MAIN() {
-
-	echo "##############################################################\n#Organize the Result folder"
-	organize_deliverable_structure
-<<COMMENT1
-	echo "##############################################################\n#Organize the Essential folder ----- part1"
-	mkdir Essential
-	mkdir Essential/1-Demux/ Essential/2-AbundanceAnalysis/ Essential/3-AlphaDiversity Essential/4-BetaDiversity
-	mkdir Essential/2-AbundanceAnalysis/OTUSummary Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis Essential/2-AbundanceAnalysis/OTUSummary/Heatmap Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis/ANCOM
-	cp -r demux.qzv.exported Essential/1-Demux/
-	cp -r taxa-bar-plots.qzv.exported Essential/2-AbundanceAnalysis/OTUSummary/
-	cp exported/feature-table.taxonomy.txt Essential/2-AbundanceAnalysis/OTUSummary/
-	cp -r exported/Relative Essential/2-AbundanceAnalysis/OTUSummary/
-	cp -r exported/exported/${number}/table-l2.${number} exported/exported/${number}/table-l6.${number} Essential/2-OTUTable/Heatmap
-	cp -r exported/ANCOM/ANCOM.l2.qzv.exported Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis/ANCOM/phylum
-	cp -r exported/ANCOM/ANCOM.l6.qzv.exported Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis/ANCOM/genus
-	cp exported/kruskal_wallis* exported/ANOVA* Essential/2-AbundanceAnalysis/OTUDifferentialAnalysis
-	cp alpha/alpha-summary.tsv Essential/3-AlphaDiversity
-	cp R_output/bray_matrix.txt R_output/wunifrac_matrix.txt R_output/unifrac_matrix.txt R_output/*unifrac_NMDS.pdf R_output/bray_NMDS.pdf R_output/P*_plot.pdf Essential/4-BetaDiversity/
-
-	cp -r Essential Result
-COMMENT1
-}
-
-MAIN;
+	python ~/github/Bayegy/convert_to_html_table.py -i ../../../Result_AmpliconSequencing/1-OTUStats/2-Stats-dada2/Summary_请点此文件查看.html -o src/pages/main_cleaned.html -t dada2html -k '无法加载表格表3-1'

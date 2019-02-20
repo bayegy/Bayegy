@@ -136,7 +136,7 @@ if(how==1){
         theme(text = element_text(size = 12),
               panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
               axis.line = element_line(),panel.border =  element_blank(),
-              axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))
+              axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))
       ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
       if(as.logical(opt$se)){
         colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
@@ -179,7 +179,7 @@ if(how==1){
       theme(text = element_text(size = 12),
             panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
             axis.line = element_line(),panel.border =  element_blank(),
-            axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))
+            axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))
     ggsave(plot = p,paste(opt$out,'/',opt$group,"_all_significant_pathway_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
     if(as.logical(opt$se)){
       colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")

@@ -82,7 +82,8 @@ anno_df<-mutate(anno_df,y_pos=p.value.y.coord)
 alphaplotwithsig <- ggplot(unitab, aes(x=Group, y=value)) + geom_boxplot(fill=rainbow(7)[5]) + geom_point(aes(color="black"),position=position_jitterdodge())+
  ggsignif::geom_signif(data=anno_df,manual=T,aes(xmin=group1,xmax=group2,annotations=p.signif,y_position=y_pos))+guides(color=F)+
  #stat_compare_means(label.y = p5+0.7*p3,label.x.npc="center")+
- ylab(i)+xlab("")+theme(text=element_text(size=15,face="bold"),axis.text.x = element_text(angle = 90))
+ ylab(i)+xlab("")+theme(text=element_text(size=15,face="bold"),axis.text.x = element_text(angle = 90))+theme_bw()+
+ theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
 
 ggsave(paste(opt$out,"/",i,"_",opt$group,"_wilcox_compare_boxplot.png",sep=""), plot=alphaplotwithsig, height=7+p1*0.6, width=p1*0.8+5, dpi = 300)
 ggsave(paste(opt$out,"/",i,"_",opt$group,"_wilcox_compare_boxplot.pdf",sep=""), plot=alphaplotwithsig, height=7+p1*0.6, width=p1*0.8+5, dpi = 300)

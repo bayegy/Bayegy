@@ -1,0 +1,2 @@
+sed -i '/7-FunctionAnalysis/d' organize_dir_structure_others.sh 
+sed -i 's/8-FiguresTablesForReport/7-FiguresTablesForReport/g' organize_dir_structure_others.sh 

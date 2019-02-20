@@ -301,7 +301,7 @@
 			</dd>
 
 			<p>
-				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：DESeq2、Kruskal Wallis和ANOVA的分析运用了qiime1 group_significance.py脚本，ANCOM的分析运用了qiime2 composition ancom命令。ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验。Kruskal Wallis和ANOVA提供检验统计量（Test-Statistic），总的p值（P），校正错误发现率p值（FDR_P），Bonferroni校正p值（Bonferroni_P），及各分组均值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,为了方便客户选择，我们在结果文件夹中分别提供了阈值为2和4的结果），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；DESeq2结果表格的文件名称格式为DESeq2_Group2_Between_x_and_y_DiffAbundance_分类水平.txt，那么baseMean可以理解为x的均值，log2FoldChange对应log2(y/x)，lfcSE对应log2FoldChange的标准误，stat对应检验统计量，pvalue 和padj分别对应p值和校正p值。DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。DESeq2 和ANCOM两种方法都是基于比例来进行差异分析的，相较于传统的相对丰度，比例的好处在于，样本中某一个物种丰度发生变化，在统计上并不会影响另一个物种的丰度，而相对丰度则不然。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
+				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：DESeq2、Kruskal Wallis和ANOVA的分析运用了qiime1 group_significance.py脚本，ANCOM的分析运用了qiime2 composition ancom命令。ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验。Kruskal Wallis和ANOVA提供检验统计量（Test-Statistic），总的p值（P），校正错误发现率p值（FDR_P），Bonferroni校正p值（Bonferroni_P），及各分组均值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,为了方便客户选择，我们在结果文件夹中分别提供了阈值为2和4的结果），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；同时，图4-4标注了特征微生物的分类层级所属关系，科以上有差异的大分类在图中标注分类区间和名字，科以下的只区分颜色，由图可以推断在分组间有显著差异的微生物的进化关系；DESeq2结果表格的文件名称格式为DESeq2_Group2_Between_x_and_y_DiffAbundance_分类水平.txt，那么baseMean可以理解为x的均值，log2FoldChange对应log2(y/x)，lfcSE对应log2FoldChange的标准误，stat对应检验统计量，pvalue 和padj分别对应p值和校正p值。DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。DESeq2 和ANCOM两种方法都是基于比例来进行差异分析的，相较于传统的相对丰度，比例的好处在于，样本中某一个物种丰度发生变化，在统计上并不会影响另一个物种的丰度，而相对丰度则不然。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
 			</p>
 
 			<p align="center"><img src="../../Figure4-3.png" width="800" height="500"></p> 
@@ -315,7 +315,7 @@
 
 			<p align="center"><strong>图4-4 LEfSe分析cladogram图</strong></p>
 			<dd style="font-size:80%;">
-				说明：cladogram图由内到外，分别对应界门纲目科属种不同的分类层级，层级间连线代表所属关系。每个圆圈节点代表一个物种，节点为黄色代表在分组间差异不显著，不为黄色则代表该物种是对应颜色分组的特征微生物（在该分组丰度显著较高）。有颜色的扇形区域标注了特征微生物的下属分类区间。
+				说明：cladogram图由内到外，分别对应界门纲目科属不同的分类层级，层级间连线代表所属关系。每个圆圈节点代表一个物种，节点为黄色代表在分组间差异不显著，不为黄色则代表该物种是对应颜色分组的特征微生物（在该分组丰度显著较高）。有颜色的扇形区域标注了特征微生物的下属分类区间。
 			</dd>
 
 		 	<br>
@@ -538,14 +538,14 @@
 
 			<h3><a id="a9.3"></a>9.3 组间功能差异性分析</h3>
 			<p>
-				在得到KEGG功能注释后，结合分组信息，利用ANOVA+Duncan和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。Dunn test分析基于R语言dunn.test包，其中，结果文件中KW_pvalue， DunnTest_comparison， DunnTest_Z， DunnTest_PValueAdjusted 分别为Kruskal-Wallis检验P值，DunnTest多重比较组对，DunnTest的检验统计量， DunnTest的校正后P值。ANOVA+Duncan基于R语言agricolae包，在进行ANOVA+Duncan检验之前，我们先筛除观测样本小于总样本50%的代谢通路（Filter the pathways observed in less than 50% of total samples），再基于相对丰度进行差异分析。结果文件夹中也提供了根据L1水平，分别画的图，以减小一个图的面积。<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
+				在得到KEGG功能注释后，结合分组信息，利用ANOVA+Duncan和Dunn test分析了微生物群落预测功能在组间是否有显著性差异。Dunn test分析基于R语言dunn.test包，其中，结果文件中KW_pvalue， DunnTest_comparison， DunnTest_Z， DunnTest_PValueAdjusted 分别为Kruskal-Wallis检验P值，DunnTest多重比较组对，DunnTest的检验统计量， DunnTest的校正后P值。ANOVA+Duncan基于R语言agricolae包，在进行ANOVA+Duncan检验之前，我们先筛除观测样本小于总样本50%的代谢通路（Filter the pathways observed in less than 50% of total samples），再基于相对丰度进行差异分析，图9-3是用ANOVA和Duncan检验得到的所有显著差异的通路（L3水平），当且仅当ANOVA分析校正错误发现率后的p值（p.adj）小于0.05时，才会进一步做Duncan检验，并绘图。结果文件夹中也提供了根据L1水平，分别画的图，以减小一个图的面积。<a href="../../../7-FunctionAnalysis/3-SignifcanceAnalysis/">点击此处查看功能差异性分析详细结果</a>。
 			</p>
 
 			<p align="center"><img alt="没有在分组间差异显著的通路" src="../../Figure9-3.png" width="800" height="800"></p>
 
 			<p align="center"><strong>图9-3 ANOVA和Duncan检验得到的所有显著差异的通路（L3水平）</strong></p>
 			<dd style="font-size:80%;">
-				说明：图9-3是用ANOVA和Duncan检验得到的所有显著差异的通路（L3水平），当且仅当校正错误发现率后的p值（p.adj）小于0.05时，才会进一步做Duncan检验，并绘图。横坐标为通路名字，对应每个通路，用不同颜色表示不同的分组，两个分组上方如果有相同的字母，则代表差异不显著，否则差异显著。
+				说明：横坐标为通路名字，对应每个通路，用不同颜色表示不同的分组，两个分组上方如果有相同的字母，则代表差异不显著，否则差异显著。
 			</dd>
 
 

@@ -110,7 +110,7 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
   scale_y_continuous(limits=c(0,101), expand = c(0, 0))
 
 
-wd<-ifelse(opt$bym,length(label_order)*0.4+p1,length(label_order)*0.2+p1)
+wd<-ifelse(opt$bym,length(label_order)*0.26+p1,length(label_order)*0.2+p1)
 wd<-ifelse(wd<50,wd,49.9)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 
