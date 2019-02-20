@@ -90,7 +90,7 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
                 miss += 1
 
 print("\nIn summary:")
-emm = "\n    %s fastq files were writed" % (nfile)
+emm = "\n    %s fastq files were written" % (nfile)
 emm1 = "\n    %s fastq files were filterd as the ids of samples were not found in mapping file" % (ff)
 print(emm)
 print(emm1)
