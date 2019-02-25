@@ -86,7 +86,7 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
                 li[0] = li[fc]
                 outfile.write('\t'.join(li) + '\n')
             else:
-                print('    ' + li[0])
+                print('    ' + li[0].lower())
                 miss += 1
 
 print("\nIn summary:")

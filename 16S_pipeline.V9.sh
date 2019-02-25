@@ -499,6 +499,8 @@ COMMENT
 		#cp $mapping_file ./alpha/sample-metadata_alphadiversity.txt
 		#perl -p -i.bak -e 's/#SampleID//' ./alpha/sample-metadata_alphadiversity.txt
 
+		source deactivate
+		source activate qm2
 		for category_1 in $category_set;
 			do echo $category_1;
 				Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
@@ -509,8 +511,12 @@ COMMENT
 			done;
 
 
+		source deactivate
+		source activate qm2
+		Rscript ${SCRIPTPATH}/beta_heatmap.R -i exported/feature-table.ConsensusLineage.txt -m $mapping_file -t exported/tree.rooted.nwk -r exported/dna-sequences.fasta -o R_output -c $category_set -p 'unclustered_';
 		Rscript ${SCRIPTPATH}/beta_heatmap.R -i exported/feature-table.ConsensusLineage.txt -m $mapping_file -t exported/tree.rooted.nwk -r exported/dna-sequences.fasta -o R_output;
 		perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.txt R_output/weighted_unifrac_matrix.txt R_output/unweighted_unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
+
 
 		rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
 

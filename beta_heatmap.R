@@ -38,20 +38,20 @@ print("#calculate distance")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
   beta_heatmap_outputpdfname <- paste(opt$out,distance_matrix[2], "_betadiversity_summary.pdf", sep="")
   #pdf(beta_heatmap_outputpdfname)
-  Dist <- distance(qiimedata, method=distance_matrix[1])
-
+  Dist <- as.matrix(distance(qiimedata, method=distance_matrix[1]))
   beta_outputtxtname <- paste(opt$out,distance_matrix[2], "_matrix.txt", sep="")
-  write.table(as.matrix(Dist), beta_outputtxtname , quote=FALSE, col.names=NA, sep="\t")
-  Dist_read<-read.table(beta_outputtxtname, head=T)
+  #print(Dist)
+  #Dist_read<-read.table(beta_outputtxtname, head=T)
   if(cluster){
-    pdf(beta_heatmap_outputpdfname,height = nrow(Dist_read)*0.3+3,width = ncol(Dist_read)*0.3+4)
-    pheatmap(Dist_read,fontsize=10,border_color = "black",fontsize_row =10,
+    write.table(Dist, beta_outputtxtname , quote=FALSE, col.names=NA, sep="\t")
+    pdf(beta_heatmap_outputpdfname,height = nrow(Dist)*0.3+3,width = ncol(Dist)*0.3+4)
+    pheatmap(Dist,fontsize=10,border_color = "black",fontsize_row =10,
              cluster_rows=T,clustering_distance_rows="euclidean",
              cluster_cols=T,clustering_distance_cols="euclidean")
     dev.off()
   }else{
     print("no cluster heatmap")
-    Dist_read<-data.frame(Dist_read)
+    Dist_read<-data.frame(Dist)
     Dist_read<-Dist_read[match(rownames(group),rownames(Dist_read)),]
     Dist_read<-Dist_read[,match(rownames(group),colnames(Dist_read))]
     pdf(beta_heatmap_outputpdfname,height = nrow(Dist_read)*0.3+3,width = ncol(Dist_read)*0.3+4)
