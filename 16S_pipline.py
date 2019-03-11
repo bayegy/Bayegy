@@ -60,7 +60,7 @@ def parse_map(mapping):
     os.system('''sed -i -e 's/ //g' %s''' % (mapping))
     with open(mapping, 'r') as mapin:
         l1 = mapin.readline()
-        gps = re.findall('Group\d*', l1)
+        gps = re.findall('Group[^\t ]*', l1)
     return ','.join(gps)
 
 
@@ -110,7 +110,7 @@ else:
 
     for mp in mapdir:
         pmp = options.map + '/' + mp
-        if os.isfile(pmp):
+        if os.path.isfile(pmp):
             cgp = parse_map(pmp)
             if cgp:
                 od = re.search('\d+', mp).group()

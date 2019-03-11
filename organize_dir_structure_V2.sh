@@ -224,7 +224,7 @@ check_file() {
 	cp ../4-BetaDiversity/1-BetaDiversitySummary/BetaDiversity_heatmap.png Figure6-1.png
 	cp ../4-BetaDiversity/3-NMDS/${category_1}_unweighted_unifrac_NMDS_without_labels.pdf Figure6-2.pdf
 	cp ../5-Phylogenetics/${category_1}_phylogenetic_tree_heatmap.pdf Figure7-1.pdf
-	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}*bacteria_location_plot.png Figure8-1.png
+	cp ../6-AssociationAnalysis/1-RDA/Genus/${category_1}*bacteria_location_plot.pdf Figure8-1.pdf
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/Correlation_heatmap.pdf Figure8-2.pdf
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
 	cp ../7-FunctionAnalysis/1-KEGG_Pathway/function-bar-plots-top20-group-mean/${category_1}_L1_mean_* Figure9-1.pdf

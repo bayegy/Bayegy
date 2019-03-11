@@ -94,9 +94,12 @@ p1<-max(nchar(colnames(otu)))*0.12+2
 #group<-map["Group1"]
 #opt$group<-"Group1"
 #otu<-melt(otu,id.vars = c("Group1","id"))
+#reverse the order of species
+otu<-otu[rev(colnames(otu))]
+
 otu<-melt(otu,id.vars = "id")
 
-pallet<-c(brewer.pal(12,"Paired"),brewer.pal(8,"Set2")[-c(7,8)],brewer.pal(8,"Dark2"),brewer.pal(12,"Set3"),brewer.pal(8,"Accent"),brewer.pal(11,"Spectral"))
+pallet<-c(rev(brewer.pal(12,"Paired")),brewer.pal(8,"Set2")[-c(7,8)],brewer.pal(8,"Dark2"),brewer.pal(12,"Set3"),brewer.pal(8,"Accent"),brewer.pal(11,"Spectral"))
 
 p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width = 0.7)+
   guides(fill=guide_legend(title = NULL))+

@@ -26,13 +26,13 @@ p.add_argument('-p', '--prefix', dest='prefix', metavar='<int>', default="",
 options = p.parse_args()
 
 if not options.input and options.group and options.meta:
-  p.error("must have argument -i -m -g")
-  sys.exit()
+    p.error("must have argument -i -m -g")
+    sys.exit()
 else:
-  pass
+    pass
 
 if not os.path.exists(options.output):
-  os.makedirs(options.output)
+    os.makedirs(options.output)
 
 options.output = options.output + '/' + options.prefix
 rscript = open('rda.R', 'w')
@@ -45,7 +45,7 @@ library(ggplot2)
 library(RColorBrewer)
 ex<-str_split("%s",",")[[1]]
 dat <- read.table("%s", header = TRUE, sep = "\\t",comment.char = "",check.names = F)
-#dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
+# dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
 
 dat<-dat[!duplicated(dat[,1]),]
 
@@ -63,8 +63,8 @@ for(i in 1:length(map)){
 if(ex[1]!="none"){
   notstr=notstr&(!colnames(map)%%in%%ex)
 }
-
-sel=c("%s",colnames(map)[notstr])
+group_name="%s"
+sel=c(group_name,colnames(map)[notstr])
 
 data=map[sel]
 data=na.omit(data)
@@ -89,6 +89,21 @@ if (dcam > 4){
   pre <- "RDA"
 }
 
+
+rda_for_mcpp_group<-rda(dat,factor(groups),scale = TRUE, na.action = na.exclude)
+mcpp_group<-anova(rda_for_mcpp_group,step=1000,perm.max=1000)
+title_group<-paste("Permutation test",": P=",mcpp_group[[4]][1],sep="")
+print(mcpp_group)
+print(title_group)
+
+mcpp_numeric<-anova(cca,step=1000,perm.max=1000)
+title_all<-paste("Overall permutation test: P=",mcpp_numeric[[4]][1],sep="")
+print(title_all)
+
+
+
+
+
 path="%s"
 ccascore <- scores(cca)
 write.table(ccascore$sites, file = paste(path,"%s_", pre, ".sample.txt", sep = ""), sep = "\\t")
@@ -102,16 +117,16 @@ write.table(as.data.frame(env), file = paste(path, "%s_",pre, ".envfit.txt", sep
 
 new<-cca$CCA
 
-#samples=data.frame(new$u)
+# samples=data.frame(new$u)
 samples=data.frame(ccascore$sites)
 range_sam<-max(samples)-min(samples)
-#sum(rownames(samples)!=rownames(data))==0
+# sum(rownames(samples)!=rownames(data))==0
 samples$id=rownames(samples)
 samples=data.frame(samples,%s=groups)
 
 
 
-#species=data.frame(new$v)
+# species=data.frame(new$v)
 species=data.frame(ccascore$species)
 range_spe<-max(species)-min(species)
 species$id=rownames(species)
@@ -130,8 +145,8 @@ print(paste("The threshold of abundance is:",cut))
 
 
 
-#envis=data.frame(envfit$vectors$arrows)#Envis seem to be the same length after permutation
-#envis=data.frame(new$biplot)
+# envis=data.frame(envfit$vectors$arrows)#Envis seem to be the same length after permutation
+# envis=data.frame(new$biplot)
 envis=data.frame(env)
 envis[,1]<-envis[,1]*envis[,3]
 envis[,2]<-envis[,2]*envis[,3]
@@ -150,20 +165,17 @@ ratio_sam_env<-range_sam/range_env
 
 
 
-
-
-
 if(pre=="RDA"){
 envis[,1]<-envis[,1]*ratio_sam_env*0.85
 envis[,2]<-envis[,2]*ratio_sam_env*0.85
 
 p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
   geom_point(aes(x=RDA1,y=RDA2,color=%s),size=3) +
-  #geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
+  # geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
   geom_text_repel(data=envis,aes(x=RDA1,y=RDA2,label=id),color="black",size=5) +
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
-  labs(title=paste(pre," sample location plot",sep=""))+
+  labs(title=title_group)+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=0.4,
                 arrow = arrow(length = unit(0.2,"cm")))+
@@ -174,8 +186,13 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+
+
+p2<-p1+geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)
+
+ggsave(paste(path,"%s_",pre,"_sample_location_plot_with_labels.pdf",sep=""),plot=p2,width = 8,height = 7,dpi = 300)
+
 
 envis[,1]<-envis[,1]*(1/ratio_sam_env)*ratio_spe_env
 envis[,2]<-envis[,2]*(1/ratio_sam_env)*ratio_spe_env
@@ -188,7 +205,7 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
   geom_text_repel(aes(RDA1,RDA2,label=id)) +
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
-  ggtitle(paste(pre," bacteria location plot",sep=""))+
+  ggtitle(title_all)+
   geom_segment(aes(x=0,y=0,xend = RDA1, yend = RDA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=0.4,
                 arrow = arrow(length = unit(0.2,"cm")))+
@@ -199,21 +216,21 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+# ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }else{
 envis[,1]<-envis[,1]*ratio_sam_env*0.85
 envis[,2]<-envis[,2]*ratio_sam_env*0.85
 
-#envis[,1]<-envis[,1]*3.5
-#envis[,2]<-envis[,2]*3.5
+# envis[,1]<-envis[,1]*3.5
+# envis[,2]<-envis[,2]*3.5
 p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
   geom_point(aes(x=CCA1,y=CCA2,color=%s),size=3) +
-  #geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+
+  # geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+
   geom_text_repel(data=envis,aes(x=CCA1,y=CCA2,label=id),color="black",size=5) +
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
-  labs(title=paste(pre," sample location plot",sep=""))+
+  labs(title=title_group)+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=0.4,
                 arrow = arrow(length = unit(0.2,"cm")))+
@@ -224,8 +241,13 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"%s_",pre,"_sample_location_plot.png",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+
+p2<-p1+geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)
+
+ggsave(paste(path,"%s_",pre,"_sample_location_plot_with_labels.pdf",sep=""),plot=p2,width = 8,height = 7,dpi = 300)
+
+
 
 envis[,1]<-envis[,1]*(1/ratio_sam_env)*ratio_spe_env
 envis[,2]<-envis[,2]*(1/ratio_sam_env)*ratio_spe_env
@@ -238,7 +260,7 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
   geom_text_repel(aes(CCA1,CCA2,label=id)) +
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
   theme_bw() + theme(panel.grid=element_blank())+xlab(xlab)+ylab(ylab)+
-  ggtitle(paste(pre," bacteria location plot",sep=""))+
+  ggtitle(title_all)+
   geom_segment(aes(x=0,y=0,xend = CCA1, yend = CCA2),data = envis,
                 color=brewer.pal(8,"Accent")[6],size=0.4,
                 arrow = arrow(length = unit(0.2,"cm")))+
@@ -249,7 +271,7 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+# ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
 ''' % (options.exclude, options.input, options.meta, options.group, options.output,

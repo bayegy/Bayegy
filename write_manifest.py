@@ -25,12 +25,15 @@ options = p.parse_args()
 if not os.path.exists(options.out):
     os.makedirs(options.out)
 
+print("Assert no duplicated sample names: please make sure no duplicated sample names and did not use capital and small letter to distinguish samples if error happened\n")
 id_ds = {}
 with open(options.meta, 'r') as meta:
     for line in enumerate(meta):
         li = re.split('\t', line[1].strip())
         if line[0] > 0:
-            id_ds[li[0].strip().lower()] = li[len(li) - 1].strip()
+            first_element = li[0].strip().lower()
+            assert first_element not in id_ds.keys()
+            id_ds[first_element] = li[len(li) - 1].strip()
 
 
 print("############################################################writting manifest\n\nThe regular expression for matching sample ID is %s, you should change -s if no fastq files were writed" % (options.sp))

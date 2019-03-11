@@ -39,7 +39,8 @@ def parse_project(line):
     if re.search('ME[0-9]+', line):
         number = re.search('ME[0-9]+', line).group()
     else:
-        number = time.strftime('RD%Y%m%d', time.localtime(time.time()))
+        #number = time.strftime('RD%Y%m%d', time.localtime(time.time()))
+        number = "外来项目无编号"
     if re.search('([0-9]+)(个|份)', line):
         sample = re.search('([0-9]+)(个|份)', line).group(1)
     else:

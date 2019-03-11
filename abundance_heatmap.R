@@ -8,6 +8,8 @@ option_list <- list(
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of most abundant species needed to be plotted, default is 20",default=15),
     make_option(c("-a", "--min-abundance"),metavar="float", dest="mina",help="The min abundance of species to be plotted, pass this will cause --number disabled",default=NULL),
     make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
+    make_option(c("-b", "--by-groupMean"),metavar="logical", dest="bym",help="if T, to use the group mean to plot barplot",default=FALSE),
+    make_option(c("-l", "--long-taxname"),metavar="logical", dest="long",help="if T, use the long name of species to plot heatmap",default=TRUE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
@@ -34,7 +36,13 @@ otu<-otu[otu[,1]!="Others"&otu[,1]!="unclassified",]
 
 
 #otu<-otu[!duplicated(otu[,1]),]
-rownames(otu)<-otu[,ncol(otu)]
+if(opt$long){
+    rownames(otu)<-otu[,ncol(otu)]
+}else{
+    otu<-otu[!duplicated(otu[,1]),]
+    rownames(otu)<-otu[,1]
+}
+
 #rownames(otu)<-otu[,1]
 
 p1<-max(nchar(rownames(otu)))
@@ -69,6 +77,9 @@ if(cluster){
     dev.off()
 }else{
     otu<-otu[match(rownames(group),rownames(otu)),]
+    if(opt$bym){
+        otu<-apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)})
+    }
     pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ifelse(p2<50,p2,49.9),width=3+0.4*dim(otu)[2])
     pheatmap(otu,fontsize=10,border_color = "black",
              cluster_cols=T,clustering_distance_cols="euclidean",cluster_rows=F)

@@ -203,7 +203,7 @@ srbct.plsda <- plsda(tX, Y)  # set ncomp to 10 for performance assessment later
 plsda.vip <- vip(srbct.plsda)
 write.table(data.frame(OTUID=rownames(plsda.vip),plsda.vip,Taxonomy=taxonomy),paste(category1,"_","PLSDA_Variable_importance_in_projection.txt"),row.names = F,sep="\t")
 
-pdf(paste(category1,"_","PLSDA_AUC_plot.pdf",sep=""), width = 6, height = 4)
+pdf(paste(category1,"_","PLSDA_AUC_plot.pdf",sep=""), width = 6, height = 6)
 auroc(srbct.plsda, roc.comp = 2)
 dev.off()
 
