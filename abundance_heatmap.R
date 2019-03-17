@@ -68,7 +68,7 @@ otu<-log(otu+1,base=10)
 #apply(otu,2,sd)
 
 #print(otu)
-p2<-2+(0.25*dim(otu)[1])+(0.08*p1)
+p2<-0.5+(0.3*dim(otu)[1])+(0.06*p1)
 if(cluster){
     pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ifelse(p2<50,p2,49.9),width=3+0.4*dim(otu)[2])
     pheatmap(otu,fontsize=10,border_color = "black",
