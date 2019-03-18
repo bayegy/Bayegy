@@ -9,7 +9,7 @@ import shutil
 
 class Circos(object):
     def __init__(self, table, number=10, mapping_file=None, category=None, by_group_mean=False, outpath="./", prefix=""):
-        self.__base_path = __file__
+        self.__base_path = re.sub('[^/]+$',"",__file__)
         self.__read_conf__()
         self.__numder = number
         self.__prefix = prefix
@@ -141,7 +141,7 @@ if __name__ == '__main__':
                    help='Sample metadata file')
     p.add_argument('-g', '--group', dest='group', metavar='<str>',
                    help='Column name in sample-metadata file')
-    p.add_argument('-n', '--number', dest='number', metavar='<int>', default='20',
+    p.add_argument('-n', '--number', dest='number', metavar='<int>', default='10',
                    help='Specify how many species to be display, defaulf is 20')
     p.add_argument('-b', '--by-groupMean', dest='by', metavar='<bool>', default=False,
                    help='Pass True to use group mean to plot circos')
