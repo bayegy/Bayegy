@@ -24,8 +24,10 @@ class Circos(object):
         otu_col_index, sam_col_index = self.generate_span(self.data.shape)
         self.__otu_col = self.__colors[otu_col_index[0]:otu_col_index[1]]
         self.__sam_col = self.__colors[sam_col_index[0]:sam_col_index[1]]
-        self.__rev_sam_name, self.__otu_name = (self.data.columns.values.reshape((-1, 1))[::-1, :],
-                                                self.data.index.values.reshape((-1, 1)))
+        self.__rev_sam_name, self.__rev_otu_name = (self.data.columns.values.reshape((-1, 1))[::-1, :],
+                                                    self.data.index.values.reshape((-1, 1)))[::-1, :]
+        self.__rev_sam_col = self.__sam_col[::-1, :]
+        self.__rev_otu_col = self.__otu_col[::-1, :]
 
     def __read_conf__(self):
         with open(self.__base_path + "/circos_config/path.conf") as f:
@@ -89,18 +91,16 @@ class Circos(object):
     def write_highlight(self):
 
         data = self.data
-        data = data.loc[:, data.columns[::-1]]
-        rev_sam_col = self.__sam_col[::-1, :]
-
+        data = data.loc[data.index[::-1], data.columns[::-1]]
         pre = "fill_color="
         self.otu = np.array(data.apply(self.generate_span, axis=1).values.tolist())
-        otu = pd.DataFrame(np.hstack((self.__otu_name.repeat(self.__number_of_sample, axis=0),
-                                      self.otu.reshape((-1, 2)), np.char.add(pre, np.tile(rev_sam_col, (self.__number_of_otu, 1))))))
+        otu = pd.DataFrame(np.hstack((self.__rev_otu_name.repeat(self.__number_of_sample, axis=0),
+                                      self.otu.reshape((-1, 2)), np.char.add(pre, np.tile(self.__rev_sam_col, (self.__number_of_otu, 1))))))
         self.write_conf(otu, "highlight_spec.txt")
 
         self.sample = np.array(data.apply(self.generate_span, axis=0).values.T.tolist())
         sample = pd.DataFrame(np.hstack((self.__rev_sam_name.repeat(self.__number_of_otu, axis=0),
-                                         self.sample.reshape((-1, 2)), np.char.add(pre, np.tile(self.__otu_col, (self.__number_of_sample, 1))))))
+                                         self.sample.reshape((-1, 2)), np.char.add(pre, np.tile(self.__rev_otu_col, (self.__number_of_sample, 1))))))
         self.write_conf(sample, "highlight_site.txt")
 
         self.write_conf(pd.DataFrame(np.vstack((sample.values, otu.values))), "highlight_all.txt")
@@ -110,9 +110,9 @@ class Circos(object):
         link = pd.DataFrame(
             np.hstack((np.tile(self.__rev_sam_name, (self.__number_of_otu, 1)),
                        self.sample.reshape((-1, 2), order="F"),
-                       self.__otu_name.repeat(self.__number_of_sample, axis=0),
+                       self.__rev_otu_name.repeat(self.__number_of_sample, axis=0),
                        self.otu.reshape((-1, 2)),
-                       np.char.add("color=", self.__otu_col.repeat(self.__number_of_sample, axis=0))
+                       np.char.add("color=", self.__rev_otu_col.repeat(self.__number_of_sample, axis=0))
                        ))
         )
         self.write_conf(link, "links.txt")
