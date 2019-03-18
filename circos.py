@@ -89,7 +89,7 @@ class Circos(object):
     def write_highlight(self):
 
         data = self.data
-        data = data.loc[:, list(data.columns).reverse()]
+        data = data.loc[:, data.columns[::-1]]
         rev_sam_col = self.__sam_col[::-1, :]
 
         pre = "fill_color="
