@@ -61,7 +61,7 @@ if [ -z "$9" ]; then
 		8) Specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 		9) Specify the type of classifier, either silva or gg
 		Sample Usage:
-		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  none gg
+		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  all gg
 		"
 	exit 0
 else
