@@ -25,7 +25,7 @@ class Circos(object):
         self.__otu_col = self.__colors[otu_col_index[0]:otu_col_index[1]]
         self.__sam_col = self.__colors[sam_col_index[0]:sam_col_index[1]]
         self.__rev_sam_name, self.__rev_otu_name = (self.data.columns.values.reshape((-1, 1))[::-1, :],
-                                                    self.data.index.values.reshape((-1, 1)))[::-1, :]
+                                                    self.data.index.values.reshape((-1, 1))[::-1, :])
         self.__rev_sam_col = self.__sam_col[::-1, :]
         self.__rev_otu_col = self.__otu_col[::-1, :]
 
