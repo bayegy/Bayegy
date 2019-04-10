@@ -72,6 +72,7 @@ cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
 
 ifcor<-colSums(t(cor_allft_p<0.05))
 ifna<-colSums(t(is.na(cor_allft_p)))
+#print(ifna)
 order_pos<-order(ifcor,decreasing=TRUE)
 order_pos<-order_pos[ifcor[order_pos]>=1&ifna[order_pos]==0]
 selected_pos<-head(order_pos,opt$num)

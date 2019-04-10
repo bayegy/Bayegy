@@ -114,7 +114,7 @@ function assign_taxa() {
 	source activate qiime2-2018.11
 
 	echo "##############################################################\n#paired end analysis using DADA2"
-<<skip
+
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
@@ -123,13 +123,13 @@ function assign_taxa() {
 
 
 
-<<comment2
+<<skip1
 	echo "##############################################################\n#Single end analysis using DADA2"
 	qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --input-format SingleEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 	qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-max-ee 50 --p-trunc-q 0 --p-trunc-len 420 --p-trim-left 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
-comment2
+skip1
 
 
 <<comment1
@@ -170,7 +170,7 @@ comment1
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
 		else python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c;
 	fi;
-skip
+
 
 	echo "##############################################################\n#Generate tree";
 	qiime alignment mafft   --i-sequences rep-seqs.qza   --o-alignment aligned-rep-seqs.qza
@@ -225,7 +225,6 @@ skip
 		cd ${category_set}_Results;
 
 		mapping_file=$(readlink -f './mapping_file.txt');
-
 
 
 		qiime metadata tabulate   --m-input-file taxonomy.qza   --o-visualization taxonomy.qzv;
@@ -314,12 +313,14 @@ skip
 			do echo $n;
 			qiime taxa collapse   --i-table table.qza   --i-taxonomy taxonomy.qza   --p-level $n   --o-collapsed-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza;
 			qiime feature-table summarize --i-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza --o-visualization exported/collapsed/collapsed-${tax_levels[${n}]}.qzv '--m-sample-metadata-file' $mapping_file;
-			qiime feature-table filter-features   --i-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza --p-min-frequency $min_freq  --o-filtered-table exported/${min_freq}/table-${tax_levels[${n}]}.${min_freq}.qza; 
+			# qiime feature-table filter-features   --i-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza --p-min-frequency $min_freq  --o-filtered-table exported/${min_freq}/table-${tax_levels[${n}]}.${min_freq}.qza; 
+<<COMMENT
 			for category_1 in $category_set;
 				do echo $category_1;
 					Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -t exported/${min_freq}/table-${tax_levels[${n}]}.${min_freq}.qza -o media_files
 					qiime feature-table heatmap --i-table media_files/filtered_feature_table.qza  --m-metadata-file media_files/cleaned_map.txt --m-metadata-column $category_1 --o-visualization exported/${min_freq}/${category_1}-table-${tax_levels[${n}]}.${min_freq}.qzv;
 				done;
+COMMENT
 		done;
 
 		source deactivate
@@ -327,6 +328,11 @@ skip
 		echo "##############################################################\n#Generate the figure for the percentage of annotated level"
 		perl ${SCRIPTPATH}/stat_otu_tab.unspecifiedadded.pl -unif min exported/feature-table.taxonomy.txt -prefix exported/Relative/otu_table --even exported/Relative/otu_table.even.txt -spestat exported/Relative/classified_stat_relative.xls
 		perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/classified_stat_relative.xls -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > exported/Relative/Classified_stat_relative.svg
+
+
+		Rscript ${SCRIPTPATH}/collapse_table_with_group_mean.R -m $mapping_file -c $category_set -t exported/Relative/classified_stat_relative.xls -o ./
+		perl ${SCRIPTPATH}/bar_diagram.pl -table ${category_set}_classified_stat_relative.xls -style 1 -x_title "" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > ${category_set}_classified_stat_relative.svg
+		for svg_file in *svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > ${n}.png; done
 
 		for key in ${!tax_aa[*]};do mv exported/Relative/otu_table.${key}.relative.mat exported/Relative/otu_table.${tax_aa[$key]}.relative.txt;done;
 			#mv exported/Relative/otu_table.p.relative.mat exported/Relative/otu_table.Phylum.relative.txt
@@ -504,7 +510,7 @@ COMMENT
 				Rscript ${SCRIPTPATH}/clean_na_of_inputs.R -m $mapping_file --group $category_1 -o media_files
 				map=$(readlink -f ./media_files/cleaned_map.txt)
 				#otu=$(readlink -f ./media_files/cleaned_feature_table.txt)
-				Rscript ${SCRIPTPATH}/RRelatedOutput.R $map $category_1;
+				Rscript ${SCRIPTPATH}/RRelatedOutput.R $map $category_1 T;
 				Rscript ${SCRIPTPATH}/alphaboxplotwitSig.R -m $map -c $category_1 -i ./alpha/alpha-summary.tsv -o ./alpha/;
 			done;
 
@@ -569,6 +575,10 @@ COMMENT
 				prefix=${nrda//,/_}_excluded_;
 				prefix=${prefix//none_excluded_/};
 				prefix=${prefix//\//-};
+				prefix=${prefix//\\/-};
+				prefix=${prefix//\(/};
+				prefix=${prefix//\)/};
+				prefix=${prefix//\%/};
 				for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 					do echo $n7;
 					Rscript ${SCRIPTPATH}/cor_heatmap.R -i otu_table_forlefse/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 25 -m $mapping_file -e $nrda -p "$prefix";
@@ -585,13 +595,16 @@ COMMENT
 			do echo $n7;
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i otu_table_forlefse/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
 			#Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Relative/otu_table.${n7}.relative.txt -o Heatmap_top20/${n7}/;
-			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/ -l T;
+			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/ -l T -t F;
+			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20_clustered/${n7}/ -l T -t F;
 
-			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/ -b T -l T -p 'group_mean_';
+			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/ -b T -l T -p 'group_mean_' -t F;
 
 			done;
 
 
+		source deactivate
+		source activate qm2
 		echo "###############################################################\nAdditional plot"
 		mkdir 4-VennAndFlower
 		for category_1 in $category_set;

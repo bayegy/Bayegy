@@ -16,6 +16,7 @@ args <- commandArgs(trailingOnly = TRUE)
 #rs = "/Users/chengguo/Desktop/Hengchuang/M231/exported/dna-sequences.fasta"
 map = args[1]
 category1=args[2]
+ifline=as.logical(args[3])
 
 #category1 = "SampleType"
 #map = "~/Desktop/Hengchuang/M122/M122_Mapping.tsv"
@@ -141,11 +142,15 @@ print("#Generate the PCoA 3D plot for betadiversity")
   gp<-as.character(data.frame(sample_data(gpt))[category1][,1])
   tdata<-GP.ord$vectors[,1:3]
   eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
-  lab<-paste("PC",c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
+  lab<-paste("Axis.",c(1:3)," [",round((eig[1:3]/sum(eig))*100,digits=2),"%]",sep="")
   pdf(paste(category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=8, height=6.4)
   opar<-par(no.readonly=TRUE)
   par(fig=c(0,0.75,0,1))
-  scatterplot3d(tdata,mar=c(2.2,2.2,0,0)+1,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
+  if(ifline){
+    scatterplot3d(tdata,mar=c(2.2,2.2,0,0)+1,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, type="h", lty.hplot=2, pch=19)
+  }else{
+    scatterplot3d(tdata,mar=c(2.2,2.2,0,0)+1,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, pch=19)
+  }
   par(fig=c(0.75,1,0,1),xpd=TRUE)
   legend("center", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = FALSE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)
   par(opar)

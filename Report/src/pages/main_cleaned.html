@@ -275,15 +275,19 @@
 			</dd>
 
 			<p>
-				<br>为了研究不同样品间的相似性，还可以通过对样品进行聚类分析从而构建样品的聚类树。选取关注分类水平的物种（默认选取物种绝对丰度大于1000）实现样品聚类（纵向聚类），以此考察不同样品或者分组间的相似或差异性（此处为门水平分类的热图），并从分类信息和样品间差异两个层面进行横向聚类，寻找物种或样本的聚集规律。
+				<br>为了研究不同样品间的相似性，还可以通过对样品进行聚类分析从而构建样品的聚类树。选取关注分类水平的物种（默认选取物种绝对丰度前20）实现样品聚类，以此考察不同样品或者分组间的相似或差异性（此处为门水平分类的热图），并从分类信息和样品间差异两个层面进行横向聚类，寻找物种或样本的聚集规律。结果中也提供了不聚类样品，按分组顺序排列的热图。
 			</p>
-			
-			<p align="center"><strong><a href="../../page4/Summary_请点此文件查看.html">门分类水平的热图聚类结果（点击此处打开新窗口查看）</a></strong></p>
 
+			<p align="center"><img src="../../Figure4-3.png" width="800" height="800"></p>
+			<p align="center"><strong>图 4-3 门分类水平的热图</strong></p>
+
+<!--
+			<p align="center"><strong><a href="../../page4/Summary_请点此文件查看.html">门聚类结果（点击此处打开新窗口查看）</a></strong></p>
+-->
 			<dd style="font-size:80%;">
-				说明：纵向为样品名称信息，同时也包括了分组信息。横向为OTU在该分类水平注释名称。图中上方的聚类树为OTU的系统发生关系及其物种注释，左侧的聚类树为样品聚类树，中间的热图是OTU的相对丰度热图，颜色与相对丰度的关系见图上方的刻度尺。</a>其他分类等级完整的热图聚类结果请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/">./2-AundanceAnalysis/1-AbundanceSummary/3-Heatmaps/</a>。
+				说明：纵向为样品名称信息。横向为门水平分类注释名称。图中上方的聚类树为物种在各样品中的丰度分布相似程度聚类，左侧的聚类树为样品各物种的丰度分布相似程度聚类，中间的热图是log10(绝对丰度)热图,其他分类等级完整的热图聚类结果请参见结果部分<a href="../../../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/">./2-AundanceAnalysis/1-AbundanceSummary/3-Heatmaps/</a>。
 			</dd>
-			
+
 			<br><br>
 			<h3><a id="a4.2"></a>4.2 组间OTU差异显著性分析</h3>
 			<p>
@@ -304,16 +308,16 @@
 				同时Kruskal Wallis/ANOVA/LEfSe/DESeq2等分析也被用于物种各分类水平在组间的显著性差异：DESeq2、Kruskal Wallis和ANOVA的分析运用了qiime1 group_significance.py脚本，ANCOM的分析运用了qiime2 composition ancom命令。ANCOM、Kruskal Wallis和ANOVA用于多组间丰度差异的显著性检验。Kruskal Wallis和ANOVA提供检验统计量（Test-Statistic），总的p值（P），校正错误发现率p值（FDR_P），Bonferroni校正p值（Bonferroni_P），及各分组均值，但不提供多重比较的结果；ANOVA是参数检验，要求丰度服从正态分布，而大部分物种的丰度都是不服从正态分布的；Kruskal Wallis属于非参数检验，对分布没有要求，较为适合菌群分析。LEfSe方法是非参数检验和线性判别分析的结合，适合菌群丰度差异检验；LEfSe寻找每一个分组的特征微生物（LDA>阈值的微生物,为了方便客户选择，我们在结果文件夹中分别提供了阈值为2和4的结果），也就是相对于其他分组，在这个组中丰度较高的微生物（如图4-3）；同时，图4-4标注了特征微生物的分类层级所属关系，科以上有差异的大分类在图中标注分类区间和名字，科以下的只区分颜色，由图可以推断在分组间有显著差异的微生物的进化关系；DESeq2结果表格的文件名称格式为DESeq2_Group2_Between_x_and_y_DiffAbundance_分类水平.txt，那么baseMean可以理解为x的均值，log2FoldChange对应log2(y/x)，lfcSE对应log2FoldChange的标准误，stat对应检验统计量，pvalue 和padj分别对应p值和校正p值。DESeq2方法在分组间进行多重比较，寻找每两个分组之间显著差异的微生物。这五种显著性差异比较方法各有优劣并且对结果可能会有不同的解释，是属于合理的现象，用户可以根据数据本身的特性去选择方法解读数据。DESeq2 和ANCOM两种方法都是基于比例来进行差异分析的，相较于传统的相对丰度，比例的好处在于，样本中某一个物种丰度发生变化，在统计上并不会影响另一个物种的丰度，而相对丰度则不然。我们推荐使用ANCOM或者LEfSe先去查看某物种在多组之间的丰度差异，再使用DESeq2去了解具体的两两分组比较结果<sup>[11-14]</sup>。完整的差异性分析结果请见结果部分<a href="../../../2-AbundanceAnalysis/2-AbundanceComparison/">./2-AundanceAnalysis/2-AbundanceComparison/</a>。
 			</p>
 
-			<p align="center"><img src="../../Figure4-3.png" width="800" height="500"></p> 
+			<p align="center"><img src="../../Figure4-4.png" width="800" height="500"></p> 
 
-			<p align="center"><strong>图4-3 LEfSe分析LDA柱形图</strong></p>
+			<p align="center"><strong>图4-4 LEfSe分析LDA柱形图</strong></p>
 			<dd style="font-size:80%;">
 				说明：每一横向柱形体代表一个物种，柱形体的长度对应LDA值，LDA值越高则差异越大。柱形的颜色对应该物种是哪个分组的特征微生物，特征微生物(Biomarkers)表示在对应分组中的丰度相对较高。
 			</dd>
 
-			<p align="center"><img src="../../Figure4-4.png" width="800" height="500"></p> 
+			<p align="center"><img src="../../Figure4-5.png" width="800" height="500"></p> 
 
-			<p align="center"><strong>图4-4 LEfSe分析cladogram图</strong></p>
+			<p align="center"><strong>图4-5 LEfSe分析cladogram图</strong></p>
 			<dd style="font-size:80%;">
 				说明：cladogram图由内到外，分别对应界门纲目科属不同的分类层级，层级间连线代表所属关系。每个圆圈节点代表一个物种，节点为黄色代表在分组间差异不显著，不为黄色则代表该物种是对应颜色分组的特征微生物（在该分组丰度显著较高）。有颜色的扇形区域标注了特征微生物的下属分类区间。
 			</dd>
@@ -324,8 +328,8 @@
 				对于样本间，根据OTU是否存在来寻找样本之间的特有或共有的OTU，对于分组较少（小于等于5）的实验方案，我们绘制韦恩图（Venn diagram）分析不同样品组之间特有或共有的OTU，用于统计多个样本中所共有和独有的OTU数目，可以比较直观的表现样本在OTU水平上的组成相似性及重叠情况（图4-3）。对于分组较多的（大于等于3），我们绘制了花瓣图，花瓣图中，花瓣里是对应分组特有的OTU数目，中心是所有分组共有的OTU数目。同时也给出了特有和共有的OTU种类，注释情况及丰度，丰度较高且特有的OTU具有重要分析价值，请参见<a href="../../../1-VennAndFlower"> ./1-AbundanceAnalysis/3-VennAndFlower</a>
 			</p>
 
-			<p align="center"><img src="../../Figure4-5.png" width="600" height="600" alt="分组数量大于5，无法画Venn图"></p>
-			<p align="center"><strong>图4-5 共有或特有物种韦恩图展示（当分组数目小于等于5时）</strong></p>
+			<p align="center"><img src="../../Figure4-6.png" width="600" height="600" alt="分组数量大于5，无法画Venn图"></p>
+			<p align="center"><strong>图4-6 共有或特有物种韦恩图展示（当分组数目小于等于5时）</strong></p>
 			<dd style="font-size:80%;">说明：韦恩图显示的是不同分组间共有或特有的OTU数量,每个椭圆代表一个分组。<a href="../../../1-VennAndFlower">请点击打开新窗口查看韦恩图/花瓣图</a></dd>
 			
 			<p>
@@ -449,7 +453,7 @@
 				进化树的绘制由R语言ggtree包完成。选取关注的OTU代表序列进行系统进化分析(默认总丰度排名前30的OTU)绘制进化关系树图，同时结合OTU的在各个分组的绝对丰度进行热图可视化展示（图7-1）。客户可以点击<a href="../../../5-Phylogenetics/">./5-Phylogenetics/</a>查看完整信息。
 			</p>
 			<p align="center"><img src="../../Figure7-1.png" width="800" height="800"></p>
- 
+
 			<p align="center"><strong>图7-1 系统发育进化树及组间丰度分布热图</strong></p>
 			<dd style="font-size:80%;">说明：左边为进化树，不同颜色的分支代表不同的门，每条末端的树枝代表一个OTU，末端注释了对应OTU所属的属分类，如果没有对应的属分类，则以unclassied_genus表示,右边热图是标准化后的丰度，值越大代表相对丰度越高。丰度标准化：每个样本的绝对丰度减去该物种绝对丰度的平均值再除以标准差，从使得标准化之后的丰度平均值为0，标准差为1.</dd>
 			
@@ -493,7 +497,7 @@
 				说明：样本组各自富集的物种的相互作用network图的比较，圆圈代表一个物种，大小代表其相对丰度，不同的颜色代表不同的物种门分类，圆圈之间的线条代表这两个物种间的相关性显著（校正错误发现率的秩相关的p值小于0.05），线条颜色红色代表正相关，蓝色代表负相关，线条越粗，相关系数绝对值越大。 
 			</dd>
 			<p>其它分类水平的相关网络图请查看<a href="../../../6-AssociationAnalysis/3-NetworkAnalysis">./6-AssociationAnalysis/3-NetworkAnalysis</a></p>
-
+<!--
 			<h3 align="left"><a name="a8.4" id="a8.4"></a>8.4 Source tracker 分析（VIP分析）</h3>
 			<p>
 				使用基于贝叶斯算法的Source  tracker分析，可以寻找样本中的微生物可能来源及其在样本中分布的比例，该方法适用于寻找环境样本或微生物感染的临床样本的微生物物种来源，需要采集可能会影响样本微生物组成的相关联的环境样本（图8-4）。<sup>[34]</sup>  
@@ -512,7 +516,7 @@
 				说明：AYASDI拓扑图中每个点分别代表样品，颜色代表在选择的该变量信息下的分布（最大值为深红色，最小值为深蓝色）。在图A，所示为根据样品微生物多样性信息在实验组（红）和对照组（蓝）中显示了两个截然不同的分组，证明了仅微生物多样性信息即可以区分实验组和对照组。但是在利用到其他元数据变量信息（这是用的是样品采集人的年龄）的时候（图B）发现在实验组和对照组中分别有一组紧密相关联的样品分集（实验组的最右端的样品和对照组的右下方的样本）与同实验/对照组中的其他样品呈现颜色上显著的差异，暗示在年龄在实验组和对照组中都起到了重要的调控作用，很可能因此发现更细致的可能的分组情况，同时该结果也可以继续引导用户使用AYASDI用机器学习方法去解释年龄是如何影响到样品的生物学意义。 
 			</dd>
 			<dd style="font-size:80%;">&nbsp;</dd>
-
+-->
 			<hr>
 			<h2 align="left">
 				九 样品微生物组成功能预测分析(<a href="../../../7-FunctionAnalysis">7-FunctionAnalysis目录</a>)

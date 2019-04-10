@@ -68,6 +68,8 @@ def rar(name, target):
     os.system('''rar a %s %s''' % (name, target))
 
 
+# print("analyzing......")
+
 if os.path.isfile(options.map):
     cgp = parse_map(options.map)
     options.group = cgp if options.group == "auto" else options.group
@@ -111,20 +113,18 @@ else:
     for mp in mapdir:
         pmp = options.map + '/' + mp
         if os.path.isfile(pmp):
-            cgp = parse_map(pmp)
-            if cgp:
-                od = re.search('\d+', mp).group()
-                odn = int(od) - 1
-                exc = excs[odn] if len(excs) > 1 else options.exclude
-                cgp = cgp if options.group == "auto" else gp_set[odn]
-                if not os.path.exists(options.outdir + '/Results' + od):
-                    os.makedirs(options.outdir + '/Results' + od)
-                os.system("python %s/write_manifest.py -i %s -m %s -o %s/data%s -f '%s' -r '%s' -s '%s'" %
-                          (scriptpath, options.input, pmp, options.outdir, od, options.fp, options.rp, options.sp))
-                os.system('''cd %s/Results%s&&\
-          bash %s/16S_pipeline.V9.sh ../data%s/sample-metadata.tsv %s 1000 %s %s %s ../data%s/manifest.txt  "%s" %s&&\
-          mv Result_AmpliconSequencing %sResult_AmpliconSequencing&&\
-          rar a %s%s.rar %sResult_AmpliconSequencing&&\
-          mv %s%s.rar ../Results_Result_AmpliconSequencing/''' %
-                          (options.outdir, od, scriptpath, od, options.depth, cgp, options.classifier, options.ref, od, exc, options.type,
-                           od, od, options.fname, od, od, options.fname))
+            od = re.search('\d+', mp).group()
+            odn = int(od) - 1
+            exc = excs[odn] if len(excs) > 1 else options.exclude
+            cgp = parse_map(pmp) if options.group == "auto" else gp_set[odn]
+            if not os.path.exists(options.outdir + '/Results' + od):
+                os.makedirs(options.outdir + '/Results' + od)
+            os.system("python %s/write_manifest.py -i %s -m %s -o %s/data%s -f '%s' -r '%s' -s '%s'" %
+                      (scriptpath, options.input, pmp, options.outdir, od, options.fp, options.rp, options.sp))
+            os.system('''cd %s/Results%s&&\
+      bash %s/16S_pipeline.V9.sh ../data%s/sample-metadata.tsv %s 1000 %s %s %s ../data%s/manifest.txt  "%s" %s&&\
+      mv Result_AmpliconSequencing %sResult_AmpliconSequencing&&\
+      rar a %s%s.rar %sResult_AmpliconSequencing&&\
+      mv %s%s.rar ../Results_Result_AmpliconSequencing/''' %
+                      (options.outdir, od, scriptpath, od, options.depth, cgp, options.classifier, options.ref, od, exc, options.type,
+                       od, od, options.fname, od, od, options.fname))

@@ -10,6 +10,7 @@ option_list <- list(
     make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
     make_option(c("-b", "--by-groupMean"),metavar="logical", dest="bym",help="if T, to use the group mean to plot barplot",default=FALSE),
     make_option(c("-l", "--long-taxname"),metavar="logical", dest="long",help="if T, use the long name of species to plot heatmap",default=TRUE),
+    make_option(c("-t", "--transpose"),metavar="logical", dest="trans",help="if T, transpose the heatmap",default=TRUE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
@@ -60,28 +61,50 @@ if(!is.null(opt$mina)){
 }
 
 otu<-log(otu+1,base=10)
+p2<-0.5+(0.3*dim(otu)[1])+(0.06*p1)
+p3<-dim(otu)[2]
 
+if(opt$trans){
+    otu<-t(otu)
+}
 #otu<-log((otu+min(otu[otu!=0]))*10000)
 #otu<-scale(otu,center=T,scale=T)
 
 #apply(otu,2,mean)
 #apply(otu,2,sd)
-
 #print(otu)
-p2<-0.5+(0.3*dim(otu)[1])+(0.06*p1)
+#print(otu)
+
+ht<-ifelse(opt$trans,3+0.4*p3 ,ifelse(p2<50,p2,49.9))
+wd<-ifelse(opt$trans, ifelse(p2<50,p2,49.9),3+0.4*p3)
+cc<-ifelse(opt$trans,F,T)
+cr<-ifelse(opt$trans,T,F)
 if(cluster){
-    pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ifelse(p2<50,p2,49.9),width=3+0.4*dim(otu)[2])
+    pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ht,width=wd)
     pheatmap(otu,fontsize=10,border_color = "black",
              cluster_rows=T,clustering_distance_rows="euclidean",
+             color = colorRampPalette(colors = c("#FFCCCC","red","black"))(100),
              cluster_cols=T,clustering_distance_cols="euclidean")
     dev.off()
 }else{
-    otu<-otu[match(rownames(group),rownames(otu)),]
-    if(opt$bym){
-        otu<-apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)})
+    if(opt$trans){
+        otu<-otu[,match(rownames(group),colnames(otu))]
+    }else{
+        otu<-otu[match(rownames(group),rownames(otu)),]
     }
-    pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ifelse(p2<50,p2,49.9),width=3+0.4*dim(otu)[2])
+
+    if(opt$bym){
+        if(opt$trans){
+            wd=wd*0.7
+            otu<-t(apply(otu,1,function(x){tapply(x,INDEX = group[,1],mean)}))
+        }else{
+            ht=ht*0.7
+            otu<-apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)})
+        }
+    }
+    pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ht,width=wd)
     pheatmap(otu,fontsize=10,border_color = "black",
-             cluster_cols=T,clustering_distance_cols="euclidean",cluster_rows=F)
+             color = colorRampPalette(colors = c("#FFCCCC","red","black"))(100),
+             cluster_cols=cc,clustering_distance_cols="euclidean",cluster_rows=cr)
     dev.off()
 }

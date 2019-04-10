@@ -16,6 +16,8 @@ p.add_argument('-r', '--repseqs', dest='repseqs', metavar='<path>', default=Fals
                help='Specify representive sequences file after masking and aligning')
 p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='./',
                help='Specify the output directory')
+p.add_argument('-b', '--by-group-mean', dest='mean', action='store_true',
+               help="Use group mean to plot heatmap")
 p.add_argument('-n', '--number', dest='num', metavar='<int>', default=30,
                help='How many most abundant species do you want to analyze')
 
@@ -82,7 +84,7 @@ qiime phylogeny fasttree --i-alignment %s/selected_features_reseqs.qza --o-tree 
 qiime phylogeny midpoint-root --i-tree %s/selected_unrooted-tree.qza --o-rooted-tree %s/selected_rooted-tree.qza&&\
 qiime tools export %s/selected_rooted-tree.qza --output-dir %s/" % (options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir))
 
-
+ifmean = 'T' if options.mean else 'F'
 ######visualize tree####
 with open('tree.R', 'w') as rscript:
     print('''
@@ -90,9 +92,15 @@ library("ggtree")
 library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
-metadata<-metadata["%s"]
-metagroup<-metadata[,1][match(colnames(otu_table)[-length(otu_table)],rownames(metadata))]
+gname="%s"
 
+metadata=metadata[order(metadata[gname]),]
+
+
+metadata<-metadata[gname]
+metagroup<-metadata[,1]
+#print(otu_table)
+otu_table[,1:(ncol(otu_table)-1)]<-otu_table[,1:(ncol(otu_table)-1)][,match(rownames(metadata),colnames(otu_table)[-ncol(otu_table)])]
 
 ####clean na
 otu_table<-otu_table[,c(!is.na(metagroup),T)]
@@ -128,11 +136,14 @@ mysum=function(x){
 
 
 
+if(%s){
+  data=t(apply(otu_table,2,mysum))
+}else{
+  data=t(otu_table)
+}
 
-par1<-length(unique(metagroup))
+par1<-ncol(data)
 
-
-data=t(apply(otu_table,2,mysum))
 tree <- read.tree("%s/tree.nwk")
 tree<- groupOTU(tree, groupInfo,group_name = "Phylum")
 tree<- groupOTU(tree, groupInfo1,group_name = "taxa")
@@ -140,15 +151,18 @@ tree<- groupOTU(tree, groupInfo1,group_name = "taxa")
 
 
 t<-levels(leg)
+
+par(mar=c(7, 4, 4, 2) + 0.1)
 p = ggtree(tree,aes(color=Phylum))+
   geom_tiplab(size=4,align=TRUE, linesize=.5,aes(label=taxa))+
   scale_color_discrete(breaks = t,name="Phylum")
+wd=par1*0.1
+ofs=0.17
+p1<-gheatmap(p, data, offset = ofs, width=wd, hjust=0.5,font.size=2,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=15),axis.ticks=element_blank())
 
-p1<-gheatmap(p, data, offset = 0.18, width=0.8+par1*0.1, hjust=0.5,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=17),axis.ticks=element_blank())
-
-ggsave(p1,file="%s/%s", width=10, height=11)
+ggsave(p1,file="%s/%s", width=(wd+1)*4+3, height=10)
 '''
-          % (options.input, options.metadata, options.group, options.num, options.outdir, options.outdir, str(options.group) + '_phylogenetic_tree_heatmap.pdf'),
+          % (options.input, options.metadata, options.group, options.num, ifmean, options.outdir, options.outdir, str(options.group) + '_phylogenetic_tree_heatmap.pdf'),
           file=rscript)
 
 os.system('Rscript tree.R')
