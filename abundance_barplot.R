@@ -32,11 +32,19 @@ if(as.logical(opt$skip)){
   otu <-read.table(opt$otu,quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 }
 
-map<-read.table(opt$map,quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
-#map<-read.table("mapping_file.txt",quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+if(!is.numeric(otu[,ncol(otu)])){
+  otu<-otu[,-ncol(otu)]
+}
 
-group<-na.omit(map[opt$group])
-label_order<-rownames(group)[order(group)]
+if(!is.null(opt$map)&!is.null(opt$group)){
+  map<-read.table(opt$map,quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+#map<-read.table("mapping_file.txt",quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+  map<-map[order(rownames(map)),]
+  group<-na.omit(map[opt$group])
+  label_order<-rownames(group)[order(group)]
+}else{
+  label_order<-ordered(colnames(otu)[-1])
+}
 
 add_postfix<-function(z){
   i<-1
@@ -54,7 +62,7 @@ add_postfix<-function(z){
 }
 
 
-sum_abundance<-colSums(t(otu[,-c(1,ncol(otu))]))
+sum_abundance<-colSums(t(otu[,-1]))
 otu<-otu[order(sum_abundance,decreasing = T),]
 
 if(as.logical(opt$add)){
@@ -66,12 +74,14 @@ if(as.logical(opt$add)){
 #otu<-otu[otu[,1]!="Others"&otu[,1]!="unclassified",]
 rownames(otu)<-otu[,1]
 
-otu<-t(apply(otu[,-c(1,ncol(otu))],2,function(x){x/sum(x)}))*100
+otu<-t(apply(otu[,-1],2,function(x){x/sum(x)}))*100
 
-#otu<-t(otu[,-c(1,ncol(otu))])*100
+#otu<-t(otu[,-1])*100
+if(!is.null(opt$map)&!is.null(opt$group)){
+  otu<-otu[match(rownames(group),rownames(otu)),]
+}
 
-otu<-otu[match(rownames(group),rownames(otu)),]
-if(opt$bym){
+if(!is.null(opt$map)&!is.null(opt$group)&opt$bym){
   otu<-data.frame(apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)}),check.names=F)
   otu<-data.frame(t(apply(otu,1,function(x){x/sum(x)}))*100,check.names=F)
   label_order<-ordered(rownames(otu))
@@ -90,7 +100,8 @@ if(num<ncol(otu)-1){
 
 #otu<-data.frame(otu,group)
 otu$id<-rownames(otu)
-p1<-max(nchar(colnames(otu)))*0.12+2
+p1<-(max(nchar(colnames(otu)))*0.05+0.3)*ceiling(ncol(otu)/17)+2.5
+
 #group<-map["Group1"]
 #opt$group<-"Group1"
 #otu<-melt(otu,id.vars = c("Group1","id"))
@@ -113,7 +124,7 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
   scale_y_continuous(limits=c(0,101), expand = c(0, 0))
 
 
-wd<-ifelse(opt$bym,length(label_order)*0.26+p1,length(label_order)*0.2+p1)
+wd<-length(label_order)*0.2+p1
 wd<-ifelse(wd<50,wd,49.9)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 

@@ -61,7 +61,7 @@ if(!is.null(opt$mina)){
 }
 
 otu<-log(otu+1,base=10)
-p2<-0.5+(0.3*dim(otu)[1])+(0.06*p1)
+p2<-2+(0.3*dim(otu)[1])+(0.05*p1)
 p3<-dim(otu)[2]
 
 if(opt$trans){
@@ -95,10 +95,10 @@ if(cluster){
 
     if(opt$bym){
         if(opt$trans){
-            wd=wd*0.7
+            ht=ht-1
             otu<-t(apply(otu,1,function(x){tapply(x,INDEX = group[,1],mean)}))
         }else{
-            ht=ht*0.7
+            wd=wd-1
             otu<-apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)})
         }
     }
