@@ -157,7 +157,7 @@ p = ggtree(tree,aes(color=Phylum))+
   geom_tiplab(size=4,align=TRUE, linesize=.5,aes(label=taxa))+
   scale_color_discrete(breaks = t,name="Phylum")
 wd=par1*0.1
-ofs=0.17
+ofs=0.19
 p1<-gheatmap(p, data, offset = ofs, width=wd, hjust=0.5,font.size=2,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=15),axis.ticks=element_blank())
 
 ggsave(p1,file="%s/%s", width=(wd+1)*4+3, height=10)

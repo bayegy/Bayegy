@@ -596,9 +596,9 @@ COMMENT
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i otu_table_forlefse/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
 			#Rscript ${SCRIPTPATH}/abundance_heatmap.R -n 20 -i exported/Relative/otu_table.${n7}.relative.txt -o Heatmap_top20/${n7}/;
 			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/ -l T -t F;
-			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20_clustered/${n7}/ -l T -t F;
+			Rscript ${SCRIPTPATH}/abundance_heatmap.R -m $mapping_file -c $category_set  -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20_clustered/${n7}/ -l T -t F -u T;
 
-			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/ -b T -l T -p 'group_mean_' -t F;
+			Rscript ${SCRIPTPATH}/abundance_heatmap.R  -m $mapping_file -c $category_set -n 20 -i exported/Absolute/otu_table.${n7}.absolute.txt -o Heatmap_top20/${n7}/ -b T -l T -p 'group_mean_' -t T;
 
 			done;
 
@@ -612,7 +612,7 @@ COMMENT
 			Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  -i ./exported/feature-table.taxonomy.txt -m $mapping_file -c $category_1 -o ./4-VennAndFlower;
 			Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b T -o ./2-ANOVA_And_Duncan
 			Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b F -o ./2-ANOVA_And_Duncan
-			python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r aligned-dna-sequences.fasta -o AdditionalPhylogeny/ -n 30
+			python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r aligned-dna-sequences.fasta -o AdditionalPhylogeny/ -n 30 -b
 			done;
 
 
