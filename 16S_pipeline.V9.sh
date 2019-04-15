@@ -657,7 +657,7 @@ COMMENT
 				cd Lefse/${n7}
 				for category_1 in $category_set;
 					do echo $category_1;
-						Rscript ${SCRIPTPATH}/write_data_for_lefse.R  otu_table.${n7}.relative.txt  $mapping_file  $category_1  ${category_1}_${n7}_lefse.txt F;
+						Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i  otu_table.${n7}.relative.txt -m  $mapping_file -c  $category_1 -o  ${category_1}_${n7}_lefse.txt -u l;
 						base="${category_1}_${n7}_lefse_LDA2"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  
 	#					plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
 						plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
