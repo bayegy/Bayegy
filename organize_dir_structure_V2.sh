@@ -117,6 +117,7 @@ check_file() {
 	#cp lefse result ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
 	cp -r exported/Relative/Lefse/*/ ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/4-LEfSe/
 	cp -r exported/DiffAbundance/DESeq2_*txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/5-DESeq2/
+	cp -rp tables_for_deseq_anova_kruskal ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/
 
 	cp -r alpha/alpha-summary.tsv R_output/*alpha_diversity_* ./Result_AmpliconSequencing/3-AlphaDiversity/1-AlphaDiversitySummary/
 
@@ -138,7 +139,6 @@ check_file() {
 	cp -r R_output/*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
 	cp -r core-metrics-results/*permanova*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 	cp -r core-metrics-results/*anosim*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
-
 	#cp -r R_output/unifrac*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
 	#cp -r core-metrics-results/unweighted*_emperor.qzv* R_output/*unifrac*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/
 	#cp -r R_output/*unifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/

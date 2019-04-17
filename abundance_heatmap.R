@@ -117,6 +117,7 @@ if(opt$bym){
     }
 }
 
+write.table(otu,paste(opt$out,"abundance_heatmap_table.xls",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
 
 pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ht,width=wd)
 pheatmap(otu,annotation_row=annotation_row,

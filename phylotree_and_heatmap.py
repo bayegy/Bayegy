@@ -159,10 +159,12 @@ p = ggtree(tree,aes(color=Phylum))+
 wd=par1*0.1
 ofs=0.19
 p1<-gheatmap(p, data, offset = ofs, width=wd, hjust=0.5,font.size=2,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=15),axis.ticks=element_blank())
+file_name="%s/%s_phylogenetic_tree_heatmap"
 
-ggsave(p1,file="%s/%s", width=(wd+1)*4+3, height=10)
+write.table(data,paste(file_name,"_table.xls",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
+ggsave(p1,file=paste(file_name,".pdf",sep=""), width=(wd+1)*4+3, height=10)
 '''
-          % (options.input, options.metadata, options.group, options.num, ifmean, options.outdir, options.outdir, str(options.group) + '_phylogenetic_tree_heatmap.pdf'),
+          % (options.input, options.metadata, options.group, options.num, ifmean, options.outdir, options.outdir, str(options.group)),
           file=rscript)
 
 os.system('Rscript tree.R')

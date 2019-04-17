@@ -105,16 +105,17 @@ function assign_taxa() {
 #	echo $tax;
 #done;
 
+
 	##Activate Qiime2 Version
 	echo "##############################################################\n#Initiate directory name and set up the directory structure"
 
 	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-
+	source $SCRIPTPATH/path/clean_path.sh
 	source activate qiime2-2018.11
 
 	echo "##############################################################\n#paired end analysis using DADA2"
-
+<<skip1
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
@@ -123,13 +124,13 @@ function assign_taxa() {
 
 
 
-<<skip1
+<<comment2
 	echo "##############################################################\n#Single end analysis using DADA2"
 	qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --input-format SingleEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 	qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-max-ee 50 --p-trunc-q 0 --p-trunc-len 420 --p-trim-left 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
-skip1
+comment2
 
 
 <<comment1
@@ -162,7 +163,7 @@ comment1
 	mv table-no-mitochondria-no-chloroplast.qza table.qza
 	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Archaea,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
-
+skip1
 	echo "##############################################################\n#Classify the taxonomy"
 	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
@@ -464,7 +465,8 @@ COMMENT
 			perl -p -i.bak -e 's/#OTU ID/taxonomy/' exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt
 			paste exported/DiffAbundance/tax/otu_table.even_L${n4}.txt exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt > exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt
 			biom convert -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt -o exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom --to-hdf5 --table-type="OTU table" --process-obs-metadata taxonomy
-
+			mkdir tables_for_deseq_anova_kruskal
+			cp exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt tables_for_deseq_anova_kruskal/
 			filter_otus_from_otu_table.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -s $min_observation -o filtered_otu_table.biom
 
 			for category_1 in $category_set;
@@ -603,8 +605,6 @@ COMMENT
 			done;
 
 
-		source deactivate
-		source activate qm2
 		echo "###############################################################\nAdditional plot"
 		mkdir 4-VennAndFlower
 		for category_1 in $category_set;
@@ -617,6 +617,8 @@ COMMENT
 
 
 
+		source deactivate
+		source activate qm2
 		echo "##############################################################\n#Barplot and RDA according to group mean"
 		for category_1 in $category_set;
 		do echo $category_1;
@@ -645,28 +647,31 @@ COMMENT
 		#perl ${SCRIPTPATH}/stat_otu_tab.pl -unif min exported/feature-table.taxonomy.txt -prefix otu_table_forlefse/otu_table
 		#for key in ${!tax_aa[*]};do mv otu_table_forlefse/otu_table.${key}.relative.mat otu_table_forlefse/otu_table.${tax_aa[$key]}.relative.txt;done;
 
+		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+			do echo $n7;
+				for category_1 in $category_set;
+					do echo $category_1;
+					Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i  otu_table_forlefse/otu_table.${n7}.relative.txt -m  $mapping_file -c  $category_1 -o  exported/Relative/Lefse/${n7}/${category_1}_${n7}_lefse.txt -u l;
+				done;
+		done;
+
+
 		source deactivate
 		source deactivate
 		source activate lefse
 		cd exported/Relative
-		mkdir Lefse/
 		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 			do echo $n7;
-				mkdir Lefse/${n7}
-				cp ../../otu_table_forlefse/otu_table.${n7}.relative.txt Lefse/${n7}
-				cd Lefse/${n7}
-				for category_1 in $category_set;
-					do echo $category_1;
-						Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i  otu_table.${n7}.relative.txt -m  $mapping_file -c  $category_1 -o  ${category_1}_${n7}_lefse.txt -u l;
-						base="${category_1}_${n7}_lefse_LDA2"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  
-	#					plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
-						plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
-						base="${category_1}_${n7}_lefse_LDA4"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 4;  
-	#					plot_res.py --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.png; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
-						plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
-					done;
-				cd ../../
+			cd Lefse/${n7}
+			for category_1 in $category_set;
+				do echo $category_1;
+					base="${category_1}_${n7}_lefse_LDA2"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  
+					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+					base="${category_1}_${n7}_lefse_LDA4"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 4;  
+					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
 			done;
+			cd ../../
+		done;
 		cd ../../
 
 	#	source deactivate
