@@ -181,7 +181,7 @@ check_file() {
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
 	#rm ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/PCA.R ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/Rplots.pdf
 
-	cp AdditionalPhylogeny/*.pdf ./Result_AmpliconSequencing/5-Phylogenetics/
+	cp AdditionalPhylogeny/*.pdf AdditionalPhylogeny/*.xls ./Result_AmpliconSequencing/5-Phylogenetics/
 	cp -rp 4-VennAndFlower/ ./Result_AmpliconSequencing/1-VennAndFlower
 	rm ./Result_AmpliconSequencing/1-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/

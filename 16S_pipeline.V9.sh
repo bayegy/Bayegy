@@ -115,7 +115,7 @@ function assign_taxa() {
 	source activate qiime2-2018.11
 
 	echo "##############################################################\n#paired end analysis using DADA2"
-<<skip1
+
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
@@ -163,7 +163,7 @@ comment1
 	mv table-no-mitochondria-no-chloroplast.qza table.qza
 	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Archaea,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
-skip1
+
 	echo "##############################################################\n#Classify the taxonomy"
 	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
