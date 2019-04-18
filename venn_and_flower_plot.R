@@ -6,6 +6,7 @@ option_list <- list(
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
     make_option(c("-t", "--threshold"),metavar="int or float", dest="thresh",help="The threshold of abundance for the judgement of existence, default is 0",default=0),
+    make_option(c("-s", "--skip"),metavar="logical",dest="skip", help="T(Skip the first line(e.g. comment line) while reading abundance table) or F(not skip first line)",default=TRUE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot venndiagram and flower diagram, and to display the special and common otus among groups"))
@@ -31,8 +32,8 @@ thresh<-opt$thresh
 meta<-read.table(map,na.strings="",row.names=1,header = T,sep = "\t",comment.char = "",check.names = F,stringsAsFactors = F)
 
 meta<-meta[group]
-
-data<-read.table(otu,header = T,skip = 1,sep = "\t",
+sk=ifelse(opt$skip,1,0)
+data<-read.table(otu,header = T,skip = sk,sep = "\t",
                  comment.char = "",stringsAsFactors = F,check.names = F,row.names = 1)
 
 

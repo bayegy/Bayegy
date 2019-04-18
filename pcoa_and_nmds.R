@@ -42,14 +42,19 @@ for (distance_matrix in list(c('bray','bray_curtis'))){
   NMDS_ordtxtname <- paste(opt$out,"/",category1,"_",distance_matrix[2], "_NMDS.ord.txt", sep="")
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
-  p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
+  #p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
+  p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
+ 
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
   ####without names and ellipse
   pdf(paste(opt$out,"/",category1,"_",distance_matrix[2], "_NMDS_without_labels.pdf", sep=""), width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
-  p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))
+  #p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))
+
+  p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
+ 
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
@@ -66,14 +71,20 @@ for (distance_matrix in list(c('bray','bray_curtis'))){
 
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
-  p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
+  #p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
+  p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
+
+
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
 
   ######without names and ellipse
   pdf(paste(opt$out,"/",category1,"_",distance_matrix[2], "_PCoA_2D_without_labels.pdf", sep=""), width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
-  p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))
+  #p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))
+  p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
+
+
   print(p3 + ggtitle(distance_matrix[2]))
   dev.off()
   print("#Generate the PCoA 3D plot for betadiversity")
@@ -90,7 +101,8 @@ for (distance_matrix in list(c('bray','bray_curtis'))){
   gp<-as.character(data.frame(sample_data(gpt))[category1][,1])
   tdata<-GP.ord$vectors[,1:3]
   eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
-  lab<-paste("PC",c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
+  #lab<-paste("PC",c(1:3)," ",round((eig[1:3]/sum(eig))*100,digits=2),"%",sep="")
+  lab<-paste("Axis.",c(1:3)," [",round((eig[1:3]/sum(eig))*100,digits=2),"%]",sep="")
   pdf(paste(opt$out,"/",category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=8, height=6.4)
   opar<-par(no.readonly=TRUE)
   par(fig=c(0,0.75,0,1))
