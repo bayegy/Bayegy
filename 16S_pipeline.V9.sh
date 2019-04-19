@@ -227,7 +227,6 @@ comment1
 
 		mapping_file=$(readlink -f './mapping_file.txt');
 
-
 		qiime metadata tabulate   --m-input-file taxonomy.qza   --o-visualization taxonomy.qzv;
 
 		echo "##############################################################\n#Generate tree";
@@ -398,7 +397,7 @@ COMMENT
 			python ${SCRIPTPATH}/convert_percent.py -i feature-table.metagenome.L${n3}.txt;
 			#perl ${SCRIPTPATH}/get_table_head2.pl percent.feature-table.metagenome.L${n3}.txt 35 -trantab > percent.feature-table.metagenome.L${n3}.tab
 			#perl ${SCRIPTPATH}/top10_bar_diagram.pl  -right -grid -rotate='-45' -x_title 'Sample Name' -y_title 'Relative Abundance' --y_mun 0.25,4 --height 350 -table percent.feature-table.metagenome.L${n3}.tab > percent.feature-table.metagenome.L${n3}.svg
-			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20/ -p L${n3}_${category_set}_ordered_ -b F -s T;
+			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20/ -p L${n3}_${category_set}_ -b F -s T;
 			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20-group-mean/ -p ${category_set}_L${n3}_mean_ -b T -s T;
 
 			perl ${SCRIPTPATH}/cluster.pl  -BC -Z -x percent.feature-table.metagenome.L${n3}.txt > level1.relative.tree
@@ -624,7 +623,7 @@ COMMENT
 		do echo $category_1;
 			for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species"; 
 				do echo $n7;
-				Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_1 -i exported/Relative/otu_table.${n7}.relative.txt -o taxa-bar-plots-top20-group-ordered/ -p ${n7}_${category_1}_ordered_ -b F;
+				Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_1 -i exported/Relative/otu_table.${n7}.relative.txt -o taxa-bar-plots-top20-group-ordered/ -p ${n7}_${category_1}_ -b F;
 				Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_1 -i exported/Relative/otu_table.${n7}.relative.txt -o Barplot-of-Group-Mean/ -p ${category_1}_${n7}_mean_ -b T;
 			done;
 		done;

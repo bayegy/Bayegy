@@ -117,9 +117,9 @@ if(opt$bym){
     }
 }
 
-write.table(otu,paste(opt$out,"abundance_heatmap_table.xls",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
+write.table(t(otu),paste(opt$out,"table.txt",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
 
-pdf(paste(opt$out,"abundance_heatmap.pdf",sep = ""), height=ht,width=wd)
+pdf(paste(opt$out,"heatmap.pdf",sep = ""), height=ht,width=wd)
 pheatmap(otu,annotation_row=annotation_row,
          annotation_col=annotation_col,fontsize=10,border_color = "black",
          color = colorRampPalette(colors = c("#FFCCCC","red","black"))(100),

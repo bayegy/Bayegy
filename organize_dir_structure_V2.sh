@@ -181,7 +181,7 @@ check_file() {
 	#mv ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
 	#rm ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/PCA.R ./Result_AmpliconSequencing/7-FunctionAnalysis/2-PCAPlots/PCA*/Rplots.pdf
 
-	cp AdditionalPhylogeny/*.pdf AdditionalPhylogeny/*.xls ./Result_AmpliconSequencing/5-Phylogenetics/
+	cp AdditionalPhylogeny/*.pdf AdditionalPhylogeny/*table.txt ./Result_AmpliconSequencing/5-Phylogenetics/
 	cp -rp 4-VennAndFlower/ ./Result_AmpliconSequencing/1-VennAndFlower
 	rm ./Result_AmpliconSequencing/1-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result_AmpliconSequencing/6-AssociationAnalysis/
@@ -214,7 +214,7 @@ check_file() {
 
 	cd ./Result_AmpliconSequencing/8-FiguresTablesForReport
 	#cp -rp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/Heatmap-Qiime2/${category_1}-table-Phylum.${number}/ page4
-	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/Heatmap_top20_clustered/Phylum/abundance_heatmap.pdf Figure4-3.pdf
+	cp ../2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/Heatmap_top20_clustered/Phylum/heatmap.pdf Figure4-3.pdf
 	cp -rp ../2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/${category_1}.ANCOM.Genus/ page4-2
 	cp -rp ../4-BetaDiversity/5-GroupSignificance/unweighted_unifrac-permanova-${category_1}-significance/ page6-2
 	#cp ../1-QCStats/1-Stats-demux/demultiplex-summary.png Figure3-1.png
@@ -231,7 +231,7 @@ check_file() {
 	cp ../6-AssociationAnalysis/1-RDA/Genus/${prefix}${category_1}*bacteria_location_plot.pdf Figure8-1.pdf
 	cp ../6-AssociationAnalysis/2-CorrelationHeatmap/Genus/${prefix}Correlation_heatmap.pdf Figure8-2.pdf
 	cp ../6-AssociationAnalysis/3-NetworkAnalysis/Genus/Correlation_network.pdf Figure8-3.pdf
-	cp ../7-FunctionAnalysis/1-KEGG_Pathway/function-bar-plots-top20-group-mean/${category_1}_L1_mean_* Figure9-1.pdf
+	cp ../7-FunctionAnalysis/1-KEGG_Pathway/function-bar-plots-top20-group-mean/${category_1}_L1_mean_*.pdf Figure9-1.pdf
 	cp ../7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.${category_1}.PCA.pdf Figure9-2.pdf
 	cp ../7-FunctionAnalysis/3-SignifcanceAnalysis/2-ANOVA_And_Duncan/${category_1}_all_significant_pathway_barplot_of_duncan.pdf Figure9-3.pdf
 

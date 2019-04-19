@@ -107,7 +107,7 @@ p1<-(max(nchar(colnames(otu)))*0.05+0.3)*ceiling(ncol(otu)/17)+2.5
 #otu<-melt(otu,id.vars = c("Group1","id"))
 #reverse the order of species
 otu<-otu[rev(colnames(otu))]
-otu_out<-otu
+otu_out<-t(otu[,-1])/100
 otu<-melt(otu,id.vars = "id")
 
 pallet<-c(rev(brewer.pal(12,"Paired")),brewer.pal(8,"Set2")[-c(7,8)],brewer.pal(8,"Dark2"),brewer.pal(12,"Set3"),brewer.pal(8,"Accent"),brewer.pal(11,"Spectral"))
@@ -126,6 +126,6 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
 
 wd<-length(label_order)*0.2+p1
 wd<-ifelse(wd<50,wd,49.9)
-write.table(otu_out,paste(opt$out,"barplot_table.xls"),sep = "\t",quote=FALSE,row.names = FALSE)
+write.table(otu_out,paste(opt$out,"table.txt"),sep = "\t",quote=FALSE,row.names = TRUE,col.names = NA)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 
