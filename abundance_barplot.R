@@ -98,6 +98,8 @@ if(num<ncol(otu)-1){
   otu<-data.frame(otu,check.names = F,check.rows = T)
 }
 
+
+otu_out<-t(otu)/100
 #otu<-data.frame(otu,group)
 otu$id<-rownames(otu)
 p1<-(max(nchar(colnames(otu)))*0.05+0.3)*ceiling(ncol(otu)/17)+2.5
@@ -106,8 +108,9 @@ p1<-(max(nchar(colnames(otu)))*0.05+0.3)*ceiling(ncol(otu)/17)+2.5
 #opt$group<-"Group1"
 #otu<-melt(otu,id.vars = c("Group1","id"))
 #reverse the order of species
+
 otu<-otu[rev(colnames(otu))]
-otu_out<-t(otu[,-1])/100
+
 otu<-melt(otu,id.vars = "id")
 
 pallet<-c(rev(brewer.pal(12,"Paired")),brewer.pal(8,"Set2")[-c(7,8)],brewer.pal(8,"Dark2"),brewer.pal(12,"Set3"),brewer.pal(8,"Accent"),brewer.pal(11,"Spectral"))
