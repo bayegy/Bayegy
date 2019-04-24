@@ -13,6 +13,7 @@ opt <- parse_args(OptionParser(option_list=option_list,description = "This scrip
 
 library(VennDiagram)
 library(plotrix)
+library(getopt)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #ag<-commandArgs(T)
 #if (length(ag)<3){
@@ -23,6 +24,12 @@ if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #	4.the path of output files
 #  5.the threshold of abundance for the judgement of existence")
 #}else{
+
+base_dir<-normalizePath(dirname(get_Rscript_filename()))
+source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+groups_color<-get_colors(opt$group, opt$map)
+
+
 otu<-opt$otu
 map<-opt$map
 group<-opt$group
@@ -73,7 +80,7 @@ if(length(unig)<=5){
 ls1<-list()
 for(i in 1:ll){ls1[[i]]<-colnames(tb1)[tb1[i,]]}
 names(ls1)<-rownames(tb1)
-venn.diagram(ls1,filename = paste(out,"/",group,"_Venn_plot.png",sep = ""),imagetype="png",alpha= 0.50,lwd =1.2,cat.cex=1.4,fill=rainbow(length(ls1)),margin=0.15)
+venn.diagram(ls1,filename = paste(out,"/",group,"_Venn_plot.png",sep = ""),imagetype="png",alpha= 0.50,lwd =1.2,cat.cex=1.4,fill=groups_color,margin=0.15)
 
 }
 
@@ -127,7 +134,7 @@ flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,
 pdf(paste(out,"/",group,"_Flower_plot.pdf",sep = ""),width = 6,height = 6)
 flower_plot(sample=unig,value = flower_data,
             a=0.65,b=1.8,start =90,common = com,tax_pos = 4.3,num_pos = 2.5,
-            ellipse_col = rainbow(ll),
+            ellipse_col = groups_color,
             ell_pos = 2.5,circ_r = 0.9)
 dev.off()
 }

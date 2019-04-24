@@ -18,9 +18,11 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to relate the bacteria species and enviromental factors(numeric), and a heatmap is used to visualize the rank correlation coefficent"))
 
 library(pheatmap)
+library(getopt)
 
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 opt$out<-paste(opt$out,"/",opt$prefix,sep="")
+
 
 
 no_group<-(is.null(opt$map)|is.null(opt$group))
@@ -117,6 +119,20 @@ if(opt$bym){
     }
 }
 
+if(!no_group){
+    base_dir<-normalizePath(dirname(get_Rscript_filename()))
+    source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+    groups_color<-get_colors(opt$group, opt$map)
+    names(groups_color)<-sort(unique(group[,1]))
+    rexp=sprintf("annotation_color=list(%s=groups_color)",opt$group)
+    eval(parse(text = rexp))
+}else{
+    annotation_color=NA
+}
+
+
+
+
 write.table(t(otu),paste(opt$out,"table.txt",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
 
 pdf(paste(opt$out,"heatmap.pdf",sep = ""), height=ht,width=wd)
@@ -124,6 +140,6 @@ pheatmap(otu,annotation_row=annotation_row,
          annotation_col=annotation_col,fontsize=10,border_color = "black",
          color = colorRampPalette(colors = c("#FFCCCC","red","black"))(100),
          cluster_cols=cc,clustering_distance_cols="euclidean",
-         cluster_rows=cr,clustering_distance_rows="euclidean")
+         cluster_rows=cr,clustering_distance_rows="euclidean",annotation_colors=annotation_color)
 dev.off()
 

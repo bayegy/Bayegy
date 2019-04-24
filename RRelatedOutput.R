@@ -7,6 +7,8 @@ library("vegan")
 library("ggrepel")
 library("pheatmap")
 library("scatterplot3d")
+library(getopt)
+
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -17,6 +19,13 @@ args <- commandArgs(trailingOnly = TRUE)
 map = args[1]
 category1=args[2]
 ifline=as.logical(args[3])
+
+
+
+
+base_dir<-normalizePath(dirname(get_Rscript_filename()))
+source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+groups_color<-get_colors(category1, map)
 
 #category1 = "SampleType"
 #map = "~/Desktop/Hengchuang/M122/M122_Mapping.tsv"
@@ -95,18 +104,18 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
-  print(p3 + ggtitle(distance_matrix[2]))
+  print(p3 + ggtitle(distance_matrix[2])+scale_colour_manual(values = groups_color))
   dev.off()
 
   ####without names and ellipse
   pdf(paste(category1,"_",distance_matrix[2], "_NMDS_without_labels.pdf", sep=""), width=7.6, height=6.6)
-  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
+  p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1)
   p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
-  print(p3 + ggtitle(distance_matrix[2]))
+  print(p3 + ggtitle(distance_matrix[2])+scale_colour_manual(values = groups_color))
   dev.off()
 
 
-  write.table(as.matrix(GP.ord), NMDS_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
+  write.table(as.matrix(GP.ord$points), NMDS_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
 }
 
 print("#Generate the PCoA 2D plot for betadiversity")
@@ -119,28 +128,30 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
-  print(p3 + ggtitle(distance_matrix[2]))
+  print(p3 + ggtitle(distance_matrix[2])+scale_colour_manual(values = groups_color))
   dev.off()
 
   ######without names and ellipse
   pdf(paste(category1,"_",distance_matrix[2], "_PCoA_2D_without_labels.pdf", sep=""), width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3)+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
-  print(p3 + ggtitle(distance_matrix[2]))
+  print(p3 + ggtitle(distance_matrix[2])+scale_colour_manual(values = groups_color))
   dev.off()
-print("#Generate the PCoA 3D plot for betadiversity")
+  print("#Generate the PCoA 3D plot for betadiversity")
   ######pcoa 3d plot
   asign_rainbow_cor<-function(x){
     unig<-unique(x)
     color_out<-x
     for (i in 1:length(unig)) {
-      color_out[color_out==unig[i]]<-rainbow(length(unig))[i]
+      color_out[color_out==unig[i]]<-groups_color[i]
     }
     return(color_out)
   }
 
   gp<-as.character(data.frame(sample_data(gpt))[category1][,1])
-  tdata<-GP.ord$vectors[,1:3]
+  gp_ord<-order(gp)
+  gp<-gp[gp_ord]
+  tdata<-GP.ord$vectors[,1:3][gp_ord,]
   eig<-data.frame(GP.ord$values)["Eigenvalues"][,1]
   lab<-paste("Axis.",c(1:3)," [",round((eig[1:3]/sum(eig))*100,digits=2),"%]",sep="")
   pdf(paste(category1,"_",distance_matrix[2], "_PCoA_3D.pdf", sep=""), width=8, height=6.4)
@@ -152,10 +163,10 @@ print("#Generate the PCoA 3D plot for betadiversity")
     scatterplot3d(tdata,mar=c(2.2,2.2,0,0)+1,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, pch=19)
   }
   par(fig=c(0.75,1,0,1),xpd=TRUE)
-  legend("center", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = FALSE,col = rainbow(length(unique(gp))), pch = 19, inset = -0.1)
+  legend("center", legend = unique(gp),bty = 'n',xpd = TRUE,horiz = FALSE,col = groups_color, pch = 19, inset = -0.1)
   par(opar)
   dev.off()
-  write.table(as.matrix(GP.ord), PCoA_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
+  write.table(as.matrix(tdata), PCoA_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
 
 }
 
@@ -199,7 +210,7 @@ pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
 #pca.srbct #outputs the explained variance per component
 plot(pca.srbct)  # screeplot of the eingenvalues (explained variance per component)
 pdf(paste(category1,"_","PCA_plot.pdf",sep=""), width = 7.6, height = 6.6)
-plotIndiv(pca.srbct, group = Y, ind.names = FALSE, legend = TRUE, ellipse = TRUE, title = 'PCA plot')
+plotIndiv(pca.srbct, group = Y,col.per.group = groups_color, ind.names = FALSE, legend = TRUE, ellipse = TRUE, title = 'PCA plot')
 dev.off()
 #write.table(as.matrix(pca.srbct), “PCA_ord.txt”, quote=FALSE, col.names=NA, sep="\t")
 
@@ -213,7 +224,7 @@ auroc(srbct.plsda, roc.comp = 2)
 dev.off()
 
 pdf(paste(category1,"_","PLSDA_comp_plot.pdf",sep=""), width = 6, height = 4)
-plotIndiv(srbct.plsda , comp = 1:2, group = Y, ellipse.level = 0.75,size.xlabel = 15, size.ylabel = 15,size.axis = 15,size.legend = 15,size.legend.title = 15,ind.names = FALSE, title = "Supervised PLS-DA on OTUs",abline = T,legend = TRUE,ellipse = T)
+plotIndiv(srbct.plsda ,col.per.group = groups_color, comp = 1:2, group = Y, ellipse.level = 0.75,size.xlabel = 15, size.ylabel = 15,size.axis = 15,size.legend = 15,size.legend.title = 15,ind.names = FALSE, title = "Supervised PLS-DA on OTUs",abline = T,legend = TRUE,ellipse = T)
 dev.off()
 #write.table(as.matrix(srbct.plsda), “PLSDA_ord.txt”, quote=FALSE, col.names=NA, sep="\t")
 
@@ -228,13 +239,20 @@ design = read.table(map, header=T,row.names= 1,comment.char="", check.names=F,se
 alpha = read.table(alphadatxt, header=T, row.names= 1, sep="\t")
 
 # merge information for script
-index = cbind(design, alpha[match(rownames(design), rownames(alpha)), ]) 
+index = cbind(design, alpha[match(rownames(design), rownames(alpha)), ])
 # run shannon, observed_otus, faith_pd separately as the aes function is not accepting variables!!! Hard coded for Group1 as well. Really bad script.
-p = ggplot(index, aes_string(x=category1, y="observed_otus", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="observed_otus index")+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())+theme(axis.text.x = element_text(angle = 45,size = 10,hjust = 1))
-ggsave(paste(category1,"_","alpha_diversity_observed_otus.boxplot.pdf", sep=""), p, width = 6, height = 3)
 
-p = ggplot(index, aes_string(x=category1, y="shannon", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="shannon index")+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())+theme(axis.text.x = element_text(angle = 45,size = 10,hjust = 1))
-ggsave(paste(category1,"_","alpha_diversity_shannon.boxplot.pdf", sep=""), p, width = 6, height = 3)
+for(alpha_index in colnames(alpha)){
+  p = ggplot(index, aes_string(x=category1, y=alpha_index, color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y=paste(alpha_index," index",sep = ""))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())+theme(axis.text.x = element_text(angle = 45,size = 10,hjust = 1))+scale_colour_manual(values = groups_color)
+  ggsave(paste(category1,"_alpha_diversity_",alpha_index,".boxplot.pdf", sep=""), p, width = 6, height = 3)
+}
 
-p = ggplot(index, aes_string(x=category1, y="faith_pd", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="faith_pd index")+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())+theme(axis.text.x = element_text(angle = 45,size = 10,hjust = 1))
-ggsave(paste(category1,"_","alpha_diversity_faith_pd.boxplot.pdf", sep=""), p, width = 6, height = 3)
+
+#p = ggplot(index, aes_string(x=category1, y="observed_otus", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="observed_otus index")+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())+theme(axis.text.x = element_text(angle = 45,size = 10,hjust = 1))
+#ggsave(paste(category1,"_","alpha_diversity_observed_otus.boxplot.pdf", sep=""), p, width = 6, height = 3)
+
+#p = ggplot(index, aes_string(x=category1, y="shannon", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="shannon index")+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())+theme(axis.text.x = element_text(angle = 45,size = 10,hjust = 1))
+#ggsave(paste(category1,"_","alpha_diversity_shannon.boxplot.pdf", sep=""), p, width = 6, height = 3)
+
+#p = ggplot(index, aes_string(x=category1, y="faith_pd", color=category1)) + geom_boxplot(alpha=1, outlier.size=0, size=0.7, width=0.5, fill="transparent") +  geom_jitter( position=position_jitter(0.17), size=1, alpha=0.7) + labs(x="Groups", y="faith_pd index")+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())+theme(axis.text.x = element_text(angle = 45,size = 10,hjust = 1))
+#ggsave(paste(category1,"_","alpha_diversity_faith_pd.boxplot.pdf", sep=""), p, width = 6, height = 3)

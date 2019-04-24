@@ -125,11 +125,14 @@ check_file() {
 
 	cp -r alpha/*wilcox* ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/1-Wilcox_Test/
 
-	cp -r core-metrics-results/observed*qzv* ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/
+	#cp -r core-metrics-results/observed*qzv* ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/
 
-	cp -r core-metrics-results/shannon*qzv*  ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/
+	#cp -r core-metrics-results/shannon*qzv*  ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/
 
-	cp -r core-metrics-results/faith*qzv* ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/
+	#cp -r core-metrics-results/faith*qzv* ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/
+	cp -r alpha_groupsignificance/* ./Result_AmpliconSequencing/3-AlphaDiversity/3-SignificanceAnalysis/2-Kruskal_Wallis/
+
+
 
 	cp -r R_output/*matrix.txt R_output/BetaDiversity_heatmap.png ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
 

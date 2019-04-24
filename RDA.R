@@ -1,43 +1,21 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-import argparse
-import re
-import sys
-import os
+library(optparse)
+#######arguments
+option_list <- list( 
+  make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table. Required",default=NULL),
+  make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
+  make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
+  make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
+  make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of species needed to be plotted, default is 20",default=20),
+  make_option(c("-e", "--exclude"),metavar="string",dest="ex", help="Specify the numeric variables excluded from plot and seprated by commas in mapping file",default="none"),
+  make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files. default=./",default="./")
+)
 
-#*********************************************************************** *********************************************************************************
-# argument:
-p = argparse.ArgumentParser(
-    description="This script is used to plot RDA of species. The numeric enviroment factors must be encluded in maping file. The categories will be filterd before RDA")
-p.add_argument('-i', '--input', dest='input', metavar='<path>',
-               help='Taxonomic count data file')
-p.add_argument('-o', '--output', dest='output', metavar='<directory>', default='./',
-               help='Given an output directory')
-p.add_argument('-m', '--metadata', dest='meta', metavar='<path>',
-               help='Sample metadata file')
-p.add_argument('-g', '--group', dest='group', metavar='<str>',
-               help='Column name in sample-metadata file')
-p.add_argument('-n', '--number', dest='number', metavar='<int>', default='20',
-               help='Specify how many species to be display, defaulf is 20')
-p.add_argument('-e', '--exclude', dest='exclude', metavar='<str>', default='none',
-               help='Specify numeric variables excluded from rda seprated by commas,use "none" if all numeric variables is expected')
-p.add_argument('-p', '--prefix', dest='prefix', metavar='<int>', default="",
-               help='The prefix of output files, default if null')
-options = p.parse_args()
+opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to compare the predicted pathway of level 3"))
 
-if not options.input and options.group and options.meta:
-    p.error("must have argument -i -m -g")
-    sys.exit()
-else:
-    pass
+if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
+opt$out<-paste(opt$out,"/",opt$prefix,sep="")
 
-if not os.path.exists(options.output):
-    os.makedirs(options.output)
 
-options.output = options.output + '/' + options.prefix
-rscript = open('rda.R', 'w')
-
-print('''
 library(vegan)
 library(stringr)
 library(ggrepel)
@@ -45,17 +23,19 @@ library(ggplot2)
 library(RColorBrewer)
 library(getopt)
 
+base_dir<-normalizePath(dirname(get_Rscript_filename()))
+source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+groups_color<-get_colors(opt$group, opt$map)
 
 
-
-ex<-str_split("%s",",")[[1]]
-dat <- read.table("%s", header = TRUE, sep = "\\t",comment.char = "",check.names = F)
+ex<-str_split(opt$ex,",")[[1]]
+dat <- read.table(opt$otu, header = TRUE, sep = "\\t",comment.char = "",check.names = F)
 # dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
 
 dat<-dat[!duplicated(dat[,1]),]
 
 rownames(dat)=dat[,1]
-map<-read.table("%s",header = T,na.strings="",sep = "\\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
+map<-read.table(opt$map,header = T,na.strings="",sep = "\\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 
 colnames(map)[is.na(colnames(map))]<-"NA"
 
@@ -66,9 +46,9 @@ for(i in 1:length(map)){
 }
 
 if(ex[1]!="none"){
-  notstr=notstr&(!colnames(map)%%in%%ex)
+  notstr=notstr&(!colnames(map)%in%ex)
 }
-group_name="%s"
+group_name=opt$group
 sel=c(group_name,colnames(map)[notstr])
 
 data=map[sel]
@@ -106,18 +86,15 @@ title_all<-paste("Overall permutation test: P=",mcpp_numeric[[4]][1],sep="")
 print(title_all)
 
 
-
-
-
-path="%s"
+path=opt$out
 ccascore <- scores(cca)
-write.table(ccascore$sites, file = paste(path,"%s_", pre, ".sample.txt", sep = ""), sep = "\\t")
-write.table(ccascore$species, file = paste(path,"%s_", pre, ".bacteria.txt", sep = ""), sep = "\\t")
+write.table(ccascore$sites, file = paste(path,group_name,"_", pre, ".sample.txt", sep = ""), sep = "\\t")
+write.table(ccascore$species, file = paste(path,group_name,"_", pre, ".bacteria.txt", sep = ""), sep = "\\t")
 envfit <- envfit(cca, envdata, permu = 2000, na.rm = TRUE)
 rp <- cbind(as.matrix(envfit$vectors$r), as.matrix(envfit$vectors$pvals))
 colnames(rp) <- c("r2", "Pr(>r)")
 env <- cbind(envfit$vectors$arrows, rp)
-write.table(as.data.frame(env), file = paste(path, "%s_",pre, ".envfit.txt", sep = ""),sep = "\\t")
+write.table(as.data.frame(env), file = paste(path, group_name, "_",pre, ".envfit.txt", sep = ""),sep = "\\t")
 
 
 new<-cca$CCA
@@ -127,7 +104,7 @@ samples=data.frame(ccascore$sites)
 range_sam<-max(samples)-min(samples)
 # sum(rownames(samples)!=rownames(data))==0
 samples$id=rownames(samples)
-samples=data.frame(samples,%s=groups)
+samples=data.frame(samples,Group=groups)
 
 
 
@@ -138,7 +115,7 @@ species$id=rownames(species)
 species<-species[match(colnames(dat),rownames(species)),]
 sum<-scale(colSums(dat))[,1]
 species$abundance<-sum-min(sum)+0.8
-number<-%s+1
+number<-as.integer(opt$num)+1
 if (dim(dat)[2]<number){
   cut=-1
 }else{
@@ -147,7 +124,6 @@ if (dim(dat)[2]<number){
 show_species<-species[colSums(dat)>cut,]
 hide_species<-species[colSums(dat)<=cut,]
 print(paste("The threshold of abundance is:",cut))
-
 
 
 # envis=data.frame(envfit$vectors$arrows)#Envis seem to be the same length after permutation
@@ -160,8 +136,8 @@ envis$id=rownames(envis)
 
 pc1 = cca$CCA$eig[1]/sum(cca$CCA$eig) * 100
 pc2 = cca$CCA$eig[2]/sum(cca$CCA$eig) * 100
-xlab <- paste(pre, "1: ", round(pc1, digits = 2), "%%", sep = "")
-ylab <- paste(pre, "2: ", round(pc2, digits = 2), "%%", sep = "")
+xlab <- paste(pre, "1: ", round(pc1, digits = 2), "%", sep = "")
+ylab <- paste(pre, "2: ", round(pc2, digits = 2), "%", sep = "")
 
 
 
@@ -175,7 +151,7 @@ envis[,1]<-envis[,1]*ratio_sam_env*0.85
 envis[,2]<-envis[,2]*ratio_sam_env*0.85
 
 p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
-  geom_point(aes(x=RDA1,y=RDA2,color=%s),size=3) +
+  geom_point(aes(x=RDA1,y=RDA2,color=Group),size=3) +
   # geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)+
   geom_text_repel(data=envis,aes(x=RDA1,y=RDA2,label=id),color="black",size=5) +
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
@@ -189,14 +165,15 @@ p1<-ggplot(data=samples,aes(x=RDA1,y=RDA2)) +
         text = element_text(size = 15),
         axis.title = element_text(size = 15),
         legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15))
+        legend.text = element_text(size = 15))+
+  scale_colour_manual(values = groups_color)
 
-ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,group_name,"_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
 
 p2<-p1+geom_text_repel(aes(x=RDA1,y=RDA2,label=id),color="black",size=3)
 
-ggsave(paste(path,"%s_",pre,"_sample_location_plot_with_labels.pdf",sep=""),plot=p2,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,group_name,"_",pre,"_sample_location_plot_with_labels.pdf",sep=""),plot=p2,width = 8,height = 7,dpi = 300)
 
 
 envis[,1]<-envis[,1]*(1/ratio_sam_env)*ratio_spe_env
@@ -222,7 +199,7 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
         legend.text = element_text(size = 15))
 
 # ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
-ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,group_name,"_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }else{
 envis[,1]<-envis[,1]*ratio_sam_env*0.85
 envis[,2]<-envis[,2]*ratio_sam_env*0.85
@@ -230,7 +207,7 @@ envis[,2]<-envis[,2]*ratio_sam_env*0.85
 # envis[,1]<-envis[,1]*3.5
 # envis[,2]<-envis[,2]*3.5
 p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
-  geom_point(aes(x=CCA1,y=CCA2,color=%s),size=3) +
+  geom_point(aes(x=CCA1,y=CCA2,color=Group),size=3) +
   # geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)+
   geom_text_repel(data=envis,aes(x=CCA1,y=CCA2,label=id),color="black",size=5) +
   geom_hline(yintercept=0,linetype="dotted") + geom_vline(xintercept=0,linetype="dotted")+
@@ -244,13 +221,14 @@ p1<-ggplot(data=samples,aes(x=CCA1,y=CCA2)) +
         text = element_text(size = 15),
         axis.title = element_text(size = 15),
         legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15))
+        legend.text = element_text(size = 15))+
+  scale_colour_manual(values = groups_color)
 
-ggsave(paste(path,"%s_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,group_name,"_",pre,"_sample_location_plot.pdf",sep=""),plot=p1,width = 8,height = 7,dpi = 300)
 
 p2<-p1+geom_text_repel(aes(x=CCA1,y=CCA2,label=id),color="black",size=3)
 
-ggsave(paste(path,"%s_",pre,"_sample_location_plot_with_labels.pdf",sep=""),plot=p2,width = 8,height = 7,dpi = 300)
+ggsave(paste(path,group_name,"_",pre,"_sample_location_plot_with_labels.pdf",sep=""),plot=p2,width = 8,height = 7,dpi = 300)
 
 
 
@@ -277,14 +255,5 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
         legend.text = element_text(size = 15))
 
 # ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
-ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,group_name, "_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
-''' % (options.exclude, options.input, options.meta, options.group, options.output,
-       options.group, options.group, options.group, options.group, options.number,
-       options.group, options.group, options.group, options.group, options.group, options.group,
-       options.group, options.group, options.group, options.group), file=rscript)
-
-rscript.close()
-
-os.system('Rscript rda.R')
-os.remove('rda.R')

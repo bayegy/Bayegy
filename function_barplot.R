@@ -21,7 +21,7 @@ library(ggpubr)
 library(reshape2)
 library(agricolae)
 library(ggplot2)
-
+library(getopt)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 
 func<-read.table(opt$func,comment.char="",quote = "",skip = 1,check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
@@ -98,6 +98,10 @@ if(opt$bl=="auto"){
   }
 }
 
+base_dir<-normalizePath(dirname(get_Rscript_filename()))
+source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+groups_color<-get_colors(opt$group, opt$map)
+
 
 if(how==1){
   LF<-str_extract(rownames(func),'^[^;]+')
@@ -136,7 +140,8 @@ if(how==1){
         theme(text = element_text(size = 12),
               panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
               axis.line = element_line(),panel.border =  element_blank(),
-              axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))
+              axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))+
+        scale_fill_manual(values = groups_color)
       ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
       if(as.logical(opt$se)){
         colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
@@ -179,7 +184,8 @@ if(how==1){
       theme(text = element_text(size = 12),
             panel.grid.major = element_blank(),panel.grid.minor = element_blank(),
             axis.line = element_line(),panel.border =  element_blank(),
-            axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))
+            axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))+
+      scale_fill_manual(values = groups_color)
     ggsave(plot = p,paste(opt$out,'/',opt$group,"_all_significant_pathway_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
     if(as.logical(opt$se)){
       colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")

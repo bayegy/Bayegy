@@ -79,7 +79,7 @@ check_file() {
 		exit
 	fi
 }
-
+<<comment
 function assign_taxa() {
 	loop_id=$1
 	if [ $loop_id ==  1]; then 
@@ -98,7 +98,7 @@ function assign_taxa() {
 		echo "Species"
 	fi
 }
-
+comment
 #for f in 1 2 3 4 5 6 7;
 #	do echo $f;
 #	tax=$(assign_taxa ${f});
@@ -115,7 +115,7 @@ function assign_taxa() {
 	source activate qiime2-2018.11
 
 	echo "##############################################################\n#paired end analysis using DADA2"
-
+<<skip1
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
@@ -215,7 +215,7 @@ comment1
 	mv ./Result_AmpliconSequencing/1-OTUStats/demux/ ./Result_AmpliconSequencing/1-OTUStats/1-Stats-demux
 	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png exported/Relative/classified_stat_relative.xls ./Result_AmpliconSequencing/1-OTUStats/
 	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/1-OTUStats/feature-table.taxonomy.even.txt
-
+skip1
 	echo "##############################################################\n#Generate the results of each group"
 	for category_set in $category_sum;
 		do echo $category_set;
@@ -224,9 +224,9 @@ comment1
 		#mkdir ${category_set}_Results;
 		python $SCRIPTPATH/split_source_by_group.py  -i table.qza -t taxonomy.qza -r rep-seqs.qza -m $sample_metadata -c $category_set -o ${category_set}_Results;
 		cd ${category_set}_Results;
-
 		mapping_file=$(readlink -f './mapping_file.txt');
 
+<<skip2
 		qiime metadata tabulate   --m-input-file taxonomy.qza   --o-visualization taxonomy.qzv;
 
 		echo "##############################################################\n#Generate tree";
@@ -256,10 +256,10 @@ comment1
 		echo "##############################################################\n#Core alpha and beta diversity analysis"
 		qiime diversity core-metrics-phylogenetic   --i-phylogeny rooted-tree.qza   --i-table table.qza   --p-sampling-depth $min_depth   --m-metadata-file $mapping_file  --output-dir core-metrics-results
 
-		qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/faith_pd_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/faith-pd-group-significance.qzv
-		qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/evenness_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/evenness-group-significance.qzv
-		qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/shannon_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/shannon-group-significance.qzv
-		qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/observed_otus_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/observed_otus-group-significance.qzv
+		#qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/faith_pd_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/faith-pd-group-significance.qzv
+		#qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/evenness_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/evenness-group-significance.qzv
+		#qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/shannon_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/shannon-group-significance.qzv
+		#qiime diversity alpha-group-significance   --i-alpha-diversity core-metrics-results/observed_otus_vector.qza   --m-metadata-file $mapping_file  --o-visualization core-metrics-results/observed_otus-group-significance.qzv
 		for category_1 in $category_set;
 		do echo $category_1;
 			qiime diversity beta-group-significance   --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza   --m-metadata-file $mapping_file  --p-method permanova --m-metadata-column $category_1   --o-visualization 'core-metrics-results/unweighted_unifrac-permanova-'$category_1'-significance.qzv'  --p-pairwise;
@@ -283,16 +283,37 @@ comment1
 
 
 		echo "##############################################################\n#alpha dviersity summary"
-		mkdir alpha
-		qiime diversity alpha --i-table table.qza --p-metric chao1 --output-dir alpha/chao1
-		qiime diversity alpha --i-table table.qza --p-metric shannon --output-dir alpha/shannon
-		qiime diversity alpha --i-table table.qza --p-metric observed_otus --output-dir alpha/observed_otus
+		mkdir alpha alpha_groupsignificance
+		#qiime diversity alpha --i-table table.qza --p-metric chao1 --output-dir alpha/chao1
+		#qiime diversity alpha --i-table table.qza --p-metric shannon --output-dir alpha/shannon
+		#qiime diversity alpha --i-table table.qza --p-metric observed_otus --output-dir alpha/observed_otus
 		qiime diversity alpha-phylogenetic --i-table table.qza --i-phylogeny rooted-tree.qza --p-metric faith_pd --output-dir alpha/faith_pd
-	 	qiime tools export --input-path alpha/chao1/alpha_diversity.qza --output-path alpha/chao1/
-	 	qiime tools export --input-path alpha/shannon/alpha_diversity.qza --output-path alpha/shannon/
-	 	qiime tools export --input-path alpha/observed_otus/alpha_diversity.qza --output-path alpha/observed_otus/
-	 	qiime tools export --input-path alpha/faith_pd/alpha_diversity.qza --output-path alpha/faith_pd/
-	 	paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8}' >  alpha/alpha-summary.tsv
+		#qiime diversity alpha --i-table table.qza --p-metric simpson --o-alpha-diversity alpha/simpson.qza
+		#qiime diversity alpha --i-table table.qza --p-metric ace --o-alpha-diversity alpha/ace.qza
+		#qiime diversity alpha --i-table table.qza --p-metric goods_coverage --o-alpha-diversity alpha/goods_coverage.qza
+
+		for alpha_index in chao1 shannon observed_otus faith_pd simpson ace;
+			do echo $alpha_index;
+			if [ ! $alpha_index == faith_pd ];then
+			qiime diversity alpha --i-table table.qza --p-metric ${alpha_index} --output-dir alpha/${alpha_index}/
+			fi;
+			qiime tools export --input-path alpha/${alpha_index}/alpha_diversity.qza --output-path alpha/${alpha_index}/;
+			#if [ ! $alpha_index == goods_coverage ];then
+			qiime diversity alpha-group-significance   --i-alpha-diversity alpha/${alpha_index}/alpha_diversity.qza   --m-metadata-file $mapping_file  --o-visualization alpha_groupsignificance/${alpha_index}-group-significance.qzv;
+			#fi;
+		done;
+
+
+
+	 	#qiime tools export --input-path alpha/chao1/alpha_diversity.qza --output-path alpha/chao1/
+	 	#qiime tools export --input-path alpha/shannon/alpha_diversity.qza --output-path alpha/shannon/
+	 	#qiime tools export --input-path alpha/observed_otus/alpha_diversity.qza --output-path alpha/observed_otus/
+	 	#qiime tools export --input-path alpha/faith_pd/alpha_diversity.qza --output-path alpha/faith_pd/
+	 	#qiime tools export --input-path alpha/simpson.qza --output-path alpha/simpson/
+	 	#qiime tools export --input-path alpha/ace.qza --output-path alpha/ace/
+	 	#qiime tools export --input-path alpha/goods_coverage.qza --output-path alpha/goods_coverage/
+	 	#paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv alpha/simpson/alpha-diversity.tsv alpha/ace/alpha-diversity.tsv alpha/goods_coverage/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8, $10, $12, $14}' >  alpha/alpha-summary.tsv
+	 	paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv alpha/simpson/alpha-diversity.tsv alpha/ace/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8, $10, $12}' >  alpha/alpha-summary.tsv
 
 		echo "##############################################################\n#Export necessary files for future analysis"
 		for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
@@ -457,6 +478,7 @@ COMMENT
 
 		min_observation=$(echo \(`wc -l $mapping_file | sed 's/ .*//g'`-1\)/4 | bc)
 		echo "###############min observation of otu in samples is $min_observation"
+		mkdir tables_for_deseq_anova_kruskal
 		for n4 in 2 3 4 5 6 7;
 			do echo $n4;
 			#the biom file should include taxonomy information for group_significance.py script
@@ -464,7 +486,7 @@ COMMENT
 			perl -p -i.bak -e 's/#OTU ID/taxonomy/' exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt
 			paste exported/DiffAbundance/tax/otu_table.even_L${n4}.txt exported/DiffAbundance/tax/otu_table.even_L${n4}.1stColumn.txt > exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt
 			biom convert -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt -o exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom --to-hdf5 --table-type="OTU table" --process-obs-metadata taxonomy
-			mkdir tables_for_deseq_anova_kruskal
+
 			cp exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.txt tables_for_deseq_anova_kruskal/
 			filter_otus_from_otu_table.py -i exported/DiffAbundance/tax/otu_table.even_${tax_levels[${n4}]}.taxonomy.biom -s $min_observation -o filtered_otu_table.biom
 
@@ -583,12 +605,12 @@ COMMENT
 				for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 					do echo $n7;
 					Rscript ${SCRIPTPATH}/cor_heatmap.R -i otu_table_forlefse/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 25 -m $mapping_file -e $nrda -p "$prefix";
-					for category_1 in $category_set;do echo $category_1;python ${SCRIPTPATH}/RDA.py -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -g $category_1 -o exported/Absolute/RDA/${n7} -n 25 -e $nrda -p "$prefix";done;
+					for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/RDA.R -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -c $category_1 -o exported/Absolute/RDA/${n7} -n 25 -e $nrda -p "$prefix";done;
 				done;
 			done;
 		fi;
 
-
+skip2
 		source deactivate
 		source activate qm2
 		echo "##############################################################\network and abundance heatmap" 

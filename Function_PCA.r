@@ -6,6 +6,7 @@ require(ggplot2)
 require(ggpubr)
 library(dplyr)
 library(devtools)
+library(getopt)
 #install_github("vqv/ggbiplot", ref = "experimental") 
 
 option_list <- list( 
@@ -15,6 +16,13 @@ option_list <- list(
     )
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "R script for generating Dunn test output"))
+
+
+base_dir<-normalizePath(dirname(get_Rscript_filename()))
+source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+groups_color<-get_colors(opt$group, opt$map)
+
+
 
 args <- commandArgs(trailingOnly = TRUE)
 KEGG_function_txt = opt$input
@@ -93,7 +101,7 @@ KEGG_function_txt<-str_replace(KEGG_function_txt,"PCA.txt","")
 PCA_plot_outputpdfname <- paste(KEGG_function_txt, category_1,".PCA.pdf", sep="")
 p<-ggbiplot(pc, obs.scale = 1, var.scale = 1, groups = design5[[category_1]], ellipse = TRUE, varname.adjust = 1.2, varname.abbrev=T, varname.size=3) +
   scale_color_discrete(name = '') +
-  theme_bw()
-  
+  theme_bw()+
+  scale_colour_manual(values = groups_color)
 
 ggsave(PCA_plot_outputpdfname, plot=p, height=6, width=8, dpi = 300)

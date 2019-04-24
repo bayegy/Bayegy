@@ -13,7 +13,7 @@ option_list <- list(
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to plot rarefacation curve of alpha diversity and use the exported qiime2 rarefacation results path as input"))
 
-
+library(getopt)
 library(reshape)
 library(ggplot2)
 library(stringr)
@@ -47,5 +47,11 @@ for (a in c("faith_pd","observed_otus","shannon")){
 	  theme_bw() +xlab("Number of sequences")+ylab(a)+
 	  theme(panel.grid=element_blank())+
 	  guides(color=guide_legend(title = NULL))
+	if(groupmean){
+		base_dir<-normalizePath(dirname(get_Rscript_filename()))
+		source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+		groups_color<-get_colors(opt$group, opt$map)
+		p<-p+scale_colour_manual(values = groups_color)
+	}
 	ggsave(plot = p,filename = paste(opt$o,a,"_rarefaction_curve.pdf",sep = ""),width = p_width,height = 6,dpi = 300)
 }
