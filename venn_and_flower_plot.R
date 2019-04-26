@@ -89,7 +89,7 @@ if(length(unig)>=3){
 flower_plot <- function(sample, value, common, start, a, b,circ_r=1.5,ell_pos=2,tax_pos=4,num_pos=2, 
                         ellipse_col, 
                         circle_col = rgb(0, 162, 214, max = 255),
-                        text_cex = 1.6) {
+                        text_cex = 1) {
   par( bty = "n", ann = F, xaxt = "n", yaxt = "n", mar = c(1,1,1,1))
   plot(c(0,14),c(0,14),type="n")
   n   <- length(sample)

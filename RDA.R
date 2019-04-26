@@ -1,6 +1,6 @@
 library(optparse)
 #######arguments
-option_list <- list( 
+option_list <- list(
   make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table. Required",default=NULL),
   make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
   make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
@@ -29,13 +29,13 @@ groups_color<-get_colors(opt$group, opt$map)
 
 
 ex<-str_split(opt$ex,",")[[1]]
-dat <- read.table(opt$otu, header = TRUE, sep = "\\t",comment.char = "",check.names = F)
+dat <- read.table(opt$otu, header = TRUE, sep = "\t",comment.char = "",check.names = F)
 # dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
 
 dat<-dat[!duplicated(dat[,1]),]
 
 rownames(dat)=dat[,1]
-map<-read.table(opt$map,header = T,na.strings="",sep = "\\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
+map<-read.table(opt$map,header = T,na.strings="",sep = "\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 
 colnames(map)[is.na(colnames(map))]<-"NA"
 

@@ -112,10 +112,13 @@ comment
 	SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 	source $SCRIPTPATH/path/clean_path.sh
+	python3 $SCRIPTPATH/piputils/write_colors_plan.py -i $sample_metadata -c $4 -p $SCRIPTPATH/piputils/group_color.list -o colors_plan.json
+	source $SCRIPTPATH/piputils/put_colors_plan_path.sh $(readlink -f colors_plan.json)
+	echo "COLORS_PLAN_PATH = ${COLORS_PLAN_PATH}"
 	source activate qiime2-2018.11
 
 	echo "##############################################################\n#paired end analysis using DADA2"
-<<skip1
+
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
@@ -215,7 +218,7 @@ comment1
 	mv ./Result_AmpliconSequencing/1-OTUStats/demux/ ./Result_AmpliconSequencing/1-OTUStats/1-Stats-demux
 	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png exported/Relative/classified_stat_relative.xls ./Result_AmpliconSequencing/1-OTUStats/
 	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/1-OTUStats/feature-table.taxonomy.even.txt
-skip1
+
 	echo "##############################################################\n#Generate the results of each group"
 	for category_set in $category_sum;
 		do echo $category_set;
@@ -226,7 +229,7 @@ skip1
 		cd ${category_set}_Results;
 		mapping_file=$(readlink -f './mapping_file.txt');
 
-<<skip2
+
 		qiime metadata tabulate   --m-input-file taxonomy.qza   --o-visualization taxonomy.qzv;
 
 		echo "##############################################################\n#Generate tree";
@@ -610,7 +613,7 @@ COMMENT
 			done;
 		fi;
 
-skip2
+
 		source deactivate
 		source activate qm2
 		echo "##############################################################\network and abundance heatmap" 
@@ -687,9 +690,9 @@ COMMENT
 			for category_1 in $category_set;
 				do echo $category_1;
 					base="${category_1}_${n7}_lefse_LDA2"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 2;  
-					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+					${SCRIPTPATH}/mod_lefse-plot_res.py --category $category_1 --map $mapping_file  --max_feature_len 200 --orientation h --format pdf ${base}.LDA.txt ${base}.pdf; ${SCRIPTPATH}/mod_lefse-plot_cladogram.py ${base}.LDA.txt --map $mapping_file  --category $category_1 ${base}.cladogram.pdf --format pdf;
 					base="${category_1}_${n7}_lefse_LDA4"; format_input.py ${category_1}_${n7}_lefse.txt ${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py ${base}.lefseinput.txt ${base}.LDA.txt -l 4;  
-					plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 ${base}.LDA.txt ${base}.pdf; plot_cladogram.py ${base}.LDA.txt --dpi 300 ${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+					${SCRIPTPATH}/mod_lefse-plot_res.py --category $category_1 --map $mapping_file  --max_feature_len 200 --orientation h --format pdf ${base}.LDA.txt ${base}.pdf; ${SCRIPTPATH}/mod_lefse-plot_cladogram.py ${base}.LDA.txt --map $mapping_file --category $category_1 ${base}.cladogram.pdf --format pdf;
 			done;
 			cd ../../
 		done;
@@ -701,8 +704,8 @@ COMMENT
 	#	for category_1 in $category_set;
 	#		do echo $category_1;
 	#			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/Absolute/otu_table.Genus.absolute.txt  $mapping_file  $category_1  LEfSe/Genus/${category_1}_table_for_lefse.txt F;
-	#			base="${category_1}_Genus_LEfSe_LDA2"; format_input.py LEfSe/Genus/${category_1}_table_for_lefse.txt LEfSe/Genus/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/Genus/${base}.lefseinput.txt LEfSe/Genus/${base}.LDA.txt -l 2;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.png; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
-	#			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.pdf; plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10 --labeled_stop_lev 4;
+	#			base="${category_1}_Genus_LEfSe_LDA2"; format_input.py LEfSe/Genus/${category_1}_table_for_lefse.txt LEfSe/Genus/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/Genus/${base}.lefseinput.txt LEfSe/Genus/${base}.LDA.txt -l 2;  ${SCRIPTPATH}/mod_lefse-plot_res.py --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.png; ${SCRIPTPATH}/mod_lefse-plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.png --format png   --labeled_stop_lev 4;
+	#			${SCRIPTPATH}/mod_lefse-plot_res.py  --max_feature_len 200 --orientation h --format pdf --dpi 300 LEfSe/Genus/${base}.LDA.txt LEfSe/Genus/${base}.pdf; ${SCRIPTPATH}/mod_lefse-plot_cladogram.py LEfSe/Genus/${base}.LDA.txt --dpi 300 LEfSe/Genus/${base}.cladogram.pdf  --format pdf   --labeled_stop_lev 4;
 	#		done;
 
 	#	mkdir -p LEfSe/OTU/
@@ -710,8 +713,8 @@ COMMENT
 	#		do echo $category_1;
 	#			Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/feature-table.taxonomy.txt  $mapping_file  $category_1  LEfSe/OTU/${category_1}_table_for_lefse.txt T;
 				#Rscript ${SCRIPTPATH}/write_data_for_lefse.R  exported/Absolute/otu_table.Genus.absolute.txt  $mapping_file  $category_1  LEfSe/OTU/${category_1}_table_for_lefse.txt F;
-	#			base="${category_1}_OTU_LEfSe_LDA4"; format_input.py LEfSe/OTU/${category_1}_table_for_lefse.txt LEfSe/OTU/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/OTU/${base}.lefseinput.txt LEfSe/OTU/${base}.LDA.txt -l 4;  plot_res.py --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.png; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.png --format png --right_space_prop 0.45 --label_font_size 10;
-	#			plot_res.py  --max_feature_len 200 --orientation h --format pdf --left_space 0.3 --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.pdf; plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.pdf --clade_sep 1.8 --format pdf --right_space_prop 0.45 --label_font_size 10;
+	#			base="${category_1}_OTU_LEfSe_LDA4"; format_input.py LEfSe/OTU/${category_1}_table_for_lefse.txt LEfSe/OTU/${base}.lefseinput.txt -c 2 -u 1 -o 1000000; run_lefse.py LEfSe/OTU/${base}.lefseinput.txt LEfSe/OTU/${base}.LDA.txt -l 4;  ${SCRIPTPATH}/mod_lefse-plot_res.py --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.png; ${SCRIPTPATH}/mod_lefse-plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.png --format png  ;
+	#			${SCRIPTPATH}/mod_lefse-plot_res.py  --max_feature_len 200 --orientation h --format pdf --dpi 300 LEfSe/OTU/${base}.LDA.txt LEfSe/OTU/${base}.pdf; ${SCRIPTPATH}/mod_lefse-plot_cladogram.py LEfSe/OTU/${base}.LDA.txt --dpi 300 LEfSe/OTU/${base}.cladogram.pdf  --format pdf  ;
 	#		done;
 
 
