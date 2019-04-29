@@ -11,23 +11,27 @@ def get_colors(category):
             js = json.load(f)
             return js[category]
     except KeyError:
-        return False
+        return []
 
 
 def get_lefse_colors(category, mapping_file, lda_file):
-    df = pd.read_table(mapping_file)
-    gps = list(set(list(df[category].values)))
-    gps.sort(key=str.lower)
     colors = get_colors(category)
-    gps_colors = dict()
-    gps_sig = set()
-    for gp, color in zip(gps, colors):
-        gps_colors[gp] = color
-    with open(lda_file) as f:
-        for line in f:
-            li = line.strip().split('\t')
-            if li[2]:
-                gps_sig.add(li[2].strip())
-    gps_sig = list(gps_sig)
-    gps_sig.sort()
-    return [gps_colors[gp] for gp in gps_sig]
+    if colors:
+        df = pd.read_table(mapping_file)
+        gps = list(set(list(df[category].values)))
+        gps.sort(key=str.lower)
+        gps_colors = dict()
+        gps_sig = set()
+        for gp, color in zip(gps, colors):
+            gps_colors[gp] = color
+        with open(lda_file) as f:
+            for line in f:
+                li = line.strip().split('\t')
+                sgp = li[2].strip()
+                if sgp:
+                    gps_sig.add(sgp)
+        gps_sig = list(gps_sig)
+        gps_sig.sort()
+        return [gps_colors[gp] for gp in gps_sig]
+    else:
+        return []
