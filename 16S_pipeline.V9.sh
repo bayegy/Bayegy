@@ -79,7 +79,7 @@ check_file() {
 		exit
 	fi
 }
-
+<<COMMENT
 function assign_taxa() {
 	loop_id=$1
 	if [ $loop_id ==  1]; then 
@@ -104,7 +104,7 @@ function assign_taxa() {
 #	tax=$(assign_taxa ${f});
 #	echo $tax;
 #done;
-
+COMMENT
 
 	##Activate Qiime2 Version
 	echo "##############################################################\n#Initiate directory name and set up the directory structure"
@@ -118,7 +118,7 @@ function assign_taxa() {
 	source activate qiime2-2018.11
 
 	echo "##############################################################\n#paired end analysis using DADA2"
-<<skip1
+
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
 
@@ -174,7 +174,7 @@ comment1
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
 		else python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c;
 	fi;
-skip1
+
 
 	echo "##############################################################\n#Generate tree";
 	qiime alignment mafft   --i-sequences rep-seqs.qza   --o-alignment aligned-rep-seqs.qza
