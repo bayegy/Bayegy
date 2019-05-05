@@ -7,13 +7,13 @@ from lxml import html
 # argument:
 p = argparse.ArgumentParser(
     description="This script is used to form manifest of 16S demuxed sequences for the use of qiime2")
-p.add_argument('-i', '--input', dest='input', metavar='<path>',
+p.add_argument('-i', '--input', dest='input', metavar='<path>', required=True,
                help='Path of input Table, either txt or html')
-p.add_argument('-t', '--type', dest='type', metavar='<str>', default="auto",
-               help='The type of input file')
-p.add_argument('-k', '--key-word', dest='key', metavar='<str>', default="auto",
+p.add_argument('-t', '--type', dest='type', metavar='<str>', default="auto", required=False,
+               help='The type of input file. txt(must be tab seprated) or html. default is auto, which decide the file type by postfix of file name')
+p.add_argument('-k', '--key-word', dest='key', metavar='<str>', default="auto", required=True,
                help='The key-word supposed to be replaced by this table in target html')
-p.add_argument('-o', '--output', dest='out', metavar='<directory>', default='./test.html',
+p.add_argument('-o', '--output', dest='out', metavar='<directory>', default='./test.html', required=True,
                help='The path of target html to which this table will input')
 options = p.parse_args()
 
