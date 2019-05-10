@@ -63,7 +63,10 @@ def GetGroup(file, col):
         tmp_set.sort(key=str.lower)
         groups_list += tmp_set
         groups_dic.setdefault(group, tmp_set)
-    return(groups_dic, list(set(groups_list)), groups_name)
+        groups_list = list(set(groups_list))
+        # 确保每次运行的结果都是相同的
+        groups_list.sort(key=str.lower)
+    return(groups_dic, groups_list, groups_name)
 
 
 def main():

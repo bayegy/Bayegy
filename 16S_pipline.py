@@ -27,12 +27,14 @@ p.add_argument('-d', '--sample-depth', dest='depth', default='auto', metavar='<i
                help='Depth for subsampleing. If "auto" is supplied, the min OTU frequency of samples will be caculated and apply to this parameter')
 p.add_argument('-e', '--exclude', dest='exclude', default='none', metavar='<str>',
                help='The variables excluded from RDA and correlation heatmap analysis, if more than one variable is expected, you should use comma as delimeters. if more than one run is expected, use semicolon as delimeters. example: "Var1,Var2;Var1,Var3". default is none, meaning no variable will be excluded.')
-p.add_argument('--classifier', dest='classifier', default='/home/admin1/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza', metavar='<path>',
+p.add_argument('-l', '--classifier', dest='classifier', default='/home/admin1/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza', metavar='<path>',
                help='Path of the classifier for alignment and assigning taxonomy')
 p.add_argument('--ref-seqs', dest='ref', default='/home/admin1/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza', metavar='<path>',
                help='Path of the reference sequences for close reference alignment')
-p.add_argument('--classifier-type', dest='type', default='gg', metavar='<str>',
+p.add_argument('-t', '--classifier-type', dest='type', default='gg', metavar='<str>',
                help='Specify the type of classifier, either silva or gg')
+p.add_argument('-u', '--run-picrust', dest='picrust', default='yes', metavar='<str>',
+               help='yes or no')
 p.add_argument('-n', '--rar-filename', dest='fname', default='Result_AmpliconSequencing', metavar='<str>',
                help='The name of final results.rar')
 p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='./',
@@ -84,8 +86,8 @@ if os.path.isfile(options.map):
                 os.system("python %s/write_manifest.py -i %s -m %s/cleaned_map.txt -o %s/%s_data -f '%s' -r '%s' -s '%s'" %
                           (scriptpath, options.input, options.outdir, options.outdir, c, options.fp, options.rp, options.sp))
                 os.system('''cd %s/%s_Results&&sed -i -e '1s/%s/Group/g' ../%s_data/sample-metadata.tsv&&\
-      bash %s/16S_pipeline.V9.sh ../%s_data/sample-metadata.tsv %s 1000 Group %s %s ../%s_data/manifest.txt  "%s" %s''' %
-                          (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.exclude, options.type))
+      bash %s/16S_pipeline.V9.sh ../%s_data/sample-metadata.tsv %s 1000 Group %s %s ../%s_data/manifest.txt  "%s" %s %s''' %
+                          (options.outdir, c, c, c, scriptpath, c, options.depth, options.classifier, options.ref, c, options.exclude, options.type, options.picrust))
                 if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
                     os.makedirs(options.outdir + '/' + 'All_Results_Summary')
                 os.system('''rm -r %s/All_Results_Summary/%s_Result_AmpliconSequencing; mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
@@ -97,12 +99,12 @@ if os.path.isfile(options.map):
             os.system("python %s/write_manifest.py -i %s -m %s -o %s/data -f '%s' -r '%s' -s '%s'" %
                       (scriptpath, options.input, options.map, options.outdir, options.fp, options.rp, options.sp))
             os.system('''cd %s/Results&&\
-      bash %s/16S_pipeline.V9.sh ../data/sample-metadata.tsv %s 1000 %s %s %s ../data/manifest.txt  "%s" %s&&\
-      rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.depth, options.group, options.classifier, options.ref, options.exclude, options.type, options.fname))
+      bash %s/16S_pipeline.V9.sh ../data/sample-metadata.tsv %s 1000 %s %s %s ../data/manifest.txt  "%s" %s %s&&\
+      rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.depth, options.group, options.classifier, options.ref, options.exclude, options.type, options.picrust, options.fname))
     else:
         os.system('''cd %s&&\
-      bash %s/16S_pipeline.V9.sh %s %s 1000 %s %s %s %s  "%s" %s&&\
-      rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.map, options.depth, options.group, options.classifier, options.ref, options.manifest, options.exclude, options.type, options.fname))
+      bash %s/16S_pipeline.V9.sh %s %s 1000 %s %s %s %s  "%s" %s %s&&\
+      rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.map, options.depth, options.group, options.classifier, options.ref, options.manifest, options.exclude, options.type, options.picrust, options.fname))
 else:
     mapdir = os.listdir(options.map)
     excs = re.split('::', options.exclude)
@@ -122,9 +124,9 @@ else:
             os.system("python %s/write_manifest.py -i %s -m %s -o %s/data%s -f '%s' -r '%s' -s '%s'" %
                       (scriptpath, options.input, pmp, options.outdir, od, options.fp, options.rp, options.sp))
             os.system('''cd %s/Results%s&&\
-      bash %s/16S_pipeline.V9.sh ../data%s/sample-metadata.tsv %s 1000 %s %s %s ../data%s/manifest.txt  "%s" %s&&\
+      bash %s/16S_pipeline.V9.sh ../data%s/sample-metadata.tsv %s 1000 %s %s %s ../data%s/manifest.txt  "%s" %s %s&&\
       mv Result_AmpliconSequencing %sResult_AmpliconSequencing&&\
       rar a %s%s.rar %sResult_AmpliconSequencing&&\
       mv %s%s.rar ../Results_Result_AmpliconSequencing/''' %
-                      (options.outdir, od, scriptpath, od, options.depth, cgp, options.classifier, options.ref, od, exc, options.type,
+                      (options.outdir, od, scriptpath, od, options.depth, cgp, options.classifier, options.ref, od, exc, options.type, options.picrust,
                        od, od, options.fname, od, od, options.fname))

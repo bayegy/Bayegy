@@ -15,11 +15,24 @@ close_reference_trained=$(readlink -f $6)
 manifest_file=$(readlink -f $7)
 not_rda=${8//\;/ }
 classifier_type=$9
+if_picrust=${10}
+
+
 echo "Check wheather your categories are the following:"
 for i in $category_sum;do echo $i;done
 
 echo "Check wheather the group of enviromental factors excluded from rda are the following:"
 for i in $not_rda;do echo $i;done
+
+
+if [[ $if_picrust == 'yes' ]];then
+	echo "
+
+	Will run PICRUST"
+else echo "
+
+	Won't run PICRUST"
+fi
 
 declare -A tax_aa;
 tax_aa=([k]=Kingdom [p]=Phylum [c]=Class [o]=Order [f]=Family [g]=Genus [s]=Species);
@@ -61,12 +74,12 @@ if [ -z "$9" ]; then
 		8) Specify numeric variables excluded from rda seprated by commas,use 'none' if all numeric variables is expected
 		9) Specify the type of classifier, either silva or gg
 		Sample Usage:
-		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  all gg
+		bash ~/github/Bayegy/16S_pipeline.V9.sh ../data/sample-metadata.tsv auto 1000 Group ~/database_16S/GG/338-806/gg_13_8_99_338_806_classifier.qza ~/database_16S/GG/338-806/gg_13_5_97_338_806_ref_seqs.qza ../data/manifest.txt  all gg yes
 		"
 	exit 0
 else
 	echo "################
-	Running: sh $0 $1 $2 $3 $4 $5 $6 $7 $8 $9"
+	Running: sh $0 $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} "
 fi
 
 check_file() {
@@ -396,46 +409,57 @@ COMMENT
 				#qiime composition ancom  --i-table exported/ANCOM/composition.${tax_levels[${n2}]}.qza --m-metadata-file $mapping_file --m-metadata-column $category_2 --o-visualization exported/ANCOM/SecondaryGroup/ANCOM.${tax_levels[${n2}]}.qzv;
 		done;
 
-
-		echo "##############################################################\n#Run for PICRUST analysis and STAMP visulization"
-		qiime vsearch cluster-features-closed-reference --i-sequences rep-seqs.qza --i-table table.qza --i-reference-sequences $close_reference_trained --p-perc-identity 0.97 --p-threads 0 --output-dir closedRef_forPICRUSt
-		qiime feature-table summarize --i-table closedRef_forPICRUSt/clustered_table.qza --o-visualization closedRef_forPICRUSt/clustered_table.qzv --m-sample-metadata-file $mapping_file
-		qiime feature-table tabulate-seqs   --i-data closedRef_forPICRUSt/unmatched_sequences.qza   --o-visualization closedRef_forPICRUSt/unmatched_sequences.qzv
-		qiime tools export --input-path closedRef_forPICRUSt/clustered_table.qza --output-path closedRef_forPICRUSt/
-		biom convert -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.txt --to-tsv
-
-
-		source deactivate
-		source activate qm2
-		normalize_by_copy_number.py -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.normalized.biom
-		predict_metagenomes.py -i closedRef_forPICRUSt/feature-table.normalized.biom -o closedRef_forPICRUSt/feature-table.metagenome.biom
-		categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L1.txt -c KEGG_Pathways -l 1 -f
-		categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L2.txt -c KEGG_Pathways -l 2 -f
-		categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L3.txt -c KEGG_Pathways -l 3 -f
+		if [[ $if_picrust == 'yes' ]];then
+			echo "##############################################################\n#Run for PICRUST analysis and STAMP visulization";
+			qiime vsearch cluster-features-closed-reference --i-sequences rep-seqs.qza --i-table table.qza --i-reference-sequences $close_reference_trained --p-perc-identity 0.97 --p-threads 0 --output-dir closedRef_forPICRUSt
+			qiime feature-table summarize --i-table closedRef_forPICRUSt/clustered_table.qza --o-visualization closedRef_forPICRUSt/clustered_table.qzv --m-sample-metadata-file $mapping_file
+			qiime feature-table tabulate-seqs   --i-data closedRef_forPICRUSt/unmatched_sequences.qza   --o-visualization closedRef_forPICRUSt/unmatched_sequences.qzv
+			qiime tools export --input-path closedRef_forPICRUSt/clustered_table.qza --output-path closedRef_forPICRUSt/
+			biom convert -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.txt --to-tsv
 
 
-		cd closedRef_forPICRUSt
+			source deactivate
+			source activate qm2
+			normalize_by_copy_number.py -i closedRef_forPICRUSt/feature-table.biom -o closedRef_forPICRUSt/feature-table.normalized.biom
+			predict_metagenomes.py -i closedRef_forPICRUSt/feature-table.normalized.biom -o closedRef_forPICRUSt/feature-table.metagenome.biom
+			categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L1.txt -c KEGG_Pathways -l 1 -f
+			categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L2.txt -c KEGG_Pathways -l 2 -f
+			categorize_by_function.py -i closedRef_forPICRUSt/feature-table.metagenome.biom -o closedRef_forPICRUSt/feature-table.metagenome.L3.txt -c KEGG_Pathways -l 3 -f
 
-		for n3 in 1 2 3;
-			do echo $n3;
-			python ${SCRIPTPATH}/convert_percent.py -i feature-table.metagenome.L${n3}.txt;
-			#perl ${SCRIPTPATH}/get_table_head2.pl percent.feature-table.metagenome.L${n3}.txt 35 -trantab > percent.feature-table.metagenome.L${n3}.tab
-			#perl ${SCRIPTPATH}/top10_bar_diagram.pl  -right -grid -rotate='-45' -x_title 'Sample Name' -y_title 'Relative Abundance' --y_mun 0.25,4 --height 350 -table percent.feature-table.metagenome.L${n3}.tab > percent.feature-table.metagenome.L${n3}.svg
-			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20/ -p L${n3}_${category_set}_ -b F -s T;
-			Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20-group-mean/ -p ${category_set}_L${n3}_mean_ -b T -s T;
 
-			perl ${SCRIPTPATH}/cluster.pl  -BC -Z -x percent.feature-table.metagenome.L${n3}.txt > level1.relative.tree
-			perl ${SCRIPTPATH}/draw_tree.pl -bun 0.25,4 -bline -type 4  level1.relative.tree  percent.feature-table.metagenome.L${n3}.tab --flank_x 100 >  tree.feature-table.metagenome.L${n3}.svg
-			#${SCRIPTPATH}/PCA.R.pl ${PWD}/percent.feature-table.metagenome.L${n3}.txt 0.2 ${PWD}/PCA_L${n3}
-			cp $mapping_file ./sample-metadata.PCA.txt
-			perl -p -i.bak -e 's/#//' ./sample-metadata.PCA.txt
-			tail -n +2 feature-table.metagenome.L${n3}.txt | grep -v "disease"> feature-table.metagenome.L${n3}.PCA.txt
-			perl -p -i.bak -e 's/#OTU ID/KEGG_function/' feature-table.metagenome.L${n3}.PCA.txt
-		done;
-		for svg_file in *svg; do echo $svg_file; base=$(basename $svg_file .svg); rsvg-convert -h 3200 -b white $svg_file > ${base}.png; done
+			cd closedRef_forPICRUSt
 
-		cd ..
+			for n3 in 1 2 3;
+				do echo $n3;
+				python ${SCRIPTPATH}/convert_percent.py -i feature-table.metagenome.L${n3}.txt;
+				#perl ${SCRIPTPATH}/get_table_head2.pl percent.feature-table.metagenome.L${n3}.txt 35 -trantab > percent.feature-table.metagenome.L${n3}.tab
+				#perl ${SCRIPTPATH}/top10_bar_diagram.pl  -right -grid -rotate='-45' -x_title 'Sample Name' -y_title 'Relative Abundance' --y_mun 0.25,4 --height 350 -table percent.feature-table.metagenome.L${n3}.tab > percent.feature-table.metagenome.L${n3}.svg
+				Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20/ -p L${n3}_${category_set}_ -b F -s T;
+				Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_set -i feature-table.metagenome.L${n3}.txt -o function-bar-plots-top20-group-mean/ -p ${category_set}_L${n3}_mean_ -b T -s T;
 
+				perl ${SCRIPTPATH}/cluster.pl  -BC -Z -x percent.feature-table.metagenome.L${n3}.txt > level1.relative.tree
+				perl ${SCRIPTPATH}/draw_tree.pl -bun 0.25,4 -bline -type 4  level1.relative.tree  percent.feature-table.metagenome.L${n3}.tab --flank_x 100 >  tree.feature-table.metagenome.L${n3}.svg
+				#${SCRIPTPATH}/PCA.R.pl ${PWD}/percent.feature-table.metagenome.L${n3}.txt 0.2 ${PWD}/PCA_L${n3}
+				cp $mapping_file ./sample-metadata.PCA.txt
+				perl -p -i.bak -e 's/#//' ./sample-metadata.PCA.txt
+				tail -n +2 feature-table.metagenome.L${n3}.txt | grep -v "disease"> feature-table.metagenome.L${n3}.PCA.txt
+				perl -p -i.bak -e 's/#OTU ID/KEGG_function/' feature-table.metagenome.L${n3}.PCA.txt
+			done;
+			for svg_file in *svg; do echo $svg_file; base=$(basename $svg_file .svg); rsvg-convert -h 3200 -b white $svg_file > ${base}.png; done
+
+			cd ..
+			for n5 in 1 2 3;
+				do echo $n5;
+				for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/Function_PCA.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt//sample-metadata.PCA.txt -g $category_1;done;
+				for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_DunnTest.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt -g $category_1; done;
+			done;
+			for category_1 in $category_set;
+				do echo $category_1;
+				Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b T -o ./2-ANOVA_And_Duncan
+				Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b F -o ./2-ANOVA_And_Duncan
+			done;
+
+		fi;
 
 		source deactivate
 		source activate qiime2-2018.11
@@ -552,11 +576,6 @@ COMMENT
 		rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
 
 		#python2 ${SCRIPTPATH}/biom_to_stamp.py -m KEGG_Pathways closedRef_forPICRUSt/feature-table.metagenome.biom > closedRef_forPICRUSt/feature-table.metagenome.KEGG_Pathways.STAMP.txt
-		for n5 in 1 2 3;
-			do echo $n5;
-			for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/Function_PCA.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt//sample-metadata.PCA.txt -g $category_1;done;
-			for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_DunnTest.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt -g $category_1; done;
-		done;
 
 
 		echo "##############################################################\n#Generate the absolute directory for enviromental factors relational analysis"
@@ -634,10 +653,8 @@ COMMENT
 		for category_1 in $category_set;
 			do echo $category_1;
 			Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  -i ./exported/feature-table.taxonomy.txt -m $mapping_file -c $category_1 -o ./4-VennAndFlower;
-			Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b T -o ./2-ANOVA_And_Duncan
-			Rscript ${SCRIPTPATH}/function_barplot.R -i ./closedRef_forPICRUSt/feature-table.metagenome.L3.txt -m $mapping_file -c $category_1 -j T -a 0.05 -b F -o ./2-ANOVA_And_Duncan
 			python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r aligned-dna-sequences.fasta -o AdditionalPhylogeny/ -n 30 -b
-			done;
+		done;
 
 
 
@@ -645,7 +662,7 @@ COMMENT
 		source activate qm2
 		echo "##############################################################\n#Barplot and RDA according to group mean"
 		for category_1 in $category_set;
-		do echo $category_1;
+			do echo $category_1;
 			for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species"; 
 				do echo $n7;
 				Rscript ${SCRIPTPATH}/abundance_barplot.R -n 20 -m $mapping_file -c $category_1 -i exported/Relative/otu_table.${n7}.relative.txt -o taxa-bar-plots-top20-group-ordered/ -p ${n7}_${category_1}_ -b F;
@@ -673,10 +690,10 @@ COMMENT
 
 		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 			do echo $n7;
-				for category_1 in $category_set;
-					do echo $category_1;
-					Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i  otu_table_forlefse/otu_table.${n7}.relative.txt -m  $mapping_file -c  $category_1 -o  exported/Relative/Lefse/${n7}/${category_1}_${n7}_lefse.txt -u l;
-				done;
+			for category_1 in $category_set;
+				do echo $category_1;
+				Rscript ${SCRIPTPATH}/write_data_for_lefse.R -i  otu_table_forlefse/otu_table.${n7}.relative.txt -m  $mapping_file -c  $category_1 -o  exported/Relative/Lefse/${n7}/${category_1}_${n7}_lefse.txt -u l;
+			done;
 		done;
 
 
@@ -724,12 +741,11 @@ COMMENT
 		category_report=($category_set)
 		echo "##############################################################\n#Organize the result files";
 		#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
-		sh ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq $prefix;
+		bash ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq $if_picrust $prefix;
 		if [ -d "../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing" ];then
 			rm -r ../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing;
 		fi;
 		mv Result_AmpliconSequencing ../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing
-
 
 
 		cd ../;
