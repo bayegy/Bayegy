@@ -26,10 +26,23 @@ ex<-str_split(opt$ex,",")[[1]]
 
 dat <- read.table(as.character(opt$otu),quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 dat<-dat[dat[,1]!="Others"&dat[,1]!="unclassified",]
+
+
+
 dat<-dat[!duplicated(dat[,1]),]
 rownames(dat)=dat[,1]
 annotation_row<-str_extract(dat[,length(dat)],"p__[^;]+")
-dat=dat[,-c(1,length(dat))]
+
+is_num=c()
+for(i in 1:ncol(dat)){
+  is_num[i]=is.numeric(dat[,i])
+}
+dat=dat[, is_num]
+
+
+if(nrow(dat)>200){
+    dat = dat[head(order(colSums(t(dat)),decreasing=TRUE), 200),]
+}
 
 
 map<-read.table(as.character(opt$map),sep="\t",na.strings="",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
@@ -65,8 +78,8 @@ cor_allft_p<-cor_allft$p
 cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
 
 
-write.table(cor_allft_r,paste(opt$out,"spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
-write.table(cor_allft_p,paste(opt$out,"fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
+write.table(cor_allft_r,paste(opt$out,"spearman_rank_correlation_matrix.txt",sep = ""),sep="\t",col.names=NA)
+write.table(cor_allft_p,paste(opt$out,"fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t",col.names=NA)
 
 cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
 
@@ -108,11 +121,19 @@ heat_s<-sig_label(cor_allft_p)
 #}
 
 rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
-annotation_row =data.frame(Phylum=annotation_row)
-rownames(annotation_row) = rownames(cor_allft_r) 
+
+p1<-max(nchar(rownames(cor_allft_r)))
+
+if(NA%in%annotation_row){
+    annotation_row=NA
+}else{
+    annotation_row =data.frame(Phylum=annotation_row)
+    rownames(annotation_row) = rownames(cor_allft_r)     
+}
+
 ####corrlation plot
-pdf(paste(opt$out,"Correlation_heatmap.pdf",sep = ""), height=4+0.35*dim(cor_allft_r)[1],width=6+0.5*dim(cor_allft_r)[2])
-pheatmap(cor_allft_r,fontsize=12,annotation_row = annotation_row,border_color = "black",
+pdf(paste(opt$out,"Correlation_heatmap.pdf",sep = ""), height=4+0.35*dim(cor_allft_r)[1],width=4+0.8*dim(cor_allft_r)[2]+p1*0.08)
+pheatmap(cor_allft_r,fontsize=12,annotation_row = annotation_row, border_color = "black",
          display_numbers = heat_s,fontsize_row =15,fontsize_col = 15,
          fontsize_number = 22,
          cluster_rows=T,clustering_distance_rows="euclidean",

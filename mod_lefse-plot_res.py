@@ -3,6 +3,7 @@
 import os
 import sys
 sys.path.append('/home/admin1/miniconda3/envs/lefse/share/lefse-1.0.8.post1-1')
+sys.path.append('/home/cheng/softwares/miniconda2/share/lefse-1.0.8.post1-1')
 # sys.path.append('/home/admin1/github/Bayegy')
 import matplotlib
 matplotlib.use('Agg')
@@ -208,7 +209,7 @@ def plot_histo_ver(path, params, data, report_features):
 if __name__ == '__main__':
     params = read_params(sys.argv)
 
-    if params['category']:
+    if params['category'] and params['map']:
         sys.path.append('/home/admin1/github/Bayegy')
         from getColors import get_lefse_colors
         category_colors = get_lefse_colors(params['category'], params['map'], params['input_file'])

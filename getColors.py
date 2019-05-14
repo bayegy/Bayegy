@@ -14,7 +14,7 @@ def get_colors(category):
         return []
 
 
-def get_lefse_colors(category, mapping_file, lda_file):
+def get_lefse_colors(category, mapping_file, lda_file, return_dict=False):
     colors = get_colors(category)
     if colors:
         df = pd.read_table(mapping_file)
@@ -32,6 +32,6 @@ def get_lefse_colors(category, mapping_file, lda_file):
                     gps_sig.add(sgp)
         gps_sig = list(gps_sig)
         gps_sig.sort()
-        return [gps_colors[gp] for gp in gps_sig]
+        return {gp: gps_colors[gp] for gp in gps_sig} if return_dict else [gps_colors[gp] for gp in gps_sig]
     else:
-        return []
+        return {} if return_dict else []

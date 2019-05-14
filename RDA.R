@@ -29,12 +29,15 @@ groups_color<-get_colors(opt$group, opt$map)
 
 
 ex<-str_split(opt$ex,",")[[1]]
-dat <- read.table(opt$otu, header = TRUE, sep = "\t",comment.char = "",check.names = F)
+# dat <- read.table(opt$otu, header = TRUE, sep = "\t",comment.char = "",check.names = F)
+dat <- read.table(as.character(opt$otu),quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 # dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
 
 dat<-dat[!duplicated(dat[,1]),]
-
 rownames(dat)=dat[,1]
+
+
+
 map<-read.table(opt$map,header = T,na.strings="",sep = "\t",row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 
 colnames(map)[is.na(colnames(map))]<-"NA"
@@ -54,16 +57,30 @@ sel=c(group_name,colnames(map)[notstr])
 data=map[sel]
 data=na.omit(data)
 
-dat=dat[,-c(1,ncol(dat))]
+is_num=c()
+for(i in 1:ncol(dat)){
+  is_num[i]=is.numeric(dat[,i])
+}
+dat=dat[, is_num]
+
+
 dat=t(dat)[match(rownames(data),colnames(dat)),]
+
+# print(dat)
 
 
 groups<-data[,1]
 envdata<-data[sel[-1]]
 
-dca <- decorana(veg = dat)
+dcam <- tryCatch({
+    dca <- decorana(veg = dat)
+    return(max(dca$rproj))
+  },error=function(e){
+    print("Too few samples, use RDA")
+    return(0)
+  }
+)
 
-dcam <- max(dca$rproj)
 
 if (dcam > 4){
   cca <- cca(formula=dat~.,data=envdata, scale = TRUE, na.action = na.exclude)
@@ -77,24 +94,24 @@ if (dcam > 4){
 
 rda_for_mcpp_group<-rda(dat,factor(groups),scale = TRUE, na.action = na.exclude)
 mcpp_group<-anova(rda_for_mcpp_group,step=1000,perm.max=1000)
-title_group<-paste("Permutation test",": P=",mcpp_group[[4]][1],sep="")
+title_group<-paste("Permutation test",": P=",round(mcpp_group[[4]][1],4),sep="")
 print(mcpp_group)
 print(title_group)
 
 mcpp_numeric<-anova(cca,step=1000,perm.max=1000)
-title_all<-paste("Overall permutation test: P=",mcpp_numeric[[4]][1],sep="")
+title_all<-paste("Overall permutation test: P=",round(mcpp_numeric[[4]][1],4),sep="")
 print(title_all)
 
 
 path=opt$out
 ccascore <- scores(cca)
-write.table(ccascore$sites, file = paste(path,group_name,"_", pre, ".sample.txt", sep = ""), sep = "\\t")
-write.table(ccascore$species, file = paste(path,group_name,"_", pre, ".bacteria.txt", sep = ""), sep = "\\t")
+write.table(ccascore$sites, file = paste(path,group_name,"_", pre, ".sample.txt", sep = ""), sep = "\t",col.names=NA)
+write.table(ccascore$species, file = paste(path,group_name,"_", pre, ".features.txt", sep = ""), sep = "\t",col.names=NA)
 envfit <- envfit(cca, envdata, permu = 2000, na.rm = TRUE)
 rp <- cbind(as.matrix(envfit$vectors$r), as.matrix(envfit$vectors$pvals))
 colnames(rp) <- c("r2", "Pr(>r)")
 env <- cbind(envfit$vectors$arrows, rp)
-write.table(as.data.frame(env), file = paste(path, group_name, "_",pre, ".envfit.txt", sep = ""),sep = "\\t")
+write.table(as.data.frame(env), file = paste(path, group_name, "_",pre, ".envfit.txt", sep = ""),sep = "\t",col.names=NA)
 
 
 new<-cca$CCA
@@ -198,8 +215,8 @@ p2<-ggplot(data=show_species,aes(x=RDA1,y=RDA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-# ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
-ggsave(paste(path,group_name,"_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+# ggsave(paste(path,"%s_",pre,"_features_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,group_name,"_",pre,"_features_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }else{
 envis[,1]<-envis[,1]*ratio_sam_env*0.85
 envis[,2]<-envis[,2]*ratio_sam_env*0.85
@@ -254,6 +271,6 @@ p2<-ggplot(data=show_species,aes(x=CCA1,y=CCA2)) +
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 15))
 
-# ggsave(paste(path,"%s_",pre,"_bacteria_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
-ggsave(paste(path,group_name, "_",pre,"_bacteria_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+# ggsave(paste(path,"%s_",pre,"_features_location_plot.png",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
+ggsave(paste(path,group_name, "_",pre,"_features_location_plot.pdf",sep=""),plot=p2,width = 7,height = 7,dpi = 300)
 }
