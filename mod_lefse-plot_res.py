@@ -89,7 +89,7 @@ def plot_histo_hor(path, params, data, bcl, report_features):
                      edgecolor=params['back_color'], facecolor=params['back_color'])
     ax = fig.add_subplot(111, frame_on=False, axis_bgcolor=params['back_color'])
     ls, rs = params['ls'], 1.0 - params['rs']
-    plt.subplots_adjust(left=ls, right=rs, top=1 - head * (1.0 - ints / (ints + ht)),
+    plt.subplots_adjust(left=ls, right=rs - 0.1, top=1 - head * (1.0 - ints / (ints + ht)) - 0.07,
                         bottom=tail * (1.0 - ints / (ints + ht)))
 
     fig.canvas.set_window_title('LDA results')

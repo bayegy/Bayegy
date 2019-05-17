@@ -123,8 +123,9 @@ heat_s<-sig_label(cor_allft_p)
 rownames(cor_allft_r)<-str_extract(rownames(cor_allft_r),"[^;]{1,100}")
 
 p1<-max(nchar(rownames(cor_allft_r)))
-
+wd<-4+0.8*dim(cor_allft_r)[2]+p1*0.08
 if(NA%in%annotation_row){
+    wd<-wd-2
     annotation_row=NA
 }else{
     annotation_row =data.frame(Phylum=annotation_row)
@@ -132,7 +133,7 @@ if(NA%in%annotation_row){
 }
 
 ####corrlation plot
-pdf(paste(opt$out,"Correlation_heatmap.pdf",sep = ""), height=4+0.35*dim(cor_allft_r)[1],width=4+0.8*dim(cor_allft_r)[2]+p1*0.08)
+pdf(paste(opt$out,"Correlation_heatmap.pdf",sep = ""), height=4+0.35*dim(cor_allft_r)[1],width=wd)
 pheatmap(cor_allft_r,fontsize=12,annotation_row = annotation_row, border_color = "black",
          display_numbers = heat_s,fontsize_row =15,fontsize_col = 15,
          fontsize_number = 22,

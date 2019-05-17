@@ -122,7 +122,7 @@ print("#Generate the PCoA 2D plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
   GP.ord <- ordinate(gpt, "PCoA", distance_matrix[1])
   PCoA_outputpdfname <- paste(category1,"_",distance_matrix[2], "_PCoA_2D.pdf", sep="")
-  PCoA_ordtxtname <- paste(category1,"_",distance_matrix[2], "_PCoA_2D.ord.txt", sep="")
+  PCoA_ordtxtname <- paste(category1,"_",distance_matrix[2], "_PCoA.ord.txt", sep="")
 
 
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)
