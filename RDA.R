@@ -109,7 +109,7 @@ write.table(ccascore$sites, file = paste(path,group_name,"_", pre, ".sample.txt"
 write.table(ccascore$species, file = paste(path,group_name,"_", pre, ".features.txt", sep = ""), sep = "\t",col.names=NA)
 envfit <- envfit(cca, envdata, permu = 2000, na.rm = TRUE)
 rp <- cbind(as.matrix(envfit$vectors$r), as.matrix(envfit$vectors$pvals))
-colnames(rp) <- c("r2", "Pr(>r)")
+colnames(rp) <- c("r2", "p value")
 env <- cbind(envfit$vectors$arrows, rp)
 write.table(as.data.frame(env), file = paste(path, group_name, "_",pre, ".envfit.txt", sep = ""),sep = "\t",col.names=NA)
 
