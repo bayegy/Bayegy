@@ -158,11 +158,10 @@ check_file() {
 	cp -r R_output/*PCA* R_output/*PLSDA* ./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/
 	#cp -r core-metrics-results/weighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 	cp -r exported/feature-table.taxonomy.txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_feature-table.taxonomy.txt
-	cp dna-sequences.fasta ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_representative-sequence.fasta
-	cp tree.nwk ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_rooted-tree.nwk
+	cp dna-sequences.fasta ./Result_AmpliconSequencing/5-Phylogenetics/${category_1}_representative-sequence.fasta
+	cp tree.nwk ./Result_AmpliconSequencing/5-Phylogenetics/${category_1}_rooted-tree.nwk
 	#cp -r R_output/Bacteria.phylogeny.pdf ./Result_AmpliconSequencing/5-Phylogenetics/1-MajorPhylums/
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/2-MajorOTUs/
-	
 
 	#cp -r phylogeny/tol_* phylogeny/tree.rooted.nwk ./Result_AmpliconSequencing/5-Phylogenetics/
 
