@@ -66,7 +66,7 @@ if(!is.null(opt$mina)){
 }
 
 otu<-log(otu+1,base=10)
-p2<-3+(0.3*dim(otu)[1])+(0.05*p1)
+p2<-3+(0.3*dim(otu)[1])+(0.06*p1)
 p3<-dim(otu)[2]
 
 if(!no_group){
@@ -106,13 +106,13 @@ if(!no_group&!opt$bym){
 if(opt$bym){
     if(opt$trans){
         otu<-t(apply(otu,1,function(x){tapply(x,INDEX = group[,1],mean)}))
-        p2<-3+(0.3*dim(otu)[2])+(0.05*p1)
+        p2<-4+(0.3*dim(otu)[2])+(0.06*p1)
         p3<-dim(otu)[1]
         wd<-ifelse(p2<50,p2,49.9)
         ht<-2+0.4*p3
     }else{
         otu<-apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)})
-        p2<-3+(0.3*dim(otu)[1])+(0.05*p1)
+        p2<-4+(0.3*dim(otu)[1])+(0.06*p1)
         p3<-dim(otu)[2]
         ht<-ifelse(p2<50,p2,49.9)
         wd<-2+0.4*p3
@@ -138,7 +138,7 @@ write.table(t(otu),paste(opt$out,"table.txt",sep = ""),sep = "\t",quote=FALSE,co
 pdf(paste(opt$out,"heatmap.pdf",sep = ""), height=ht,width=wd)
 pheatmap(otu,annotation_row=annotation_row,
          annotation_col=annotation_col,fontsize=10,border_color = "black",
-         color = colorRampPalette(colors = c("#FFCCCC","red","black"))(100),
+         color = colorRampPalette(colors = c("#FFCCCC","red","#222222"))(100),
          cluster_cols=cc,clustering_distance_cols="euclidean",
          cluster_rows=cr,clustering_distance_rows="euclidean",annotation_colors=annotation_color)
 dev.off()

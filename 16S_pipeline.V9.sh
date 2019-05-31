@@ -8,7 +8,9 @@
 
 sample_metadata=$(readlink -f $1)
 depth=$2
-min_freq=$3
+if [ ! $3 == 'none' ]; then
+	taxa_filtered="${3},"
+fi
 category_sum=${4//,/ }
 reference_trained=$(readlink -f $5)
 close_reference_trained=$(readlink -f $6)
@@ -66,7 +68,7 @@ if [ -z "$9" ]; then
 	echo "Please provide following input parameters
 		1) Path of the mapping file. (Accept both .csv or txt format.)
 		2) Depth of the for subsampleing. (Suggested value: 4000)
-		3) Mininum frequence for OTU to be selected. (Suggested value: 1000)
+		3) Taxa excluded from OTU table, seprated by commas.
 		4) The name of categories in the mapping file seprated by commas.
 		5) Path of the classifier for alignment.
 		6) Path of the reference sequences for close reference alignment.
@@ -93,32 +95,7 @@ check_file() {
 		exit
 	fi
 }
-<<COMMENT
-function assign_taxa() {
-	loop_id=$1
-	if [ $loop_id ==  1]; then 
-		echo "Kingdom"
-	elif [ $loop_id ==  2]; then 
-		echo "Phylum"
-	elif [ $loop_id ==  3]; then 
-		echo "Class"
-	elif [ $loop_id ==  4]; then 
-		echo "Order"
-	elif [ $loop_id ==  5]; then 
-		echo "Family"
-	elif [ $loop_id ==  6]; then 
-		echo "Genus"
-	elif [ $loop_id ==  7]; then 
-		echo "Species"
-	fi
-}
 
-#for f in 1 2 3 4 5 6 7;
-#	do echo $f;
-#	tax=$(assign_taxa ${f});
-#	echo $tax;
-#done;
-COMMENT
 
 	##Activate Qiime2 Version
 	echo "##############################################################\n#Initiate directory name and set up the directory structure"
@@ -176,9 +153,9 @@ comment1
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
-	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
 	mv table-no-mitochondria-no-chloroplast.qza table.qza
-	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude mitochondria,chloroplast,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
+	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
 
 	echo "##############################################################\n#Classify the taxonomy"
@@ -346,7 +323,7 @@ comment1
 
 		echo "##############################################################\n#Generate heatmaps for top OTUs with different levels with minimum frequence reads supported"
 		mkdir exported/collapsed
-		mkdir exported/${min_freq}
+		# mkdir exported/${min_freq}
 		for n in 2 3 4 5 6 7;
 			do echo $n;
 			qiime taxa collapse   --i-table table.qza   --i-taxonomy taxonomy.qza   --p-level $n   --o-collapsed-table exported/collapsed/collapsed-${tax_levels[${n}]}.qza;
@@ -742,7 +719,7 @@ COMMENT
 		category_report=($category_set)
 		echo "##############################################################\n#Organize the result files";
 		#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
-		bash ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} $min_freq $if_picrust $prefix;
+		bash ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} wu $if_picrust $prefix;
 		if [ -d "../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing" ];then
 			rm -r ../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing;
 		fi;
