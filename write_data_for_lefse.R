@@ -8,6 +8,7 @@ option_list <- list(
     make_option(c("-s", "--skip"),metavar="logical",dest="skip", help="T(Skip the first line(e.g. comment line) while reading abundance table) or F(not skip first line)",default=FALSE),
     make_option(c("-u", "--use"),metavar="str",dest="use", help="f(use first column as feature name) or l(use last column as feature name)",default='f'),
     make_option(c("-j", "--modify-feature-name"),metavar="logical",dest="mod", help="T(modify feature name for the use of lefse) or F(modify feature name for the use of huamann2 barplot)",default=TRUE),
+    make_option(c("-e", "--is-enzyme"),metavar="logical",dest="isenzyme", help="F(not enzyme) or T(is enzyme)",default=FALSE),
     make_option(c("-o", "--output-path"),metavar="path",dest="out", help="Specify the path of output file",default="./data_for_lefse.txt")
     )
 
@@ -48,10 +49,29 @@ if(opt$mod){
     data[,1]<-str_replace(data[,1],";$","")
     data[,1]<-str_replace_all(data[,1],";","|")
 }else{
-    data[,1]<-str_replace(data[,1],"\\-","_")
-    data[,1]<-str_replace(data[,1],"\\(","_")
-    data[,1]<-str_replace(data[,1],"\\)","_")
-    data[,1]<-str_replace(data[,1],"\\+","_")
+    for(r in c("\\-", "\\(", "\\)", "\\+", "\\:")){
+        data[,1]<-str_replace_all(data[,1], r, "_")
+    }
+    for(r in c("\\'", '\\"')){
+        data[,1]<-str_replace_all(data[,1], r, "")
+    }
+    # data[,1]<-str_replace_all(data[,1],"\\(","_")
+    # data[,1]<-str_replace_all(data[,1],"\\)","_")
+    # data[,1]<-str_replace_all(data[,1],"\\+","_")
+    # data[,1]<-str_replace_all(data[,1],"\\:","_")
+    if(opt$isenzyme){
+        data[,1]<-str_replace(data[,1],"\\.","_")
+        data[,1]<-str_replace(data[,1],"\\.","_")
+        data[,1]<-str_replace(data[,1],"\\.","_")
+        data[,1]<-paste('EC', data[,1], sep="")
+    }
+
+    
+    # data[,1]<-str_replace_all(data[,1]," ","")
+    # data[,1]<-str_replace_all(data[,1],'\\"',"")
+    # for(i in 1:nrow(data)){
+    #     data[i,1]<-ifelse(!is.na(str_extract(data[i,1],"^\\d")), paste('EC',data[i,1], sep=""), data[i,1])
+    # }
 }
 
 meta<-t(meta)
