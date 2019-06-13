@@ -10,10 +10,17 @@ library(dunn.test)
 option_list <- list( 
     make_option(c("-i", "--input"),metavar="path", dest="input",help="Specify the path of the PICRUSt output file",default=NULL),
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
-    make_option(c("-g", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none")
+    make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
+    make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if ''. Diabled where output is infer",default=""),
+    make_option(c("-o", "--output"),metavar="string",dest="out", help="Where to store the results",default="infer")
+    # make_option(c("-l", "--clean"),metavar="logical",dest="clean", help="if T, clean output file name, make it compatable to more piplines",default=FALSE)
     )
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "R script for generating Dunn test output"))
+
+
+
+
 
 #setwd("~/Desktop")
 #map = "sample-metadata.PCA.txt"
@@ -22,7 +29,14 @@ opt <- parse_args(OptionParser(option_list=option_list,description = "R script f
 filename_temp<-opt$input
 KEGG_table_temp<-gsub(pattern = "\\.PCA.txt$", "", filename_temp)
 #output_file="KEGG.txt"
-output_file=paste(KEGG_table_temp,"_",opt$group,"_DunnTest.txt",sep="")
+if(opt$out=="infer"){
+    output_file=paste(KEGG_table_temp,"_",opt$group,"_DunnTest.txt",sep="")
+}else{
+    if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
+    opt$out<-paste(opt$out,"/",opt$prefix,sep="")
+    output_file=paste(opt$out, opt$group,"_DunnTest.txt",sep="")
+}
+
 
 #print(opt$input)
 #print(opt$map)
@@ -39,8 +53,11 @@ map2<-map[order(rownames(map)), ]
 map3<-map2[opt$group]
 colnames(map3)<-"Group"
 #head(map3)
-
-table1<-t(table[,-ncol(table)])
+if(!is.numeric(table[,ncol(table)])){
+    table1<-t(table[,-ncol(table)])
+}else{
+    table1<-t(table)
+}
 #head(table1)
 
 table2<-table1[order(rownames(table1)), ]
