@@ -76,7 +76,7 @@ dcam <- tryCatch({
     dca <- decorana(veg = dat)
     return(max(dca$rproj))
   },error=function(e){
-    print("Too few samples, use RDA")
+    print("Too many features, use RDA")
     return(0)
   }
 )

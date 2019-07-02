@@ -69,6 +69,7 @@ check_file() {
 	./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/ \
 	./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/ \
 	./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/ \
+	./Result_AmpliconSequencing/4-BetaDiversity/6-PCA/ \
 	./Result_AmpliconSequencing/5-Phylogenetics/ \
 	./Result_AmpliconSequencing/6-AssociationAnalysis/1-RDA/ \
 	./Result_AmpliconSequencing/FiguresTablesForReport \
@@ -155,7 +156,8 @@ check_file() {
 	#cp -r R_output/wunifrac*summary.pdf ./Result_AmpliconSequencing/4-BetaDiversity/1-BetaDiversitySummary/
 	#cp -r core-metrics-results/weighted*_emperor.qzv* R_output/*wunifrac*PCoA* ./Result_AmpliconSequencing/4-BetaDiversity/2-PCoA/
 	#cp -r R_output/*wunifrac*NMDS* ./Result_AmpliconSequencing/4-BetaDiversity/3-NMDS/
-	cp -r R_output/*PCA* R_output/*PLSDA* ./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/
+	cp -r R_output/*PLSDA* ./Result_AmpliconSequencing/4-BetaDiversity/4-PLS-DA/
+	cp -r R_output/*PCA* ./Result_AmpliconSequencing/4-BetaDiversity/6-PCA/
 	#cp -r core-metrics-results/weighted*significance.qzv* ./Result_AmpliconSequencing/4-BetaDiversity/5-GroupSignificance/
 	cp -r exported/feature-table.taxonomy.txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/${category_1}_feature-table.taxonomy.txt
 	cp dna-sequences.fasta ./Result_AmpliconSequencing/5-Phylogenetics/${category_1}_representative-sequence.fasta
