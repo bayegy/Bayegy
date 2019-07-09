@@ -9,6 +9,7 @@ option_list <- list(
     make_option(c("-u", "--use"),metavar="str",dest="use", help="f(use first column as feature name) or l(use last column as feature name)",default='f'),
     make_option(c("-j", "--modify-feature-name"),metavar="logical",dest="mod", help="T(modify feature name for the use of lefse) or F(modify feature name for the use of huamann2 barplot)",default=TRUE),
     make_option(c("-e", "--is-enzyme"),metavar="logical",dest="isenzyme", help="F(not enzyme) or T(is enzyme)",default=FALSE),
+    make_option(c("-n", "--save-colon"),metavar="logical",dest="save_colon", help="F(not save colon) or T(save colon in feature name)",default=FALSE),
     make_option(c("-o", "--output-path"),metavar="path",dest="out", help="Specify the path of output file",default="./data_for_lefse.txt")
     )
 
@@ -49,11 +50,14 @@ if(opt$mod){
     data[,1]<-str_replace(data[,1],";$","")
     data[,1]<-str_replace_all(data[,1],";","|")
 }else{
-    for(r in c("\\-", "\\(", "\\)", "\\+", "\\:")){
+    for(r in c("\\-", "\\(", "\\)", "\\+")){
         data[,1]<-str_replace_all(data[,1], r, "_")
     }
     for(r in c("\\'", '\\"')){
         data[,1]<-str_replace_all(data[,1], r, "")
+    }
+    if(!opt$save_colon){
+        data[,1]<-str_replace_all(data[,1], "\\:", "_")
     }
     # data[,1]<-str_replace_all(data[,1],"\\(","_")
     # data[,1]<-str_replace_all(data[,1],"\\)","_")

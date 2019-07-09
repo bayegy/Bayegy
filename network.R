@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 library(optparse)
 
 
@@ -49,7 +50,6 @@ r<-cor$r
 write.table(r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""),sep="\t")
 write.table(p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t")
 
-
 r[cor$p>=0.05|abs(cor$r)<opt$cut] <- 0 
 igraph<-graph_from_adjacency_matrix(r,mode="undirected",weighted=TRUE,diag=FALSE)
 ss<-scale(colSums(dat))
@@ -58,7 +58,11 @@ V(igraph)$size<-(ss-min(ss)+5)*2
 #(log(ss1+min(ss1),10)+(-log(min(ss1))))*5
 igraph.weight = E(igraph)$weight
 E.color = igraph.weight
+
+
 E.color = ifelse(E.color>0,rainbow(3)[1],ifelse(E.color<0, rainbow(3)[3],"grey"))
+
+
 E(igraph)$color = as.character(E.color)
 E(igraph)$width = abs(igraph.weight)*3
 V(igraph)$color<-asign_rainbow_cor(annotation_row)
@@ -71,7 +75,7 @@ bad.vs<-V(igraph)[degree(igraph)==0]
 pdf(paste(opt$out,"/","Correlation_network.pdf",sep = ""), height=10,width=14)
 par(fig=c(0,0.83,0,1),xpd=F)
 plot(igraph,vertex.label.color="black",layout=layout_on_grid,
-     edge.curved=F,margin=c(0,0,0,0)+0.06,vertex.label.cex=0.9)
+     edge.curved=TRUE,margin=c(0,0,0,0)+0.06,vertex.label.cex=0.9)
 par(fig=c(0.7,1,0,1),xpd=F)
 legend('center',xpd = F,title="Phylum",bty="n",col = rainbow(length(unig)),pch = rep(16,length(unig)),pt.cex=2,legend = unig,horiz = FALSE)
 dev.off()
