@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.7
 import sys
 import re
 import os
@@ -9,7 +10,9 @@ import getopt
 import warnings
 warnings.filterwarnings("ignore")
 
-db = pymysql.connect("localhost", 'root', '947366', 'wstdb_project')
+db = pymysql.connect("192.168.1.20", 'admin1', '123456', 'wstdb_project')
+# root
+# 947366
 cursor = db.cursor()
 
 
@@ -60,7 +63,7 @@ try:
             add(parse_project(sys.argv[2]))
         db.commit()
     elif sys.argv[1] == 'export':
-        export(sys.argv[2]).to_csv(sys.argv[2] + '分析项目统计.xls', index=False, sep='\t', na_rep="--")
+        export(sys.argv[2]).to_csv(sys.argv[2] + '分析项目统计.txt', index=False, sep='\t', na_rep="--")
 
 except Exception as e:
     print(e)

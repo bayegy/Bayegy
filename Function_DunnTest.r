@@ -79,11 +79,12 @@ for (i in 2:ncol(data)){
     data$Group <- as.factor(data$Group)
     kw_test_results<-kruskal.test(data[,i]~data$Group)
     pvals<-kw_test_results$p.value
-    post_hoc<-dunn.test(data[,i],g=data$Group, method="bonferroni")
-    #print(data_colname[i])
+    tryCatch({post_hoc<-dunn.test(data[,i],g=data$Group, method="bonferroni");
+        dunntest_results = cbind.data.frame(data_colname[i],kw_test_results$p.value, post_hoc$comparisons,post_hoc$Z,post_hoc$P.adjusted);
+        output <- rbind(as.matrix(output), as.matrix(dunntest_results))}, 
+        error=function(e){print("Case can not be dunn-tested")})
     #print(post_hoc)
-    dunntest_results = cbind.data.frame(data_colname[i],kw_test_results$p.value, post_hoc$comparisons,post_hoc$Z,post_hoc$P.adjusted)
-    output <- rbind(as.matrix(output), as.matrix(dunntest_results))
+    #print(data_colname[i]) 
 }
 
 write.table(as.matrix(output), output_file, quote=FALSE, col.names=NA, sep="\t")

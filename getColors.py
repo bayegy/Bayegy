@@ -2,6 +2,7 @@ import os
 import json
 import numpy as np
 import pandas as pd
+# import pdb
 
 
 def get_colors(category):
@@ -17,8 +18,9 @@ def get_colors(category):
 def get_lefse_colors(category, mapping_file, lda_file, return_dict=False):
     colors = get_colors(category)
     if colors:
-        df = pd.read_table(mapping_file)
-        gps = list(set(list(df[category].values)))
+        df = pd.read_csv(mapping_file, sep="\t")
+        gps = df[category]
+        gps = list(set(gps[gps.notna()]))
         gps.sort(key=str.lower)
         gps_colors = dict()
         gps_sig = set()
