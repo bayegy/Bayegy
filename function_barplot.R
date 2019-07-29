@@ -1,3 +1,4 @@
+#!/home/admin1/miniconda2/bin/Rscript
 #utf-8
 library(optparse)
 #######arguments

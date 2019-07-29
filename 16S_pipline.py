@@ -47,13 +47,13 @@ options = p.parse_args()
 
 
 if not ((options.input or options.manifest) and options.map and options.group):
-  print("You must specify either -i or --manifest, also -m and -c")
-  sys.exit()
+    print("You must specify either -i or --manifest, also -m and -c")
+    sys.exit()
 
 if not os.path.exists(options.outdir):
-  os.makedirs(options.outdir)
+    os.makedirs(options.outdir)
 if options.manifest:
-  options.manifest = os.path.abspath(options.manifest)
+    options.manifest = os.path.abspath(options.manifest)
 options.map = os.path.abspath(options.map)
 options.classifier = os.path.abspath(options.classifier)
 options.ref = os.path.abspath(options.ref)
@@ -62,74 +62,74 @@ scriptpath = sys.path[0]
 
 
 def parse_map(mapping):
-  os.system('''sed -i -e 's/ //g' %s''' % (mapping))
-  with open(mapping, 'r') as mapin:
-    l1 = mapin.readline()
-    gps = re.findall('Category[^\t ]*', l1)
-  return ','.join(gps)
+    os.system('''sed -i -e 's/ //g' %s''' % (mapping))
+    with open(mapping, 'r') as mapin:
+        l1 = mapin.readline()
+        gps = re.findall('Category[^\t ]*', l1)
+    return ','.join(gps)
 
 
 def rar(name, target):
-  os.system('''rar a %s %s''' % (name, target))
+    os.system('''rar a %s %s''' % (name, target))
 
 
 # print("analyzing......")
 
 if os.path.isfile(options.map):
-  cgp = parse_map(options.map)
-  options.group = cgp if options.group == "auto" else options.group
-  if not options.manifest:
-    if options.parallel:
-      for c in re.split(",", options.group.strip()):
-        print('##############################################################Start to generate results according to the samples of %s' % (c))
-        if not os.path.exists(options.outdir + '/' + c + "_Results"):
-          os.makedirs(options.outdir + '/' + c + "_Results")
-        os.system("Rscript %s/clean_na_of_inputs.R -m %s --group %s  -o %s" %
-                  (scriptpath, options.map, c, options.outdir))
-        os.system("python %s/write_manifest.py -i %s -m %s/cleaned_map.txt -o %s/%s_data -f '%s' -r '%s' -s '%s'" %
-                  (scriptpath, options.input, options.outdir, options.outdir, c, options.fp, options.rp, options.sp))
-        os.system('''cd %s/%s_Results&&sed -i -e '1s/%s/Group/g' ../%s_data/sample-metadata.tsv&&\
+    cgp = parse_map(options.map)
+    options.group = cgp if options.group == "auto" else options.group
+    if not options.manifest:
+        if options.parallel:
+            for c in re.split(",", options.group.strip()):
+                print('##############################################################Start to generate results according to the samples of %s' % (c))
+                if not os.path.exists(options.outdir + '/' + c + "_Results"):
+                    os.makedirs(options.outdir + '/' + c + "_Results")
+                os.system("Rscript %s/clean_na_of_inputs.R -m %s --group %s  -o %s" %
+                          (scriptpath, options.map, c, options.outdir))
+                os.system("python3 %s/write_manifest.py -i %s -m %s/cleaned_map.txt -o %s/%s_data -f '%s' -r '%s' -s '%s'" %
+                          (scriptpath, options.input, options.outdir, options.outdir, c, options.fp, options.rp, options.sp))
+                os.system('''cd %s/%s_Results&&sed -i -e '1s/%s/Group/g' ../%s_data/sample-metadata.tsv&&\
       bash %s/16S_pipeline.V9.sh ../%s_data/sample-metadata.tsv %s %s Group %s %s ../%s_data/manifest.txt  "%s" %s %s''' %
-                  (options.outdir, c, c, c, scriptpath, c, options.depth, options.ftaxa, options.classifier, options.ref, c, options.exclude, options.type, options.picrust))
-        if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
-          os.makedirs(options.outdir + '/' + 'All_Results_Summary')
-        os.system('''rm -r %s/All_Results_Summary/%s_Result_AmpliconSequencing; mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
-                  (options.outdir, c, options.outdir, c, options.outdir, c))
+                          (options.outdir, c, c, c, scriptpath, c, options.depth, options.ftaxa, options.classifier, options.ref, c, options.exclude, options.type, options.picrust))
+                if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
+                    os.makedirs(options.outdir + '/' + 'All_Results_Summary')
+                os.system('''rm -r %s/All_Results_Summary/%s_Result_AmpliconSequencing; mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
+                          (options.outdir, c, options.outdir, c, options.outdir, c))
 
-    else:
-      if not os.path.exists(options.outdir + '/Results'):
-        os.makedirs(options.outdir + '/Results')
-      os.system("python %s/write_manifest.py -i %s -m %s -o %s/data -f '%s' -r '%s' -s '%s'" %
-                (scriptpath, options.input, options.map, options.outdir, options.fp, options.rp, options.sp))
-      os.system('''cd %s/Results&&\
+        else:
+            if not os.path.exists(options.outdir + '/Results'):
+                os.makedirs(options.outdir + '/Results')
+            os.system("python3 %s/write_manifest.py -i %s -m %s -o %s/data -f '%s' -r '%s' -s '%s'" %
+                      (scriptpath, options.input, options.map, options.outdir, options.fp, options.rp, options.sp))
+            os.system('''cd %s/Results&&\
       bash %s/16S_pipeline.V9.sh ../data/sample-metadata.tsv %s %s %s %s %s ../data/manifest.txt  "%s" %s %s&&\
       rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.depth, options.ftaxa, options.group, options.classifier, options.ref, options.exclude, options.type, options.picrust, options.fname))
-  else:
-    os.system('''cd %s&&\
+    else:
+        os.system('''cd %s&&\
       bash %s/16S_pipeline.V9.sh %s %s %s %s %s %s %s  "%s" %s %s&&\
       rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.map, options.depth, options.ftaxa, options.group, options.classifier, options.ref, options.manifest, options.exclude, options.type, options.picrust, options.fname))
 else:
-  mapdir = os.listdir(options.map)
-  excs = re.split('::', options.exclude)
-  gp_set = re.split('::', options.group)
-  if not os.path.exists(options.outdir + '/Results_Result_AmpliconSequencing'):
-    os.makedirs(options.outdir + '/Results_Result_AmpliconSequencing')
+    mapdir = os.listdir(options.map)
+    excs = re.split('::', options.exclude)
+    gp_set = re.split('::', options.group)
+    if not os.path.exists(options.outdir + '/Results_Result_AmpliconSequencing'):
+        os.makedirs(options.outdir + '/Results_Result_AmpliconSequencing')
 
-  for mp in mapdir:
-    pmp = options.map + '/' + mp
-    if os.path.isfile(pmp):
-      od = re.search('\d+', mp).group()
-      odn = int(od) - 1
-      exc = excs[odn] if len(excs) > 1 else options.exclude
-      cgp = parse_map(pmp) if options.group == "auto" else gp_set[odn]
-      if not os.path.exists(options.outdir + '/Results' + od):
-        os.makedirs(options.outdir + '/Results' + od)
-      os.system("python %s/write_manifest.py -i %s -m %s -o %s/data%s -f '%s' -r '%s' -s '%s'" %
-                (scriptpath, options.input, pmp, options.outdir, od, options.fp, options.rp, options.sp))
-      os.system('''cd %s/Results%s&&\
+    for mp in mapdir:
+        pmp = options.map + '/' + mp
+        if os.path.isfile(pmp):
+            od = re.search('\d+', mp).group()
+            odn = int(od) - 1
+            exc = excs[odn] if len(excs) > 1 else options.exclude
+            cgp = parse_map(pmp) if options.group == "auto" else gp_set[odn]
+            if not os.path.exists(options.outdir + '/Results' + od):
+                os.makedirs(options.outdir + '/Results' + od)
+            os.system("python3 %s/write_manifest.py -i %s -m %s -o %s/data%s -f '%s' -r '%s' -s '%s'" %
+                      (scriptpath, options.input, pmp, options.outdir, od, options.fp, options.rp, options.sp))
+            os.system('''cd %s/Results%s&&\
       bash %s/16S_pipeline.V9.sh ../data%s/sample-metadata.tsv %s %s %s %s %s ../data%s/manifest.txt  "%s" %s %s&&\
       mv Result_AmpliconSequencing %sResult_AmpliconSequencing&&\
       rar a %s%s.rar %sResult_AmpliconSequencing&&\
       mv %s%s.rar ../Results_Result_AmpliconSequencing/''' %
-                (options.outdir, od, scriptpath, od, options.depth, options.ftaxa, cgp, options.classifier, options.ref, od, exc, options.type, options.picrust,
-                 od, od, options.fname, od, od, options.fname))
+                      (options.outdir, od, scriptpath, od, options.depth, options.ftaxa, cgp, options.classifier, options.ref, od, exc, options.type, options.picrust,
+                       od, od, options.fname, od, od, options.fname))

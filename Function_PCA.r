@@ -5,7 +5,7 @@ require(reshape)
 require(ggplot2)
 require(ggpubr)
 library(dplyr)
-library(devtools)
+#library(devtools)
 library(getopt)
 #install_github("vqv/ggbiplot", ref = "experimental") 
 

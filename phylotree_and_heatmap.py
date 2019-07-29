@@ -24,11 +24,11 @@ p.add_argument('-n', '--number', dest='num', metavar='<int>', default=30,
 options = p.parse_args()
 
 
-#os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
+# os.system("if [ ! -d %s ];then mkdir -p %s;fi"%(options.outdir,options.outdir))
 if not os.path.exists(options.outdir):
     os.makedirs(options.outdir)
 
-########select otu####
+# #######select otu####
 
 
 with open('tree.R', 'w') as rscript:
@@ -53,11 +53,11 @@ write.table(out,"%s/selected_features.txt",sep = "",row.names = F,col.names = F,
 os.system('Rscript tree.R')
 
 
-#######align and mask#####
-#os.system("qiime tools export  %s --output-dir %s/" % (options.repseqs, options.outdir))
+# ######align and mask#####
+# os.system("qiime tools export  %s --output-dir %s/" % (options.repseqs, options.outdir))
 
 
-#######select rep-seqs####
+# ######select rep-seqs####
 with open('%s/selected_features_reseqs.fasta' % (options.outdir), 'w') as fout:
     s_otuid = open('%s/selected_features.txt' % (options.outdir), 'r')
     s_otuid = s_otuid.read()
@@ -78,17 +78,18 @@ with open('%s/selected_features_reseqs.fasta' % (options.outdir), 'w') as fout:
         ln += 1
 
 
-######form tree#####
+# #####form tree#####
 os.system("qiime tools import --input-path %s/selected_features_reseqs.fasta --output-path %s/selected_features_reseqs.qza --type 'FeatureData[AlignedSequence]'&&\
 qiime phylogeny fasttree --i-alignment %s/selected_features_reseqs.qza --o-tree %s/selected_unrooted-tree.qza&&\
 qiime phylogeny midpoint-root --i-tree %s/selected_unrooted-tree.qza --o-rooted-tree %s/selected_rooted-tree.qza&&\
 qiime tools export %s/selected_rooted-tree.qza --output-dir %s/" % (options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir, options.outdir))
 
 ifmean = 'T' if options.mean else 'F'
-######visualize tree####
+# #####visualize tree####
 with open('tree.R', 'w') as rscript:
     print('''
 library("ggtree")
+library("ggplot2")
 library("stringr")
 otu_table<-read.table("%s",header = T,skip=1,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
 metadata<-read.table("%s",na.strings="",header = T,row.names=1,check.names = F,stringsAsFactors = F,sep = "\\t",comment.char = "")
