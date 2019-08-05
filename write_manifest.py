@@ -32,7 +32,9 @@ with open(options.meta, 'r') as meta:
         li = re.split('\t', line[1].strip())
         if line[0] > 0:
             first_element = li[0].strip().lower()
-            assert first_element not in id_ds.keys()
+            if first_element in id_ds.keys():
+                print("Duplicated sample names detected:")
+                print(first_element)
             id_ds[first_element] = li[len(li) - 1].strip()
 
 
