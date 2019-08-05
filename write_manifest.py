@@ -72,6 +72,8 @@ for root, dirs, files in os.walk(options.input):
                 except KeyError:
                     print(pre_id)
                     ff += 1
+            else:
+                print("File {} was filtered".format(fl))
 
 fout.close()
 print("\nThe following samples were found in sample-metadata, but not found in fastq files:")
