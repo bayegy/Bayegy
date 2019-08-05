@@ -140,7 +140,7 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   print("#Generate the PCoA 3D plot for betadiversity")
   ######pcoa 3d plot
   asign_rainbow_cor<-function(x){
-    unig<-sort(unique(x))
+    unig<-unique(x)
     color_out<-x
     for (i in 1:length(unig)) {
       color_out[color_out==unig[i]]<-groups_color[i]
@@ -163,7 +163,7 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
     scatterplot3d(tdata,mar=c(2.2,2.2,0,0)+1,xlab=lab[1],ylab=lab[2],zlab=lab[3],color=asign_rainbow_cor(gp), grid=TRUE, box=F, pch=19)
   }
   par(fig=c(0.75,1,0,1),xpd=TRUE)
-  legend("center", legend = sort(unique(gp)), bty = 'n',xpd = TRUE,horiz = FALSE,col = groups_color, pch = 19, inset = -0.1)
+  legend("center", legend = unique(gp), bty = 'n',xpd = TRUE,horiz = FALSE,col = groups_color, pch = 19, inset = -0.1)
   par(opar)
   dev.off()
   write.table(as.matrix(tdata), PCoA_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
