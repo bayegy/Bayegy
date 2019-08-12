@@ -71,11 +71,28 @@ dat_for_cor<-data.frame(envdata,dat, check.rows = T, check.names = F)
 
 
 cor_allft<-corr.test(dat_for_cor,method ="spearman",adjust="fdr")
+
+
 cor_allft_r<-cor_allft$r
 cor_allft_r<-cor_allft_r[-c(1:LEN),-c(LEN+1:dim(cor_allft_r)[2])]
 
 cor_allft_p<-cor_allft$p
+
+up_to_down<-function(m){
+  d2<-ncol(m)
+  for(i in 1:d2){
+    for (j in 1:d2) {
+      if(i>j){
+        m[i,j]<-m[j,i]
+      }
+    }
+  }
+  return(m)
+}
+cor_allft_p<-up_to_down(cor_allft_p)
+
 cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
+
 
 
 write.table(cor_allft_r,paste(opt$out,"spearman_rank_correlation_matrix.txt",sep = ""),sep="\t",col.names=NA)
