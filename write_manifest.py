@@ -51,9 +51,11 @@ ff = 0
 id_sets = []
 fout.write('sample-id,absolute-filepath,direction\n')
 
-print("\nThe following samples were found in fastq files, but not found in sample-metadata:")
 for root, dirs, files in os.walk(options.input):
-    if len(dirs) == 0:
+    if len(files) == 0:
+        print("{} is a empty directory".format(root))
+    # if len(dirs) == 0:
+    else:
         root = os.path.abspath(root)
         for fl in files:
             if re.search(sp, fl):
@@ -69,14 +71,16 @@ for root, dirs, files in os.walk(options.input):
                         fout.write("%s,%s,forward\n" % (sn, info))
                         id_sets.append(pre_id)
                         nfile += 1
+                    else:
+                        print("No direction pattern matched this file: {}".format(fl))
                 except KeyError:
-                    print(pre_id)
+                    print("{} was found among fastq files, but not found in pre-map file".format(pre_id))
                     ff += 1
             else:
                 print("File {} was filtered".format(fl))
 
 fout.close()
-print("\nThe following samples were found in sample-metadata, but not found in fastq files:")
+# print("\nThe following samples were :")
 
 with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.tsv', 'w') as outfile:
     miss = 0
@@ -93,15 +97,16 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
                 li[0] = li[fc]
                 outfile.write('\t'.join(li) + '\n')
             else:
-                print('    ' + li[0].lower())
+                # print('    ' + li[0].lower())
+                print("{} was found in pre-map file, but not found among fastq files".format(li[0]))
                 miss += 1
 
 print("\nIn summary:")
-emm = "\n    %s fastq files were written" % (nfile)
-emm1 = "\n    %s fastq files were filterd as the ids of samples were not found in mapping file" % (ff)
+emm = "\n    %s fastq files were wrote into manifest file" % (nfile)
+emm1 = "\n    %s fastq files were filterd as the ids of samples were not found in pre-map file" % (ff)
 print(emm)
 print(emm1)
-print('\n    %s samples were removed from sample-metadata, as the ids of samples were not found in forward fastq files\' names' % (miss))
+print('\n    %s samples were removed from pre-map file, as the ids of samples were not found in forward fastq files\' names' % (miss))
 
 # open(options.out + '/' + 'sample-metadata.tsv', 'w') as outmeta
 #      li[0] = "#SampleID"
