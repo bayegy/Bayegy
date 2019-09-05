@@ -110,11 +110,14 @@ check_file() {
 	cp -r taxa-bar-plots.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/
 	#cp -r exported/Relative/*relative.txt exported/Relative/otu*png ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/2-Barplots/taxa-bar-plots-top20
 
+
 	# cp -r exported/${number}/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/Heatmap-Qiime2/
 	cp -r Heatmap_top20 ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/
 	cp -r Heatmap_top20_clustered ./Result_AmpliconSequencing/2-AbundanceAnalysis/1-AbundanceSummary/3-Heatmaps/
 
 	cp -r exported/ANCOM/*.qzv* ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/1-ANCOM/
+
+	cp TaxaStatistic/* ./Result_AmpliconSequencing/2-AbundanceAnalysis/
 
 	cp -r exported/DiffAbundance/ANOVA_*txt ./Result_AmpliconSequencing/2-AbundanceAnalysis/2-AbundanceComparison/2-ANOVA/
 
