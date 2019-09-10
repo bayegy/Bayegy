@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript 
 #R script for Dunn test
 library(optparse)
 require(reshape)
@@ -43,9 +44,12 @@ if(opt$out=="infer"){
 #print(opt$group)
 #print(opt$out)
 
-map<-read.table(opt$map, header = T, row.names = 1, check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "", na.strings="")
-table<-read.table(opt$input, header = T, row.names = 1, check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
+map<-read.table(opt$map, header = T, row.names = 1, check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "", na.strings="", quote="")
+table<-read.table(opt$input, header = T, check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "", quote = "")
 #head(map)
+table <-  table[!duplicated(table[,1]),]
+rownames(table) <- table[,1]
+table <- table[, -1]
 
 map2<-map[order(rownames(map)), ]
 #head(map2)
