@@ -19,8 +19,12 @@ library(ggplot2)
 library(stringr)
 library(reshape)
 library(RColorBrewer)
+library(getopt)
 #display.brewer.all()
 
+base_dir<-normalizePath(dirname(get_Rscript_filename()))
+source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+colors <- get_colors(opt$group, opt$map)
 
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 opt$out<-paste(opt$out,"/",opt$prefix,sep="")
@@ -115,7 +119,8 @@ otu<-melt(otu,id.vars = "id")
 
 pallet<-c(rev(brewer.pal(12,"Paired")),brewer.pal(8,"Set2")[-c(7,8)],brewer.pal(8,"Dark2"),brewer.pal(12,"Set3"),brewer.pal(8,"Accent"),brewer.pal(11,"Spectral"))
 
-p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width = 0.7)+
+ban_width <- 0.7
+p<-ggplot(otu,aes(x=id,y=value))+geom_bar(mapping = aes(fill=variable), stat = "identity",width = ban_width)+
   guides(fill=guide_legend(title = NULL))+
   scale_fill_manual(values = pallet)+
   scale_x_discrete(limits=label_order)+
@@ -125,6 +130,38 @@ p<-ggplot(otu,aes(x=id,y=value,fill=variable))+geom_bar(stat = "identity",width 
         axis.line = element_line(),panel.border =  element_blank(),
         axis.text.x = element_text(angle = 45,size = 10,hjust = 1))+
   scale_y_continuous(limits=c(0,101), expand = c(0, 0))
+
+if(!opt$bym){
+  generate_span <- function(number_list, start = 0){
+    step_num <- c()
+    current_num <- start
+    for(i in 1:length(number_list)){
+      current_num <- current_num + number_list[i];
+      step_num[i] <- current_num
+    }
+    flat <- step_num - number_list
+    out_list <- list()
+    for(i in 1:length(flat)){
+      out_list[[i]] <- c(flat[i], step_num[i])
+    }
+    return(out_list)
+  }
+  uni_groups <- table(group[, 1])
+  span_data <- generate_span(uni_groups, start = 1 - (ban_width/2))
+  span_len <- length(span_data)
+  annotate_data <- data.frame(matrix(nrow = span_len, ncol = 4))
+  for(i in 1:span_len){
+    ele <- span_data[[i]]
+    ele[2] <- ele[2] - (1- ban_width)
+    annotate_data[i, ]<-c(ele, c(mean(ele), 110))
+  }
+  colnames(annotate_data) <- c("x", "xend", "textx", "texty")
+  annotate_data$group <- names(uni_groups)
+  p <- p + scale_y_continuous(limits=c(0, 115), expand = c(0, 0), breaks = c(0, 20, 40, 60, 80, 100)) + 
+    geom_segment(aes(x=x, xend=xend, y=105, yend=105, colour = group), data = annotate_data,  size = 5, lineend = "butt") +
+    scale_colour_manual(values = colors) + guides(colour = FALSE) +
+    geom_text(aes(x = textx, y = texty, label = group), data = annotate_data, size = 5)
+}
 
 
 wd<-length(label_order)*0.2+p1
