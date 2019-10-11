@@ -25,6 +25,32 @@ annotation_row<-str_replace(str_extract(dat[,length(dat)],"p__[^;]+"),"p__","")
 dat=dat[,-c(1,length(dat))]
 dat<-t(dat)
 
+
+up_to_down<-function(m){
+  d2<-ncol(m)
+  for(i in 1:d2){
+    for (j in 1:d2) {
+      if(i>j){
+        m[i,j]<-m[j,i]
+      }
+    }
+  }
+  return(m)
+}
+
+
+# correlation of all species
+cor<-corr.test(dat,method = "spearman",adjust="fdr")
+p<-cor$p
+r<-cor$r
+p<-up_to_down(p)
+write.table(r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""), sep="\t", col.names = NA)
+write.table(p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""), sep="\t", col.names = NA)
+
+
+
+# correlation of top species
+
 if(opt$num<dim(dat)[2]){
   sel<-(colSums(dat)>=sort(colSums(dat),T)[opt$num])
   dat<-dat[,sel]
@@ -47,22 +73,10 @@ cor<-corr.test(dat,method = "spearman",adjust="fdr")
 p<-cor$p
 r<-cor$r
 
-up_to_down<-function(m){
-  d2<-ncol(m)
-  for(i in 1:d2){
-    for (j in 1:d2) {
-      if(i>j){
-        m[i,j]<-m[j,i]
-      }
-    }
-  }
-  return(m)
-}
+
 
 p<-up_to_down(p)
 
-write.table(r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""), sep="\t", col.names = NA)
-write.table(p,paste(opt$out,"/","fdr_adjusted_p_value_matrix.txt",sep = ""), sep="\t", col.names = NA)
 
 r[cor$p>=0.05|abs(cor$r)<opt$cut] <- 0 
 igraph<-graph_from_adjacency_matrix(r,mode="undirected",weighted=TRUE,diag=FALSE)
