@@ -45,6 +45,7 @@ otu_table<-otu_table[,sel1]
 
 otusum<-colSums(t(otu_table))
 hold<-sort(otusum,T)[%s]
+hold <- ifelse(is.na(hold), 0, hold)
 out<-data.frame(rownames(otu_table)[otusum>=hold])
 write.table(out,"%s/selected_features.txt",sep = "",row.names = F,col.names = F,quote = F)
 '''
@@ -110,7 +111,7 @@ metagroup<-metagroup[!is.na(metagroup)]
 
 otusum<-colSums(t(otu_table[,-dim(otu_table)[2]]))
 hold<-sort(otusum,T)[%s]
-
+hold <- ifelse(is.na(hold), 0, hold)
 otu_table<-otu_table[otusum>=hold,]
 
 tax<-otu_table[,dim(otu_table)[2]]
@@ -124,6 +125,7 @@ groupInfo <- split(rownames(otu_table), groupInfo)
 
 groupInfo1<-str_extract(tax,"g__[^;]{1,100}")
 groupInfo1[is.na(groupInfo1)]<-"Unclassfied_genus"
+max_char_len <- max(nchar(groupInfo1))
 groupInfo1 <- split(rownames(otu_table), groupInfo1)
 
 
@@ -157,13 +159,13 @@ par(mar=c(7, 4, 4, 2) + 0.1)
 p = ggtree(tree,aes(color=Phylum))+
   geom_tiplab(size=4,align=TRUE, linesize=.5,aes(label=taxa))+
   scale_color_discrete(breaks = t,name="Phylum")
-wd=par1*0.1
-ofs=0.19
+wd=par1*0.2
+ofs=max_char_len*0.01 + 0.01*wd
 p1<-gheatmap(p, data, offset = ofs, width=wd, hjust=0.5,font.size=2,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=15),axis.ticks=element_blank())
 file_name="%s/%s_phylogenetic_tree"
 
 write.table(data,paste(file_name,"_table.txt",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
-ggsave(p1,file=paste(file_name,"_heatmap.pdf",sep=""), width=(wd+1)*4+3, height=10)
+ggsave(p1,file=paste(file_name,"_heatmap.pdf",sep=""), width=(wd+1)*4+3+max_char_len*0.03, height=10)
 '''
           % (options.input, options.metadata, options.group, options.num, ifmean, options.outdir, options.outdir, str(options.group)),
           file=rscript)

@@ -111,6 +111,12 @@ check_file() {
 	fi
 	source activate qiime2-2018.11
 
+	export TMPDIR='/home/admin1/TMPDIR'
+	echo "Classifier TMPDIR is ${TMPDIR}"
+	export JOBLIB_TEMP_FOLDER='/home/admin1/JOBLIB_TEMP_FOLDER'
+	echo "Classifier JOBLIB_TEMP_FOLDER is ${JOBLIB_TEMP_FOLDER}"
+
+
 	echo "##############################################################\n#paired end analysis using DADA2"
 
 	qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'  --input-path $manifest_file --output-path demux.qza --input-format PairedEndFastqManifestPhred33
@@ -121,13 +127,11 @@ check_file() {
 	#qiime dada2 denoise-paired  --i-demultiplexed-seqs demux.qza --p-trunc-len-f 290 --p-trunc-len-r 220 --p-trim-left-f 26 --p-trim-left-r 26 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
 
-
-
 <<comment2
 	echo "##############################################################\n#Single end analysis using DADA2"
 	qiime tools import   --type 'SampleData[SequencesWithQuality]'   --input-path $manifest_file --output-path demux.qza --input-format SingleEndFastqManifestPhred33
 	qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
-	qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-max-ee 50 --p-trunc-q 0 --p-trunc-len 420 --p-trim-left 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
+	qiime dada2 denoise-single --i-demultiplexed-seqs demux.qza --p-max-ee 50 --p-trunc-q 0 --p-trunc-len 250 --p-trim-left 0 --o-representative-sequences rep-seqs-dada2.qza --o-table table-dada2.qza  --p-n-threads 0 --o-denoising-stats stats-dada2.qza --verbose
 	qiime metadata tabulate --m-input-file stats-dada2.qza --o-visualization stats-dada2.qzv
 comment2
 
@@ -151,10 +155,9 @@ comment1
 	mv table-dada2.qza table.withCandM.qza
 
 
-
 	echo "##############################################################\n#Filter out Choloroplast and Mitochondira"
 	check_file $reference_trained
-	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
@@ -164,7 +167,7 @@ comment1
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
 
 	echo "##############################################################\n#Classify the taxonomy"
-	qiime feature-classifier classify-sklearn --p-n-jobs 16   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
+	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
 	if [[ $classifier_type == 'silva' ]];
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
@@ -214,7 +217,7 @@ comment1
 	mv ./Result_AmpliconSequencing/1-OTUStats/demux/ ./Result_AmpliconSequencing/1-OTUStats/1-Stats-demux
 	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png exported/Relative/classified_stat_relative.xls ./Result_AmpliconSequencing/1-OTUStats/
 	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/1-OTUStats/feature-table.taxonomy.even.txt
-
+skip1
 	echo "##############################################################\n#Generate the results of each group"
 	for category_set in $category_sum;
 		do echo $category_set;
@@ -618,7 +621,8 @@ COMMENT
 		fi;
 
 
-
+		source deactivate
+		source activate qm2
 		echo "##############################################################\network and abundance heatmap" 
 		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 			do echo $n7;
@@ -632,8 +636,6 @@ COMMENT
 			done;
 
 
-		source deactivate
-		source activate qm2
 		echo "###############################################################\nAdditional plot"
 		mkdir 4-VennAndFlower
 		for category_1 in $category_set;
@@ -641,8 +643,6 @@ COMMENT
 			Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  -i ./exported/feature-table.taxonomy.txt -m $mapping_file -c $category_1 -o ./4-VennAndFlower;
 			python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r aligned-dna-sequences.fasta -o AdditionalPhylogeny/ -n 30 -b
 		done;
-
-
 
 		source deactivate
 		source activate qm2
