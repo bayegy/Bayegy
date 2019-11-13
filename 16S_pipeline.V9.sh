@@ -217,7 +217,8 @@ comment1
 	mv ./Result_AmpliconSequencing/1-OTUStats/demux/ ./Result_AmpliconSequencing/1-OTUStats/1-Stats-demux
 	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png exported/Relative/classified_stat_relative.xls ./Result_AmpliconSequencing/1-OTUStats/
 	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/1-OTUStats/feature-table.taxonomy.even.txt
-skip1
+
+
 	echo "##############################################################\n#Generate the results of each group"
 	for category_set in $category_sum;
 		do echo $category_set;

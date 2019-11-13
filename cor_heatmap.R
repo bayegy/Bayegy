@@ -70,7 +70,7 @@ LEN<-ncol(envdata)
 dat_for_cor<-data.frame(envdata,dat, check.rows = T, check.names = F)
 
 
-cor_allft<-corr.test(dat_for_cor,method ="spearman",adjust="fdr")
+cor_allft<-corr.test(dat_for_cor,method ="spearman",adjust="none")
 
 
 cor_allft_r<-cor_allft$r
@@ -96,7 +96,7 @@ cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
 
 
 write.table(cor_allft_r,paste(opt$out,"spearman_rank_correlation_matrix.txt",sep = ""),sep="\t",col.names=NA)
-write.table(cor_allft_p,paste(opt$out,"fdr_adjusted_p_value_matrix.txt",sep = ""),sep="\t",col.names=NA)
+write.table(cor_allft_p,paste(opt$out,"p_value_matrix.txt",sep = ""),sep="\t",col.names=NA)
 
 cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
 
