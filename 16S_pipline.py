@@ -36,7 +36,7 @@ p.add_argument('-t', '--classifier-type', dest='type', default='gg', metavar='<s
                help='Specify the type of classifier, either silva or gg')
 p.add_argument('-u', '--run-picrust', dest='picrust', default='yes', metavar='<str>',
                help='yes or no')
-p.add_argument('-k', '--filter-taxa', dest='ftaxa', default='none', metavar='<str>',
+p.add_argument('-k', '--filter-taxa', dest='ftaxa', default='exclude:mitochondria,chloroplast,Unassigned', metavar='<str>',
                help='Taxa excluded from OTU table, seprated by commas.')
 p.add_argument('-n', '--rar-filename', dest='fname', default='Result_AmpliconSequencing', metavar='<str>',
                help='The name of final results.rar')

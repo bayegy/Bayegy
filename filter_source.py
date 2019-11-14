@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # coding:utf-8
 import argparse
 import re
@@ -18,7 +19,7 @@ p.add_argument('-r', '--repseqs', dest='rep', metavar='<path>', default=False,
 p.add_argument('-t', '--taxonomy', dest='taxon', metavar='<path>', default=False,
                help='table.qza')
 p.add_argument('-f', '--filter', dest='filter', metavar='<flag:taxon1,taxon2>', default=False,
-               help='Taxon to be filtered. use "include:taxon1,taxon2" to keep noly taxon1, taxon2. or use "exclude:taxon1,taxon2" to filter taxon1, taxon2.')
+               help='Taxon to be filtered. use "keep:taxon1,taxon2" to keep noly taxon1, taxon2. or use "exclude:taxon1,taxon2" to filter taxon1, taxon2.')
 p.add_argument('--min-abundance', dest='mina', metavar='int', default=1,
                help='pass this to filter out the otu table and representative sequences less than the specified value')
 p.add_argument('-o', '--out', dest='out', metavar='<directory>',
@@ -43,7 +44,7 @@ def iterfind(a, b):
     for i in a:
         found = False
         for j in b:
-            if not i.find(j) == -1:
+            if re.search(j, i, flags=re.IGNORECASE):
                 found = True
                 break
         out.append(found)
@@ -67,26 +68,27 @@ if opt.map and opt.group:
     mapd = mapd.ix[:, mapd.notna().sum() > 1]
     savepd(mapd, 'mapping_file.txt')
     # filter otu table
-    otu = otu.iloc[iterin(otu.index, mapd.iloc[:, 0]), :]
+    otu = otu.ix[iterin(otu.index, mapd.ix[:, 0]), :]
 
-otu = otu.iloc[:, otu.sum() >= int(opt.mina)]
+otu = otu.ix[:, otu.sum() >= int(opt.mina)]
 otu_set1 = otu.columns
 
 # filter taxa
-flag, ftaxa = opt.filter.split(':')
-ftaxa = ftaxa.split(',')
-if flag == "keep":
-    taxon = taxon.iloc[iterfind(taxon.iloc[:, 0], ftaxa), :]
-else:
-    taxon = taxon.iloc[[not b for b in iterfind(taxon.iloc[:, 0], ftaxa)], :]
+if opt.filter:
+    flag, ftaxa = opt.filter.split(':')
+    ftaxa = ftaxa.split(',')
+    if flag == "keep":
+        taxon = taxon.ix[iterfind(taxon.ix[:, 0], ftaxa), :]
+    else:
+        taxon = taxon.ix[[not b for b in iterfind(taxon.ix[:, 0], ftaxa)], :]
 otu_set2 = taxon.index
 
 # calculate inner set
 inner_otuset = [o for o in otu_set1 if o in otu_set2]
 
-otu = otu.iloc[:, iterin(otu.columns, inner_otuset)]
-taxon = taxon.iloc[iterin(taxon.index, inner_otuset), :]
-rep = rep.iloc[iterin(rep.index, inner_otuset)]
+otu = otu.ix[:, iterin(otu.columns, inner_otuset)]
+taxon = taxon.ix[iterin(taxon.index, inner_otuset), :]
+rep = rep.ix[iterin(rep.index, inner_otuset)]
 # save data
 otu = Artifact.import_data("FeatureTable[Frequency]", otu)
 otu.save(opt.out + 'table.qza')

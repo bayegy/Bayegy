@@ -8,9 +8,9 @@
 
 sample_metadata=$(readlink -f $1)
 depth=$2
-if [ ! $3 == 'none' ]; then
-	taxa_filtered="${3},"
-fi
+
+taxa_filtered="${3}"
+
 category_sum=${4//,/ }
 reference_trained=$(readlink -f $5)
 close_reference_trained=$(readlink -f $6)
@@ -154,22 +154,19 @@ comment1
 	mv rep-seqs-dada2.qza rep-seqs.withCandM.qza
 	mv table-dada2.qza table.withCandM.qza
 
-
-	echo "##############################################################\n#Filter out Choloroplast and Mitochondira"
+	echo "##############################################################\n#Classify the taxonomy"
 	check_file $reference_trained
-	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.4 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
 	# qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-query rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
-
 	#Archaea,
-	qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
-	mv table-no-mitochondria-no-chloroplast.qza table.qza
-	qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
-	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
-
-	echo "##############################################################\n#Classify the taxonomy"
-	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.4 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
-
+	# qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
+	# mv table-no-mitochondria-no-chloroplast.qza table.qza
+	# qiime taxa filter-seqs   --i-sequences rep-seqs.withCandM.qza   --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned   --o-filtered-sequences rep-seqs-no-mitochondria-no-chloroplast.qza
+	# mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
+	# qiime feature-classifier classify-sklearn --verbose --p-confidence 0.4 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
+	echo "Filter parameter is ${taxa_filtered}"
+	filter_source.py -i table.withCandM.qza -r rep-seqs.withCandM.qza -t taxonomy.withCandM.qza -f "${taxa_filtered}"
 	if [[ $classifier_type == 'silva' ]];
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
 		else python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza -c;
@@ -226,7 +223,7 @@ comment1
 		source deactivate;
 		source activate qiime2-2018.11;
 		#mkdir ${category_set}_Results;
-		python $SCRIPTPATH/split_source_by_group.py  -i table.qza -t taxonomy.qza -r rep-seqs.qza -m $sample_metadata -c $category_set -o ${category_set}_Results;
+		python $SCRIPTPATH/filter_source.py  -i table.qza -t taxonomy.qza -r rep-seqs.qza -m $sample_metadata -c $category_set -o ${category_set}_Results;
 		cd ${category_set}_Results;
 		mapping_file=$(readlink -f './mapping_file.txt');
 
