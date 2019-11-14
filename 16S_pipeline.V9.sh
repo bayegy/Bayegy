@@ -157,7 +157,8 @@ comment1
 
 	echo "##############################################################\n#Filter out Choloroplast and Mitochondira"
 	check_file $reference_trained
-	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.4 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	# qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-query rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 
 	#Archaea,
@@ -167,7 +168,7 @@ comment1
 	mv rep-seqs-no-mitochondria-no-chloroplast.qza rep-seqs.qza
 
 	echo "##############################################################\n#Classify the taxonomy"
-	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
+	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.4 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.qza  --o-classification taxonomy.qza
 
 	if [[ $classifier_type == 'silva' ]];
 		then python $SCRIPTPATH/format_silva_to_gg.py -i taxonomy.qza;
