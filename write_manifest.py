@@ -18,12 +18,15 @@ p.add_argument('-f', '--forward-file-pattern', dest='fp', default=r'\.1\.fq$', m
                help='The regular expression representing forward sequence in file names')
 p.add_argument('-r', '--reverse-file-pattern', dest='rp', default=r'\.2\.fq$', metavar='<regular expression>',
                help='The regular expression representing reverse sequence in file names')
+p.add_argument('-c', '--ignore-case', dest='ignore_case', action='store_true', help='Ignore case for sample names')
 p.add_argument('-o', '--output', dest='out', metavar='<directory>', default='./',
                help='The path of output files')
 options = p.parse_args()
 
+
 if not os.path.exists(options.out):
     os.makedirs(options.out)
+
 
 print("Assert no duplicated sample names: please make sure no duplicated sample names and did not use capital and small letter to distinguish samples if error happened\n")
 id_ds = {}
@@ -31,7 +34,7 @@ with open(options.meta, 'r') as meta:
     for line in enumerate(meta):
         li = re.split('\t', line[1].strip())
         if line[0] > 0:
-            first_element = li[0].strip().lower()
+            first_element = li[0].strip().lower() if options.ignore_case else li[0].strip()
             if first_element in id_ds.keys():
                 print("Duplicated sample names detected:")
                 print(first_element)
@@ -60,7 +63,8 @@ for root, dirs, files in os.walk(options.input):
         for fl in files:
             if re.search(sp, fl):
                 info = "%s/%s" % (root, fl)
-                pre_id = re.search(sp, fl).group(1).lower()
+                pre_id = re.search(sp, fl).group(1)
+                pre_id = pre_id.lower() if options.ignore_case else pre_id
                 try:
                     sn = id_ds[pre_id]
                     if re.search(rp, fl):
@@ -93,7 +97,8 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
             li[fc] = "Description"
             outfile.write('\t'.join(li) + '\n')
         else:
-            if li[0].lower() in id_sets:
+            pivot = li[0].lower() if options.ignore_case else li[0]
+            if pivot in id_sets:
                 li[0] = li[fc]
                 outfile.write('\t'.join(li) + '\n')
             else:

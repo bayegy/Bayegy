@@ -328,7 +328,8 @@ comment1
 		biom add-metadata -i exported/feature-table.biom -o exported/feature-table.taxonomy.biom --observation-metadata-fp exported/taxonomy.tsv --observation-header OTUID,taxonomy,confidence
 		biom convert -i exported/feature-table.taxonomy.biom -o exported/feature-table.taxonomy.txt --to-tsv --header-key taxonomy
 		biom convert -i exported/feature-table.taxonomy.biom -o exported/feature-table.txt --to-tsv
-		sed 's/taxonomy/Consensus Lineage/' < exported/feature-table.taxonomy.txt | sed 's/ConsensusLineage/Consensus Lineage/' > exported/feature-table.ConsensusLineage.txt
+		sed 's/taxonomy/Consensus Lineage/' < exported/feature-table.taxonomy.txt | sed 's/ConsensusLineage/Consensus Lineage/' > exported/feature-table.ConsensusLineage-raw.txt
+		sed 's/taxonomy/Consensus Lineage/' < exported/Relative/otu_table.even.txt | sed 's/ConsensusLineage/Consensus Lineage/' > exported/feature-table.ConsensusLineage.txt
 
 		echo "##############################################################\n#Generate heatmaps for top OTUs with different levels with minimum frequence reads supported"
 		mkdir exported/collapsed
@@ -352,7 +353,8 @@ COMMENT
 		echo "##############################################################\n#Generate the figure for the percentage of annotated level"
 		perl ${SCRIPTPATH}/stat_otu_tab.unspecifiedadded.pl -unif min exported/feature-table.taxonomy.txt -prefix exported/Relative/otu_table --even exported/Relative/otu_table.even.txt -spestat exported/Relative/classified_stat_relative.xls
 		perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/classified_stat_relative.xls -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > exported/Relative/Classified_stat_relative.svg
-		Rscript ${SCRIPTPATH}/taxonomy_stats.R -i exported/feature-table.ConsensusLineage.txt -o TaxaStatistic
+		# Rscript ${SCRIPTPATH}/taxonomy_stats.R -i exported/feature-table.ConsensusLineage.txt -o TaxaStatistic
+		Rscript ${SCRIPTPATH}/taxonomy_stats.R -i exported/feature-table.ConsensusLineage-raw.txt -o TaxaStatistic
 
 		Rscript ${SCRIPTPATH}/collapse_table_with_group_mean.R -m $mapping_file -c $category_set -t exported/Relative/classified_stat_relative.xls -o ./
 		perl ${SCRIPTPATH}/bar_diagram.pl -table ${category_set}_classified_stat_relative.xls -style 1 -x_title "" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > ${category_set}_classified_stat_relative.svg
