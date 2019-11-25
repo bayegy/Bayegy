@@ -156,8 +156,10 @@ comment1
 
 	echo "##############################################################\n#Classify the taxonomy"
 	check_file $reference_trained
-	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.7 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
 	# qiime feature-classifier classify-sklearn --verbose --p-confidence 0.55 --p-n-jobs 1   --i-classifier $reference_trained  --i-query rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
+	#qiime feature-classifier  classify-consensus-vsearch  --i-query rep-seqs.withCandM.qza --i-reference-reads ~/database_ITS/UNITE_release/full-length/rep-set.qza  --i-reference-taxonomy ~/database_ITS/UNITE_release/full-length/ref-taxonomy.qza  --p-perc-identity 0.7 --o-classification taxonomy.withCandM.qza
+
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
 	#Archaea,
 	# qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza

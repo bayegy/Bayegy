@@ -6,6 +6,7 @@ import sys
 import os
 from qiime2 import Artifact
 from pandas import *
+# import pdb
 # argument:
 p = argparse.ArgumentParser(description="This script is used to plot phylogentic tree of top abundant otus")
 p.add_argument('-i', '--input', dest='otu', metavar='<path>', default=False,
@@ -73,6 +74,8 @@ if opt.map and opt.group:
 otu = otu.ix[:, otu.sum() >= int(opt.mina)]
 otu_set1 = otu.columns
 
+# pdb.set_trace()
+
 # filter taxa
 if opt.filter:
     flag, ftaxa = opt.filter.split(':')
@@ -85,6 +88,7 @@ otu_set2 = taxon.index
 
 # calculate inner set
 inner_otuset = [o for o in otu_set1 if o in otu_set2]
+
 
 otu = otu.ix[:, iterin(otu.columns, inner_otuset)]
 taxon = taxon.ix[iterin(taxon.index, inner_otuset), :]
