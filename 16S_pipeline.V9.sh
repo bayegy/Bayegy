@@ -330,6 +330,8 @@ comment1
 		biom convert -i exported/feature-table.taxonomy.biom -o exported/feature-table.txt --to-tsv
 		sed 's/taxonomy/Consensus Lineage/' < exported/feature-table.taxonomy.txt | sed 's/ConsensusLineage/Consensus Lineage/' > exported/feature-table.ConsensusLineage-raw.txt
 		sed 's/taxonomy/Consensus Lineage/' < exported/Relative/otu_table.even.txt | sed 's/ConsensusLineage/Consensus Lineage/' > exported/feature-table.ConsensusLineage.txt
+		sed -i '1i\# Constructed from biom file'  exported/feature-table.ConsensusLineage.txt 
+
 
 		echo "##############################################################\n#Generate heatmaps for top OTUs with different levels with minimum frequence reads supported"
 		mkdir exported/collapsed
