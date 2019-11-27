@@ -160,7 +160,7 @@ p = ggtree(tree,aes(color=Phylum))+
   geom_tiplab(size=4,align=TRUE, linesize=.5,aes(label=taxa))+
   scale_color_discrete(breaks = t,name="Phylum")
 wd=par1*0.2
-ofs=max_char_len*0.01 + 0.02*wd
+ofs=max_char_len*0.02 + 0.02*wd
 p1<-gheatmap(p, data, offset = ofs, width=wd, hjust=0.5,font.size=2,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=15),axis.ticks=element_blank())
 file_name="%s/%s_phylogenetic_tree"
 
