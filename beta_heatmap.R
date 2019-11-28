@@ -39,7 +39,7 @@ for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_un
   beta_heatmap_outputpdfname <- paste(opt$out,distance_matrix[2], "_betadiversity_summary.pdf", sep="")
   #pdf(beta_heatmap_outputpdfname)
   Dist <- as.matrix(distance(qiimedata, method=distance_matrix[1]))
-  beta_outputtxtname <- paste(opt$out,distance_matrix[2], "_matrix.txt", sep="")
+  beta_outputtxtname <- paste(opt$out,distance_matrix[2], "_matrix.xls", sep="")
   #print(Dist)
   #Dist_read<-read.table(beta_outputtxtname, head=T)
   if(cluster){

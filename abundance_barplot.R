@@ -166,6 +166,6 @@ if(!opt$bym){
 
 wd<-length(label_order)*0.2+p1
 wd<-ifelse(wd<50,wd,49.9)
-write.table(otu_out,paste(opt$out,"table.txt"),sep = "\t",quote=FALSE,row.names = TRUE,col.names = NA)
+write.table(otu_out,paste(opt$out,"table.xls"),sep = "\t",quote=FALSE,row.names = TRUE,col.names = NA)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 

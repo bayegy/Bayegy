@@ -164,7 +164,7 @@ ofs=max_char_len*0.02 + 0.02*wd
 p1<-gheatmap(p, data, offset = ofs, width=wd, hjust=0.5,font.size=2,colnames_offset_y=-0.4,colnames_angle=75)+theme(legend.position = "right",text=element_text(size=15),axis.ticks=element_blank())
 file_name="%s/%s_phylogenetic_tree"
 
-write.table(data,paste(file_name,"_table.txt",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
+write.table(data,paste(file_name,"_table.xls",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
 ggsave(p1,file=paste(file_name,"_heatmap.pdf",sep=""), width=(wd+1)*4+3+max_char_len*0.03, height=10)
 '''
         % (options.input, options.metadata, options.group, options.num, ifmean, options.outdir, options.outdir, str(options.group)),

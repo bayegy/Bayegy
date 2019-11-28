@@ -133,7 +133,7 @@ if(!no_group){
 
 
 
-write.table(t(otu),paste(opt$out,"table.txt",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
+write.table(t(otu),paste(opt$out,"table.xls",sep = ""),sep = "\t",quote=FALSE,col.names=NA)
 
 pdf(paste(opt$out,"heatmap.pdf",sep = ""), height=ht,width=wd)
 pheatmap(otu,annotation_row=annotation_row,

@@ -53,7 +53,7 @@ joinedtab<-rowname_join(map,adiv)
 joinedtab<-joinedtab[!is.na(joinedtab["Group"]),]
 meltab<-melt(joinedtab,id.vars = "Group")
 anno_dfa = compare_means(value ~ Group, group.by = "variable", data = meltab) %>% mutate(p.adj = format.pval(p.adj, digits = 2))
-write.table(as.matrix(anno_dfa), paste(opt$out,"/","alpha_",opt$group,"_wilcox_compare_results.txt",sep=""), quote=FALSE, col.names=NA, sep="\t")
+write.table(as.matrix(anno_dfa), paste(opt$out,"/","alpha_",opt$group,"_wilcox_compare_results.xls",sep=""), quote=FALSE, col.names=NA, sep="\t")
 
 
 for(i in a){

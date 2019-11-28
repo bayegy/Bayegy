@@ -45,7 +45,7 @@ print("#Generate the NMDS plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'))){
   GP.ord <- ordinate(gpt, "NMDS", distance_matrix[1])
   NMDS_outputpdfname <- paste(opt$out,"/",category1,"_",distance_matrix[2], "_NMDS.pdf", sep="")
-  NMDS_ordtxtname <- paste(opt$out,"/",category1,"_",distance_matrix[2], "_NMDS.ord.txt", sep="")
+  NMDS_ordtxtname <- paste(opt$out,"/",category1,"_",distance_matrix[2], "_NMDS.ord.xls", sep="")
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   #p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))
@@ -72,7 +72,7 @@ print("#Generate the PCoA 2D plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'))){
   GP.ord <- ordinate(gpt, "PCoA", distance_matrix[1])
   PCoA_outputpdfname <- paste(opt$out,"/",category1,"_",distance_matrix[2], "_PCoA_2D.pdf", sep="")
-  PCoA_ordtxtname <- paste(opt$out,"/",category1,"_",distance_matrix[2], "_PCoA.ord.txt", sep="")
+  PCoA_ordtxtname <- paste(opt$out,"/",category1,"_",distance_matrix[2], "_PCoA.ord.xls", sep="")
 
 
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)

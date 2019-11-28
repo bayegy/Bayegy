@@ -31,11 +31,11 @@ filename_temp<-opt$input
 KEGG_table_temp<-gsub(pattern = "\\.PCA.txt$", "", filename_temp)
 #output_file="KEGG.txt"
 if(opt$out=="infer"){
-    output_file=paste(KEGG_table_temp,"_",opt$group,"_DunnTest.txt",sep="")
+    output_file=paste(KEGG_table_temp,"_",opt$group,"_DunnTest.xls",sep="")
 }else{
     if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
     opt$out<-paste(opt$out,"/",opt$prefix,sep="")
-    output_file=paste(opt$out, opt$group,"_DunnTest.txt",sep="")
+    output_file=paste(opt$out, opt$group,"_DunnTest.xls",sep="")
 }
 
 

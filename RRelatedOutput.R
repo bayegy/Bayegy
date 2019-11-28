@@ -100,7 +100,7 @@ print("#Generate the NMDS plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
   GP.ord <- ordinate(gpt, "NMDS", distance_matrix[1])
   NMDS_outputpdfname <- paste(category1,"_",distance_matrix[2], "_NMDS.pdf", sep="")
-  NMDS_ordtxtname <- paste(category1,"_",distance_matrix[2], "_NMDS.ord.txt", sep="")
+  NMDS_ordtxtname <- paste(category1,"_",distance_matrix[2], "_NMDS.ord.xls", sep="")
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
@@ -122,7 +122,7 @@ print("#Generate the PCoA 2D plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
   GP.ord <- ordinate(gpt, "PCoA", distance_matrix[1])
   PCoA_outputpdfname <- paste(category1,"_",distance_matrix[2], "_PCoA_2D.pdf", sep="")
-  PCoA_ordtxtname <- paste(category1,"_",distance_matrix[2], "_PCoA.ord.txt", sep="")
+  PCoA_ordtxtname <- paste(category1,"_",distance_matrix[2], "_PCoA.ord.xls", sep="")
 
 
   pdf(PCoA_outputpdfname, width=7.6, height=6.6)
@@ -217,7 +217,7 @@ dev.off()
 
 srbct.plsda <- plsda(tX, Y)  # set ncomp to 10 for performance assessment later
 plsda.vip <- vip(srbct.plsda)
-write.table(data.frame(OTUID=rownames(plsda.vip),plsda.vip,Taxonomy=taxonomy),paste(category1,"_","PLSDA_Variable_importance_in_projection.txt"),row.names = F,sep="\t")
+write.table(data.frame(OTUID=rownames(plsda.vip),plsda.vip,Taxonomy=taxonomy),paste(category1,"_","PLSDA_Variable_importance_in_projection.xls"),row.names = F,sep="\t")
 
 pdf(paste(category1,"_","PLSDA_AUC_plot.pdf",sep=""), width = 6, height = 6)
 auroc(srbct.plsda, roc.comp = 2)

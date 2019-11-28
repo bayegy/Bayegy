@@ -38,13 +38,12 @@ p.add_argument('-u', '--run-picrust', dest='picrust', default='yes', metavar='<s
                help='yes or no')
 p.add_argument('-k', '--filter-taxa', dest='ftaxa', default='exclude:mitochondria,chloroplast,Unassigned', metavar='<str>',
                help='Taxa excluded from OTU table, seprated by commas.')
-p.add_argument('-n', '--rar-filename', dest='fname', default='Result_AmpliconSequencing', metavar='<str>',
+p.add_argument('-n', '--rar-filename', dest='fname', default='Result', metavar='<str>',
                help='The name of final results.rar')
 p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='./',
                help='specify the output directory')
 
 options = p.parse_args()
-
 
 if not ((options.input or options.manifest) and options.map and options.group):
     print("You must specify either -i or --manifest, also -m and -c")
@@ -93,7 +92,7 @@ if os.path.isfile(options.map):
                           (options.outdir, c, c, c, scriptpath, c, options.depth, options.ftaxa, options.classifier, options.ref, c, options.exclude, options.type, options.picrust))
                 if not os.path.exists(options.outdir + '/' + 'All_Results_Summary'):
                     os.makedirs(options.outdir + '/' + 'All_Results_Summary')
-                os.system('''rm -r %s/All_Results_Summary/%s_Result_AmpliconSequencing; mv %s/%s_Results/Result_AmpliconSequencing %s/All_Results_Summary/%s_Result_AmpliconSequencing''' %
+                os.system('''rm -r %s/All_Results_Summary/%s_Result; mv %s/%s_Results/Result %s/All_Results_Summary/%s_Result''' %
                           (options.outdir, c, options.outdir, c, options.outdir, c))
 
         else:
@@ -103,17 +102,19 @@ if os.path.isfile(options.map):
                       (scriptpath, options.input, options.map, options.outdir, options.fp, options.rp, options.sp))
             os.system('''cd %s/Results&&\
       bash %s/16S_pipeline.V9.sh ../data/sample-metadata.tsv %s %s %s %s %s ../data/manifest.txt  "%s" %s %s&&\
-      rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.depth, options.ftaxa, options.group, options.classifier, options.ref, options.exclude, options.type, options.picrust, options.fname))
+      change_suffix.py Result -s '1-Stats-demux,2-Stats-dada2,3-RepresentiveSequence,taxa-bar-plots_Qiime2,1-ANCOM,alpha-rarefaction-Qiime2,2-Kruskal_Wallis,PCoA-Qiime2,5-GroupSignificance,FiguresTablesForReport'&&\
+      rar a %s.rar Result''' % (options.outdir, scriptpath, options.depth, options.ftaxa, options.group, options.classifier, options.ref, options.exclude, options.type, options.picrust, options.fname))
     else:
         os.system('''cd %s&&\
       bash %s/16S_pipeline.V9.sh %s %s %s %s %s %s %s  "%s" %s %s&&\
-      rar a %s.rar Result_AmpliconSequencing''' % (options.outdir, scriptpath, options.map, options.depth, options.ftaxa, options.group, options.classifier, options.ref, options.manifest, options.exclude, options.type, options.picrust, options.fname))
+      rar a %s.rar Result''' % (options.outdir, scriptpath, options.map, options.depth, options.ftaxa, options.group, options.classifier, options.ref, options.manifest, options.exclude, options.type, options.picrust, options.fname))
+
 else:
     mapdir = os.listdir(options.map)
     excs = re.split('::', options.exclude)
     gp_set = re.split('::', options.group)
-    if not os.path.exists(options.outdir + '/Results_Result_AmpliconSequencing'):
-        os.makedirs(options.outdir + '/Results_Result_AmpliconSequencing')
+    if not os.path.exists(options.outdir + '/Results_Result'):
+        os.makedirs(options.outdir + '/Results_Result')
 
     for mp in mapdir:
         pmp = options.map + '/' + mp
@@ -128,8 +129,8 @@ else:
                       (scriptpath, options.input, pmp, options.outdir, od, options.fp, options.rp, options.sp))
             os.system('''cd %s/Results%s&&\
       bash %s/16S_pipeline.V9.sh ../data%s/sample-metadata.tsv %s %s %s %s %s ../data%s/manifest.txt  "%s" %s %s&&\
-      mv Result_AmpliconSequencing %sResult_AmpliconSequencing&&\
-      rar a %s%s.rar %sResult_AmpliconSequencing&&\
-      mv %s%s.rar ../Results_Result_AmpliconSequencing/''' %
+      mv Result %sResult&&\
+      rar a %s%s.rar %sResult&&\
+      mv %s%s.rar ../Results_Result/''' %
                       (options.outdir, od, scriptpath, od, options.depth, options.ftaxa, cgp, options.classifier, options.ref, od, exc, options.type, options.picrust,
                        od, od, options.fname, od, od, options.fname))

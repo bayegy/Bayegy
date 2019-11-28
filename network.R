@@ -44,10 +44,8 @@ cor<-corr.test(dat,method = "spearman",adjust="none")
 p<-cor$p
 r<-cor$r
 p<-up_to_down(p)
-write.table(r,paste(opt$out,"/","spearman_rank_correlation_matrix.txt",sep = ""), sep="\t", col.names = NA)
-write.table(p,paste(opt$out,"/","p_value_matrix.txt",sep = ""), sep="\t", col.names = NA)
-
-
+write.table(r,paste(opt$out,"/","spearman_rank_correlation_matrix.xls",sep = ""), sep="\t", col.names = NA)
+write.table(p,paste(opt$out,"/","p_value_matrix.xls",sep = ""), sep="\t", col.names = NA)
 
 # correlation of top species
 

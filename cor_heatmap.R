@@ -95,8 +95,8 @@ cor_allft_p<-cor_allft_p[-c(1:LEN),-c(LEN+1:dim(cor_allft_p)[2])]
 
 
 
-write.table(cor_allft_r,paste(opt$out,"spearman_rank_correlation_matrix.txt",sep = ""),sep="\t",col.names=NA)
-write.table(cor_allft_p,paste(opt$out,"p_value_matrix.txt",sep = ""),sep="\t",col.names=NA)
+write.table(cor_allft_r,paste(opt$out,"spearman_rank_correlation_matrix.xls",sep = ""),sep="\t",col.names=NA)
+write.table(cor_allft_p,paste(opt$out,"p_value_matrix.xls",sep = ""),sep="\t",col.names=NA)
 
 cor_allft_p[abs(cor_allft_r)<opt$minr]<-1
 

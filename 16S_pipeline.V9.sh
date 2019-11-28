@@ -201,22 +201,22 @@ comment1
 	perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/classified_stat_relative.xls -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > exported/Relative/Classified_stat_relative.svg
 	for svg_file in exported/Relative/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > exported/Relative/${n}.png; done
 
-	if [ -d "./Result_AmpliconSequencing" ];then
-		rm -r ./Result_AmpliconSequencing;
+	if [ -d "./Result" ];then
+		rm -r ./Result;
 	fi;
-	mkdir -p ./Result_AmpliconSequencing/1-OTUStats/3-RepresentiveSequence/;
+	mkdir -p ./Result/1-OTUStats/3-RepresentiveSequence/;
 
-	cp -r demux.qzv* stats-dada2.qzv* ./Result_AmpliconSequencing/1-OTUStats/
-	cp -r ./rep-seqs.qzv* ./exported/*nwk ./exported/dna-sequences.fasta ./Result_AmpliconSequencing/1-OTUStats/3-RepresentiveSequence/
+	cp -r demux.qzv* stats-dada2.qzv* ./Result/1-OTUStats/
+	cp -r ./rep-seqs.qzv* ./exported/*nwk ./exported/dna-sequences.fasta ./Result/1-OTUStats/3-RepresentiveSequence/
 
-	for f in $(find ./Result_AmpliconSequencing/1-OTUStats/ -type f -name "*qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); mv $f ${f}.exported; mv ${f}.exported ${dir}/${base}; done
-	for f in $(find ./Result_AmpliconSequencing/1-OTUStats/ -type f -name "index.html") ; do echo $f; base=$(basename $f .html); dir=$(dirname $f); new=${dir}/Summary_请点此文件查看.html; mv $f $new; done
+	for f in $(find ./Result/1-OTUStats/ -type f -name "*qzv"); do echo $f; base=$(basename $f .qzv); dir=$(dirname $f); mv $f ${f}.exported; mv ${f}.exported ${dir}/${base}; done
+	for f in $(find ./Result/1-OTUStats/ -type f -name "index.html") ; do echo $f; base=$(basename $f .html); dir=$(dirname $f); new=${dir}/Summary_请点此文件查看.html; mv $f $new; done
 
 
-	mv ./Result_AmpliconSequencing/1-OTUStats/stats-dada2 ./Result_AmpliconSequencing/1-OTUStats/2-Stats-dada2
-	mv ./Result_AmpliconSequencing/1-OTUStats/demux/ ./Result_AmpliconSequencing/1-OTUStats/1-Stats-demux
-	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png exported/Relative/classified_stat_relative.xls ./Result_AmpliconSequencing/1-OTUStats/
-	cp -r exported/Relative/otu_table.even.txt ./Result_AmpliconSequencing/1-OTUStats/feature-table.taxonomy.even.txt
+	mv ./Result/1-OTUStats/stats-dada2 ./Result/1-OTUStats/2-Stats-dada2
+	mv ./Result/1-OTUStats/demux/ ./Result/1-OTUStats/1-Stats-demux
+	cp -r exported/feature-table.taxonomy.txt exported/feature-table.taxonomy.biom exported/Relative/Classified_stat_relative.png exported/Relative/classified_stat_relative.xls ./Result/1-OTUStats/
+	cp -r exported/Relative/otu_table.even.txt ./Result/1-OTUStats/feature-table.taxonomy.even.txt
 
 
 	echo "##############################################################\n#Generate the results of each group"
@@ -564,7 +564,7 @@ COMMENT
 		Rscript ${SCRIPTPATH}/beta_heatmap.R -i exported/feature-table.ConsensusLineage.txt -m $mapping_file -t exported/tree.rooted.nwk -r exported/dna-sequences.fasta -o R_output -c $category_set -p 'unclustered_';
 		Rscript ${SCRIPTPATH}/beta_heatmap.R -i exported/feature-table.ConsensusLineage.txt  -t exported/tree.rooted.nwk -r exported/dna-sequences.fasta -o R_output;
 
-		perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.txt R_output/weighted_unifrac_matrix.txt R_output/unweighted_unifrac_matrix.txt --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
+		perl ${SCRIPTPATH}/table_data_svg.pl --colors cyan-orange R_output/bray_curtis_matrix.xls R_output/weighted_unifrac_matrix.xls R_output/unweighted_unifrac_matrix.xls --symbol 'Beta Diversity' > R_output/BetaDiversity_heatmap.svg
 
 
 		rsvg-convert -h 3200 -b white R_output/BetaDiversity_heatmap.svg > R_output/BetaDiversity_heatmap.png
@@ -732,12 +732,12 @@ COMMENT
 		source activate qm2
 		category_report=($category_set)
 		echo "##############################################################\n#Organize the result files";
-		#cp -r ${SCRIPTPATH}/Result_AmpliconSequencing ./
+		#cp -r ${SCRIPTPATH}/Result ./
 		bash ${SCRIPTPATH}/organize_dir_structure_V2.sh $mapping_file $category_report ${SCRIPTPATH} wu $if_picrust $prefix;
-		if [ -d "../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing" ];then
-			rm -r ../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing;
+		if [ -d "../Result/${category_report}" ];then
+			rm -r ../Result/${category_report};
 		fi;
-		mv Result_AmpliconSequencing ../Result_AmpliconSequencing/${category_report}_Result_AmpliconSequencing
+		mv Result ../Result/${category_report}
 
 
 		cd ../;
