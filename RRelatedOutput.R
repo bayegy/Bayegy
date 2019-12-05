@@ -206,13 +206,58 @@ tX<-tX[,colSums(tX)>10]
 #print(length(taxonomy))
 
 
-pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
-#pca.srbct #outputs the explained variance per component
-plot(pca.srbct)  # screeplot of the eingenvalues (explained variance per component)
-pdf(paste(category1,"_","PCA_plot.pdf",sep=""), width = 7.6, height = 6.6)
-plotIndiv(pca.srbct, group = Y,col.per.group = groups_color, ind.names = FALSE, legend = TRUE, ellipse = TRUE, title = 'PCA plot')
-dev.off()
+# pca.srbct = pca(tX, ncomp = 3, center = TRUE, scale = TRUE)
+# #pca.srbct #outputs the explained variance per component
+# plot(pca.srbct)  # screeplot of the eingenvalues (explained variance per component)
+# pdf(paste(category1,"_","PCA_plot.pdf",sep=""), width = 7.6, height = 6.6)
+# plotIndiv(pca.srbct, group = Y,col.per.group = groups_color, ind.names = FALSE, legend = TRUE, ellipse = TRUE, title = 'PCA plot')
+# dev.off()
 #write.table(as.matrix(pca.srbct), “PCA_ord.txt”, quote=FALSE, col.names=NA, sep="\t")
+
+
+
+
+tX <- scale(tX)
+df.pca <- prcomp(tX, center = TRUE, scale. = TRUE)
+# pdf("")
+label <- rownames(df.pca$x)
+len_g <- length(unique(Y))
+ss <- apply(df.pca$x, 2, var)
+pct <- ss/sum(ss)
+xylab <- paste(c("PC1 (", "PC2 ("), round(pct[1:2]*100, 2), "%)", sep = "")
+p<-ggplot(data = data.frame(scale(df.pca$x)), aes(x=PC1, y=PC2))+
+  theme_classic()+
+  labs(x=xylab[1], y=xylab[2])+
+  # geom_abline(data = data.frame(slope=c(0,91), intercept=c(0,0)), mapping = aes(slope=slope, intercept=intercept), size=0.1)+
+  geom_hline(yintercept = 0, size=0.1) + geom_vline(xintercept = 0, size=0.1) +
+  # scale_x_continuous(limits = c(-3, 3)) + scale_y_continuous(limits = c(-3, 3))+
+  geom_point(size=2, mapping = aes(color= Y))+
+  geom_text_repel(label=label, size=2) +
+  scale_color_manual(values = groups_color) +
+  # stat_ellipse(level = 0.95, type = "norm", size=0.1, segments = 300)+
+  theme(legend.title = element_text(size = 0), text = element_text(size = 9))
+# browser()
+ggsave(plot=p, file=paste(category1,"_","PCA_plot.pdf",sep=""), width=7.6, height=6.6)
+  
+
+p<-ggplot(data = data.frame(scale(df.pca$x)), aes(x=PC1, y=PC2))+
+  theme_classic()+
+  labs(x=xylab[1], y=xylab[2])+
+  # geom_abline(data = data.frame(slope=c(0,91), intercept=c(0,0)), mapping = aes(slope=slope, intercept=intercept), size=0.1)+
+  geom_hline(yintercept = 0, size=0.1) + geom_vline(xintercept = 0, size=0.1) +
+  # scale_x_continuous(limits = c(-3, 3)) + scale_y_continuous(limits = c(-3, 3))+
+  geom_point(size=2, mapping = aes(color= Y))+
+  # geom_text_repel(label=label, size=2) +
+  scale_color_manual(values = groups_color) +
+  # stat_ellipse(level = 0.95, type = "norm", size=0.1, segments = 300)+
+  theme(legend.title = element_text(size = 0), text = element_text(size = 9))
+# browser()
+ggsave(plot=p, file=paste(category1,"_","PCA_plot_without_lables.pdf",sep=""), width=7.6, height=6.6)
+
+
+
+
+
 
 
 srbct.plsda <- plsda(tX, Y)  # set ncomp to 10 for performance assessment later

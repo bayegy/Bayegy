@@ -648,7 +648,7 @@ COMMENT
 		for category_1 in $category_set;
 			do echo $category_1;
 			Rscript ${SCRIPTPATH}/venn_and_flower_plot.R  -i ./exported/feature-table.taxonomy.txt -m $mapping_file -c $category_1 -o ./4-VennAndFlower;
-			python ${SCRIPTPATH}/phylotree_and_heatmap.py -i ./exported/feature-table.taxonomy.txt -m $mapping_file -g $category_1 -r aligned-dna-sequences.fasta -o AdditionalPhylogeny/ -n 30 -b
+			python ${SCRIPTPATH}/phylotree_and_heatmap.R -i ./exported/feature-table.ConsensusLineage.txt -t ./exported/tree.rooted.nwk -m $mapping_file -c $category_1 -o AdditionalPhylogeny/ -n 50
 		done;
 
 		source deactivate
