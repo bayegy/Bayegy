@@ -237,7 +237,7 @@ p<-ggplot(data = data.frame(scale(df.pca$x)), aes(x=PC1, y=PC2))+
   # stat_ellipse(level = 0.95, type = "norm", size=0.1, segments = 300)+
   theme(legend.title = element_text(size = 0), text = element_text(size = 9))
 # browser()
-ggsave(plot=p, file=paste(category1,"_","PCA_plot.pdf",sep=""), width=7.6, height=6.6)
+ggsave(plot=p, file=paste(category1,"_","PCA_plot.pdf",sep=""), width=7, height=6.6)
   
 
 p<-ggplot(data = data.frame(scale(df.pca$x)), aes(x=PC1, y=PC2))+
