@@ -15,7 +15,7 @@ def read_params(args):
     parser.add_argument('output_file', metavar='OUTPUT_FILE', type=str,
                         help="the output file containing the data for the visualization module")
     # too many feature will cause R  RRuntimeWarning:  protect()
-    parser.add_argument('--top', dest="top", metavar='int', type=int, default=10000,
+    parser.add_argument('--top', dest="top", metavar='int', type=int, default=6000,
                         help="max number of features to keep before internal wilcoxon")
 
     parser.add_argument('-o', dest="out_text_file", metavar='str', type=str, default="",
