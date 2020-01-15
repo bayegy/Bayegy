@@ -296,7 +296,7 @@ comment1
 		#qiime diversity alpha --i-table table.qza --p-metric ace --o-alpha-diversity alpha/ace.qza
 		#qiime diversity alpha --i-table table.qza --p-metric goods_coverage --o-alpha-diversity alpha/goods_coverage.qza
 
-		for alpha_index in chao1 shannon observed_otus faith_pd simpson ace;
+		for alpha_index in chao1 shannon observed_otus faith_pd simpson;
 			do echo $alpha_index;
 			if [ ! $alpha_index == faith_pd ];then
 			qiime diversity alpha --i-table table.qza --p-metric ${alpha_index} --output-dir alpha/${alpha_index}/
@@ -317,7 +317,7 @@ comment1
 	 	#qiime tools export --input-path alpha/ace.qza --output-path alpha/ace/
 	 	#qiime tools export --input-path alpha/goods_coverage.qza --output-path alpha/goods_coverage/
 	 	#paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv alpha/simpson/alpha-diversity.tsv alpha/ace/alpha-diversity.tsv alpha/goods_coverage/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8, $10, $12, $14}' >  alpha/alpha-summary.tsv
-	 	paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv alpha/simpson/alpha-diversity.tsv alpha/ace/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8, $10, $12}' >  alpha/alpha-summary.tsv
+	 	paste alpha/observed_otus/alpha-diversity.tsv alpha/chao1/alpha-diversity.tsv alpha/shannon/alpha-diversity.tsv alpha/faith_pd/alpha-diversity.tsv alpha/simpson/alpha-diversity.tsv | awk -F'\t' 'BEGIN{OFS="\t"}{print $1, $2, $4, $6, $8, $10}' >  alpha/alpha-summary.tsv
 
 		echo "##############################################################\n#Export necessary files for future analysis"
 		for f in rep-seqs.qza table.qza taxonomy.qza ; do echo $f; qiime tools export --input-path $f --output-path exported; done
