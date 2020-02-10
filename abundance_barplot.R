@@ -147,20 +147,22 @@ if(!opt$bym){
     return(out_list)
   }
   uni_groups <- table(group[, 1])
-  span_data <- generate_span(uni_groups, start = 1 - (ban_width/2))
-  span_len <- length(span_data)
-  annotate_data <- data.frame(matrix(nrow = span_len, ncol = 4))
-  for(i in 1:span_len){
-    ele <- span_data[[i]]
-    ele[2] <- ele[2] - (1- ban_width)
-    annotate_data[i, ]<-c(ele, c(mean(ele), 110))
+  if(max(uni_groups)>1){
+    span_data <- generate_span(uni_groups, start = 1 - (ban_width/2))
+    span_len <- length(span_data)
+    annotate_data <- data.frame(matrix(nrow = span_len, ncol = 4))
+    for(i in 1:span_len){
+      ele <- span_data[[i]]
+      ele[2] <- ele[2] - (1- ban_width)
+      annotate_data[i, ]<-c(ele, c(mean(ele), 110))
+    }
+    colnames(annotate_data) <- c("x", "xend", "textx", "texty")
+    annotate_data$group <- names(uni_groups)
+    p <- p + scale_y_continuous(limits=c(0, 115), expand = c(0, 0), breaks = c(0, 20, 40, 60, 80, 100)) + 
+      geom_segment(aes(x=x, xend=xend, y=105, yend=105, colour = group), data = annotate_data,  size = 5, lineend = "butt") +
+      scale_colour_manual(values = colors) + guides(colour = FALSE) +
+      geom_text(aes(x = textx, y = texty, label = group), data = annotate_data, size = 4)
   }
-  colnames(annotate_data) <- c("x", "xend", "textx", "texty")
-  annotate_data$group <- names(uni_groups)
-  p <- p + scale_y_continuous(limits=c(0, 115), expand = c(0, 0), breaks = c(0, 20, 40, 60, 80, 100)) + 
-    geom_segment(aes(x=x, xend=xend, y=105, yend=105, colour = group), data = annotate_data,  size = 5, lineend = "butt") +
-    scale_colour_manual(values = colors) + guides(colour = FALSE) +
-    geom_text(aes(x = textx, y = texty, label = group), data = annotate_data, size = 5)
 }
 
 
