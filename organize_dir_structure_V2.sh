@@ -143,7 +143,7 @@ check_file() {
 
 
 
-	cp -r R_output/*matrix.txt R_output/BetaDiversity_heatmap.png ./Result/4-BetaDiversity/1-BetaDiversitySummary/
+	cp -r R_output/*matrix.xls R_output/BetaDiversity_heatmap.png ./Result/4-BetaDiversity/1-BetaDiversitySummary/
 
 	cp -r R_output/*summary.pdf ./Result/4-BetaDiversity/1-BetaDiversitySummary/
 	cp -r core-metrics-results/*_emperor.qzv* ./Result/4-BetaDiversity/2-PCoA/PCoA-Qiime2
