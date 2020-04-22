@@ -59,6 +59,7 @@ def read_params(args):
     parser.add_argument('--clade_sep', dest="clade_sep", type=float, default=0.8)
     parser.add_argument('--map', dest="map", type=str, default=False)
     parser.add_argument('--category', dest="category", type=str, default=False)
+    parser.add_argument('--colors', dest="colors", type=str, default=False)
     parser.add_argument('--max_lev', dest="max_lev", type=int, default=-1)
     parser.add_argument('--max_point_size', dest="max_point_size", type=float, default=6.0)
     parser.add_argument('--min_point_size', dest="min_point_size", type=float, default=1)
@@ -412,8 +413,9 @@ if __name__ == '__main__':
     else:
         category_colors = False
 
-    colors = ['r', 'g', 'b', 'm', 'c', [1.0, 0.5, 0.0],
-              [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k'] if not category_colors else category_colors
+    colors = params['colors'].split(',') if params['colors'] else False
+    colors = colors or category_colors['r', 'g', 'b', 'm', 'c', [1.0, 0.5, 0.0],
+                                       [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k']
     # print colors
     params['fore_color'] = 'w' if params['back_color'] == 'k' else 'k'
     clad_tree = read_data(params['input_file'], params)

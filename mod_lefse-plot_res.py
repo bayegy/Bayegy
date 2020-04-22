@@ -20,6 +20,7 @@ def read_params(args):
     parser.add_argument('output_file', metavar='OUTPUT_FILE', type=str, help="the file for the output image")
     parser.add_argument('--map', dest="map", type=str, default=False)
     parser.add_argument('--category', dest="category", type=str, default=False)
+    parser.add_argument('--colors', dest="colors", type=str, default=False)
     parser.add_argument('--feature_font_size', dest="feature_font_size",
                         type=int, default=7, help="the file for the output image")
     parser.add_argument('--format', dest="format",
@@ -216,8 +217,10 @@ if __name__ == '__main__':
     else:
         category_colors = False
 
-    colors = ['r', 'g', 'b', 'm', 'c', [1.0, 0.5, 0.0],
-              [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k'] if not category_colors else category_colors
+    colors = params['colors'].split(',') if params['colors'] else False
+
+    colors = colors or category_colors or ['r', 'g', 'b', 'm', 'c', [1.0, 0.5, 0.0],
+                                           [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k']
 
     params['fore_color'] = 'w' if params['back_color'] == 'k' else 'k'
     data = read_data(params['input_file'], params['output_file'], params['otu_only'])
