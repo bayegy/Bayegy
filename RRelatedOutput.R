@@ -96,24 +96,34 @@ gpt <- prune_taxa(selected_otu, gpt)
 # dev.off()
 
 
+# 20200422, Tangmaomao added the result of NMDS stress value based on the distance matrix.
 print("#Generate the NMDS plot for betadiversity")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){
   GP.ord <- ordinate(gpt, "NMDS", distance_matrix[1])
+  GP.distance <- distance(physeq = gpt,
+                          method = distance_matrix[1],
+                          type = "samples")
+  nmds <- metaMDS( comm = as.dist(GP.distance) )
+  GP.stress <- round(nmds$stress,4)
+
   NMDS_outputpdfname <- paste(category1,"_",distance_matrix[2], "_NMDS.pdf", sep="")
   NMDS_ordtxtname <- paste(category1,"_",distance_matrix[2], "_NMDS.ord.xls", sep="")
+  title <- paste(distance_matrix[2], '   NMDS stress:', as.character(GP.stress), sep = ' ')
+
   pdf(NMDS_outputpdfname, width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1) 
   p3 = p2  + geom_point(size=3) + geom_text_repel(aes(label=Description),hjust=0, vjust=2, size=4) + stat_ellipse()+theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
-  print(p3 + ggtitle(distance_matrix[2])+scale_colour_manual(values = groups_color))
+
+  print(p3 + ggtitle(title) + scale_colour_manual(values = groups_color))
+
   dev.off()
 
   ####without names and ellipse
   pdf(paste(category1,"_",distance_matrix[2], "_NMDS_without_labels.pdf", sep=""), width=7.6, height=6.6)
   p2 = plot_ordination(gpt, GP.ord, type="samples", color=category1)
   p3 = p2  + geom_point(size=3) +theme(text = element_text(size = 15))+theme_bw()+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank(),axis.line = element_line(),panel.border =  element_blank())
-  print(p3 + ggtitle(distance_matrix[2])+scale_colour_manual(values = groups_color))
+  print(p3 + ggtitle(title)+scale_colour_manual(values = groups_color))
   dev.off()
-
 
   write.table(as.matrix(GP.ord$points), NMDS_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
 }

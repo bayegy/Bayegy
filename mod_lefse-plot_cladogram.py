@@ -414,8 +414,7 @@ if __name__ == '__main__':
         category_colors = False
 
     colors = params['colors'].split(',') if params['colors'] else False
-    colors = colors or category_colors['r', 'g', 'b', 'm', 'c', [1.0, 0.5, 0.0],
-                                       [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k']
+    colors = colors or category_colors or ['r', 'g', 'b', 'm', 'c', [1.0, 0.5, 0.0], [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k']
     # print colors
     params['fore_color'] = 'w' if params['back_color'] == 'k' else 'k'
     clad_tree = read_data(params['input_file'], params)
