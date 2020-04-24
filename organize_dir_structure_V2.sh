@@ -188,14 +188,14 @@ check_file() {
 		cp -rp closedRef_forPICRUSt/function-bar-plots-top20-group-mean closedRef_forPICRUSt/function-bar-plots-top20  ./Result/7-FunctionAnalysis/1-KEGG_Pathway/
 
 		cp -r closedRef_forPICRUSt/*PCA*pdf ./Result/7-FunctionAnalysis/2-PCAPlots/
-		cp -r closedRef_forPICRUSt/*DunnTest*txt ./Result/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
+		cp -r closedRef_forPICRUSt/*DunnTest*xls ./Result/7-FunctionAnalysis/3-SignifcanceAnalysis/1-DunnTest/
 	fi
 	#mv ./Result/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.txt.PCA.pdf ./Result/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L1.PCA.pdf
 	#mv ./Result/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.txt.PCA.pdf ./Result/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L2.PCA.pdf
 	#mv ./Result/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.txt.PCA.pdf ./Result/7-FunctionAnalysis/2-PCAPlots/feature-table.metagenome.L3.PCA.pdf
 	#rm ./Result/7-FunctionAnalysis/2-PCAPlots/PCA*/PCA.R ./Result/7-FunctionAnalysis/2-PCAPlots/PCA*/Rplots.pdf
 
-	cp AdditionalPhylogeny/*.pdf AdditionalPhylogeny/*table.txt ./Result/5-Phylogenetics/
+	cp AdditionalPhylogeny/*.pdf AdditionalPhylogeny/*table.xls ./Result/5-Phylogenetics/
 	cp -rp 4-VennAndFlower/ ./Result/1-VennAndFlower
 	rm ./Result/1-VennAndFlower/*.log
 	cp -rp 3-NetworkAnalysis/ ./Result/6-AssociationAnalysis/
