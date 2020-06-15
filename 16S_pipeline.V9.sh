@@ -156,6 +156,12 @@ comment1
 	mv rep-seqs-dada2.qza rep-seqs.withCandM.qza
 	mv table-dada2.qza table.withCandM.qza
 
+	# Output the OTUid_frequency-talbe txt file, this file is the raw talbe, without any filtering.
+	echo "qiime tools export --input-path table.withCandM.qza --output-path table.withCandM.without_filtering"
+	qiime tools export --input-path table.withCandM.qza --output-path table.withCandM.without_filtering
+	echo "biom convert --to-tsv -i table.withCandM.without_filtering/feature-table.biom -o table.withCandM.without_filtering/feature-table.tsv"
+	biom convert --to-tsv -i table.withCandM.without_filtering/feature-table.biom -o table.withCandM.without_filtering/feature-table.tsv
+
 	echo "##############################################################\n#Classify the taxonomy"
 	check_file $reference_trained
 	qiime feature-classifier classify-sklearn --verbose --p-confidence 0.7 --p-n-jobs 1   --i-classifier $reference_trained  --i-reads rep-seqs.withCandM.qza  --o-classification taxonomy.withCandM.qza
@@ -163,6 +169,11 @@ comment1
 	#qiime feature-classifier  classify-consensus-vsearch  --i-query rep-seqs.withCandM.qza --i-reference-reads ~/database_ITS/UNITE_release/full-length/rep-set.qza  --i-reference-taxonomy ~/database_ITS/UNITE_release/full-length/ref-taxonomy.qza  --p-perc-identity 0.7 --o-classification taxonomy.withCandM.qza
 
 	qiime metadata tabulate  --m-input-file taxonomy.withCandM.qza  --o-visualization taxonomy.withCandM.qzv
+
+	# Output the OTUid_taxonomy txt file, without filtering the mitochondria,chloroplast,Unassigned
+	echo "qiime tools export --input-path taxonomy.withCandM.qza --output-path taxonomy.withCandM.without_filtering"
+	qiime tools export --input-path taxonomy.withCandM.qza --output-path taxonomy.withCandM.without_filtering
+
 	#Archaea,
 	# qiime taxa filter-table   --i-table table.withCandM.qza  --i-taxonomy taxonomy.withCandM.qza  --p-exclude ${taxa_filtered}mitochondria,chloroplast,Unassigned  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
 	# mv table-no-mitochondria-no-chloroplast.qza table.qza
@@ -199,7 +210,7 @@ comment1
 	source deactivate
 	source activate qm2
 	echo "##############################################################\n#Generate the figure for the percentage of annotated level"
-	perl ${SCRIPTPATH}/stat_otu_tab.unspecifiedadded.pl -unif min exported/feature-table.taxonomy.txt -prefix exported/Relative/otu_table --even exported/Relative/otu_table.even.txt -spestat exported/Relative/classified_stat_relative.xls
+	perl ${SCRIPTPATH}/stat_otu_tab.unspecifiedadded.pl -unif min exported/feature-table.taxonomy.txt -prefix exported/Relative/otu_table --even exported/Relative/otu_table.even.txt -spestat exported/Relative/classified_stat_relative.xls > /dev/null
 	perl ${SCRIPTPATH}/bar_diagram.pl -table exported/Relative/classified_stat_relative.xls -style 1 -x_title "Sample Name" -y_title "Sequence Number Percent" -right -textup -rotate='-45' --y_mun 1,7 > exported/Relative/Classified_stat_relative.svg
 	for svg_file in exported/Relative/*svg; do echo $svg_file; n=$(basename "$svg_file" .svg); echo $n; rsvg-convert -h 3200 -b white $svg_file > exported/Relative/${n}.png; done
 
@@ -446,7 +457,7 @@ COMMENT
 			for n5 in 1 2 3;
 				do echo $n5;
 				for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/Function_PCA.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt//sample-metadata.PCA.txt -g $category_1;done;
-				for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_DunnTest.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt -c $category_1; done;
+				for category_1 in $category_set;do echo $category_1; Rscript ${SCRIPTPATH}/Function_DunnTest.r -i ${PWD}/closedRef_forPICRUSt/feature-table.metagenome.L${n5}.PCA.txt -m ${PWD}/closedRef_forPICRUSt/sample-metadata.PCA.txt -c $category_1 > /dev/null; done;
 			done;
 			source deactivate
 			for category_1 in $category_set;
@@ -631,7 +642,7 @@ COMMENT
 
 		source deactivate
 		source activate qm2
-		echo "##############################################################\network and abundance heatmap" 
+		echo "##############################################################network and abundance heatmap" 
 		for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
 			do echo $n7;
 			Rscript ${SCRIPTPATH}/network.R -c 0.5 -i otu_table_forlefse/otu_table.${n7}.relative.txt -o 3-NetworkAnalysis/${n7}/;
