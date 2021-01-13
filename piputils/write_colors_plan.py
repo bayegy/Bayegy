@@ -97,7 +97,7 @@ def main():
     Report("INFO", "获取配色方案")
     if args.palette:
         with open(args.palette, 'r') as f:
-            palette = [l.strip() for l in f.read().split('\n')]
+            palette = [c.strip() for c in f.read().split('\n') if c.strip()]
     color_list = sns.color_palette('Accent', len(groups_list)).as_hex(
     ) if not args.palette else palette[:len(groups_list)]
     # print(color_list)

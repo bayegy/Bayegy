@@ -18,7 +18,7 @@ p.add_argument('-o', '--output', dest='out', metavar='<directory>', default='./t
 options = p.parse_args()
 
 
-file_type = re.search('[^\.]+$', options.input).group() if options.type == "auto" else options.type
+file_type = re.search(r'[^\.]+$', options.input).group() if options.type == "auto" else options.type
 
 
 if file_type == 'txt' or file_type == 'csv':

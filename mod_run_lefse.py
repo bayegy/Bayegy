@@ -86,6 +86,7 @@ if __name__ == '__main__':
             continue
         # Select top significant features
         if len(feats_pv) < params['top']:
+            kw_n_ok += 1
             feats_pv[feat_name] = pv
         elif pv < feats_pv.max():
             index_max = feats_pv.idxmax()
@@ -101,7 +102,7 @@ if __name__ == '__main__':
 
         if not params['wilc']:
             continue
-        kw_n_ok += 1
+        # kw_n_ok += 1
         res_wilcoxon_rep = test_rep_wilcoxon_r(subclass_sl, class_hierarchy, feat_values, params['wilcoxon_alpha'], params[
                                                'multiclass_strat'], params['strict'], feat_name, params['min_c'], params['only_same_subcl'], params['curv'])
         wilcoxon_res[feat_name] = str(pv) if res_wilcoxon_rep else "-"

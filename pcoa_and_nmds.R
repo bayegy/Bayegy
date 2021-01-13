@@ -25,6 +25,15 @@ category1=opt$group
 otu=opt$otu
 ifline=as.logical(opt$line)
 
+tmp_map_exists <- FALSE
+df_map <- read.table(map, sep="\t", na.strings="", header = TRUE, comment.char = "", check.names = F, stringsAsFactors = F)
+if(!"Description"%in%colnames(df_map)){
+  df_map$Description <- df_map[, 1]
+  map <- paste(opt$out, "/mappgin_file.txt", sep = "")
+  write.table(df_map, map, quote = FALSE, sep = "\t", na="", row.names = FALSE)
+  tmp_map_exists <- TRUE
+}
+
 base_dir<-normalizePath(dirname(get_Rscript_filename()))
 source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
 groups_color<-get_colors(category1, map)
@@ -125,4 +134,10 @@ for (distance_matrix in list(c('bray','bray_curtis'))){
   write.table(as.matrix(tdata), PCoA_ordtxtname, quote=FALSE, col.names=NA, sep="\t")
 
 }
+
+
+if(tmp_map_exists){
+  system(sprintf("rm %s", map))
+}
+
 

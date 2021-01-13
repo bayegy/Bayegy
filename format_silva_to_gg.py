@@ -15,11 +15,10 @@ if not os.path.exists(options.output):
 
 
 def clean_tax(tax):
-        #    for ambi in ['Incertae', 'Ambiguous', 'uncultured', 'unclassified', 'unidentified']:
     for ambi in ['uncultured', 'Ambiguous', 'unidentified', 'unassigned', 'unclassified']:
         tax = re.sub(';[^;]*' + ambi + '.*', '', tax, flags=re.I)
     tax = re.sub('; ', ';', tax)
-    tax = re.sub('[\-| ]+', '_', tax)
+    tax = re.sub(r'[\-| ]+', '_', tax)
     tax = re.sub(';$', '', tax)
     return(tax)
 

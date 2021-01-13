@@ -1,10 +1,12 @@
 library(optparse)
 
 #######arguments
-option_list <- list( 
+option_list <- list(
     make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table",default=NULL),
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
+    make_option(c("-O", "--order"),metavar="string",dest="order", help="Sequence to reorder samples",default=NULL),
+    make_option(c("-t", "--colors"),metavar="string",dest="colors", help="Comma seprated group colors.",default=NULL),
     make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
     make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of species needed to be plotted, default is 20",default=20),
     make_option(c("-a", "--add-postfix"),metavar="logical", dest="add",help="add postfix to the duplicated taxons",default=TRUE),
@@ -22,9 +24,42 @@ library(RColorBrewer)
 library(getopt)
 #display.brewer.all()
 
-base_dir<-normalizePath(dirname(get_Rscript_filename()))
-source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
-colors <- get_colors(opt$group, opt$map)
+count_inorder <- function(str_vector){
+  len = length(str_vector)
+  names_vector <- c()
+  counts_vector <- c()
+  if(len==0){
+    return(list(names=names_vector, counts=counts_vector))
+  }
+  current_count <- 1
+  current_name <- str_vector[1]
+  if(len>1){
+    for(e in str_vector[2:len]){
+      if(e!=current_name){
+        names_vector <- append(names_vector, current_name)
+        counts_vector <- append(counts_vector, current_count)
+        current_name <- e
+        current_count = 1
+        next
+      }
+      current_count=current_count+1
+    }
+  }
+  names_vector <- append(names_vector, current_name)
+  counts_vector <- append(counts_vector, current_count)
+  return(list(names=names_vector, counts=counts_vector))
+}
+
+
+
+if(is.null(opt$colors)){
+  base_dir<-normalizePath(dirname(get_Rscript_filename()))
+  source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+  colors <- get_colors(opt$group, opt$map)
+}else{
+  colors<-str_split(opt$colors, ",")[[1]]
+}
+
 
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 opt$out<-paste(opt$out,"/",opt$prefix,sep="")
@@ -40,15 +75,40 @@ if(!is.numeric(otu[,ncol(otu)])){
   otu<-otu[,-ncol(otu)]
 }
 
-if(!is.null(opt$map)&!is.null(opt$group)){
+
+if(!is.null(opt$map)){
   map<-read.table(opt$map,quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+}
+
+if(!is.null(opt$group)){
 #map<-read.table("mapping_file.txt",quote="",row.names = 1,na.strings = "",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
   map<-map[order(rownames(map)),]
   group<-na.omit(map[opt$group])
-  label_order<-rownames(group)[order(group)]
+  group$Description <- 1
+  # order_seq <-
+  group <- group[order(group[, 1]), ]
+  label_order<-rownames(group)
+  names(colors) <- sort(unique(group[, 1]))
 }else{
   label_order<-ordered(colnames(otu)[-1])
 }
+
+
+if(!is.null(opt$order)&&!is.null(opt$map)){
+    label_order <- na.omit(map[opt$order])
+    label_order <- rownames(label_order)[order(label_order[, 1])]
+    if("group"%in%ls()){
+      group <- na.omit(group[match(label_order, rownames(group)), ])
+      uni_groups<- unique(group[,1])
+      if(opt$bym){
+        label_order <- uni_groups
+      }
+      groups <- sort(uni_groups)
+      colors <- colors[groups]
+    }
+}
+
+
 
 add_postfix<-function(z){
   i<-1
@@ -86,9 +146,11 @@ if(!is.null(opt$map)&!is.null(opt$group)){
 }
 
 if(!is.null(opt$map)&!is.null(opt$group)&opt$bym){
-  otu<-data.frame(apply(otu,2,function(x){tapply(x,INDEX = group[,1],mean)}),check.names=F)
+  otu<-data.frame(apply(otu,2,function(x){tapply(x,INDEX = group[,1], mean, na.rm = TRUE)}),check.names=F)
   otu<-data.frame(t(apply(otu,1,function(x){x/sum(x)}))*100,check.names=F)
-  label_order<-ordered(rownames(otu))
+  if(is.null(opt$order)){
+    label_order<-ordered(rownames(otu))
+  }
   #print(otu)
 }
 #deod<-order(colSums(otu),decreasing = T)
@@ -102,8 +164,9 @@ if(num<ncol(otu)-1){
   otu<-data.frame(otu,check.names = F,check.rows = T)
 }
 
-
+otu[is.na(otu)] <- 0
 otu_out<-t(otu)/100
+otu<-data.frame(otu, check.names = FALSE, stringsAsFactors = FALSE)
 #otu<-data.frame(otu,group)
 otu$id<-rownames(otu)
 p1<-(max(nchar(colnames(otu)))*0.05+0.3)*ceiling(ncol(otu)/17)+2.5
@@ -131,7 +194,7 @@ p<-ggplot(otu,aes(x=id,y=value))+geom_bar(mapping = aes(fill=variable), stat = "
         axis.text.x = element_text(angle = 45,size = 10,hjust = 1))+
   scale_y_continuous(limits=c(0,101), expand = c(0, 0))
 
-if(!opt$bym){
+if(!opt$bym&&!is.null(opt$group)){
   generate_span <- function(number_list, start = 0){
     step_num <- c()
     current_num <- start
@@ -146,9 +209,11 @@ if(!opt$bym){
     }
     return(out_list)
   }
-  uni_groups <- table(group[, 1])
-  if(max(uni_groups)>1){
-    span_data <- generate_span(uni_groups, start = 1 - (ban_width/2))
+  # group_counts <- table(group[, 1])
+  counts_list <- count_inorder(group[, 1])
+  group_counts <- counts_list[["counts"]]
+  if(max(group_counts)>1){
+    span_data <- generate_span(group_counts, start = 1 - (ban_width/2))
     span_len <- length(span_data)
     annotate_data <- data.frame(matrix(nrow = span_len, ncol = 4))
     for(i in 1:span_len){
@@ -157,8 +222,8 @@ if(!opt$bym){
       annotate_data[i, ]<-c(ele, c(mean(ele), 110))
     }
     colnames(annotate_data) <- c("x", "xend", "textx", "texty")
-    annotate_data$group <- names(uni_groups)
-    p <- p + scale_y_continuous(limits=c(0, 115), expand = c(0, 0), breaks = c(0, 20, 40, 60, 80, 100)) + 
+    annotate_data$group <- counts_list[["names"]]
+    p <- p + scale_y_continuous(limits=c(0, 115), expand = c(0, 0), breaks = c(0, 20, 40, 60, 80, 100)) +
       geom_segment(aes(x=x, xend=xend, y=105, yend=105, colour = group), data = annotate_data,  size = 5, lineend = "butt") +
       scale_colour_manual(values = colors) + guides(colour = FALSE) +
       geom_text(aes(x = textx, y = texty, label = group), data = annotate_data, size = 4)
@@ -168,6 +233,6 @@ if(!opt$bym){
 
 wd<-length(label_order)*0.2+p1
 wd<-ifelse(wd<50,wd,49.9)
-write.table(otu_out,paste(opt$out,"table.xls"),sep = "\t",quote=FALSE,row.names = TRUE,col.names = NA)
+write.table(otu_out,paste(opt$out,"table.xls",sep = ""),sep = "\t",quote=FALSE,row.names = TRUE,col.names = NA)
 ggsave(plot = p,paste(opt$out,"barplot.pdf",sep = ""),width = wd,height = 7,dpi = 300)
 

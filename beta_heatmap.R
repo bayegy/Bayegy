@@ -1,15 +1,15 @@
 library(optparse)
 
 #######arguments
-option_list <- list( 
-    make_option(c("-i", "--input"),metavar="path", dest="otu",help="OTU table with Consensus Lineage at last column",default=NULL),
-    make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
-    make_option(c("-t", "--tree"),metavar="path",dest="tree", help="rooted tree. Required",default=NULL),
-    make_option(c("-r", "--rep-seqs"),metavar="path",dest="rep", help="Representative sequences. Required",default=NULL),
-    make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
-    make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
-    make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
-    )
+option_list <- list(
+  make_option(c("-i", "--input"),metavar="path", dest="otu",help="OTU table with Consensus Lineage at last column",default=NULL),
+  make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
+  make_option(c("-t", "--tree"),metavar="path",dest="tree", help="rooted tree. Required",default=NULL),
+  # make_option(c("-r", "--rep-seqs"),metavar="path",dest="rep", help="Representative sequences. Required",default=NULL),
+  make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
+  make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
+  make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
+)
 
 opt <- parse_args(OptionParser(option_list=option_list,description = "This script is used to draw the relative stack barplot of species"))
 
@@ -32,7 +32,8 @@ if(!cluster){
 }
 
 
-qiimedata = import_qiime(opt$otu, opt$map, opt$tree, opt$rep)
+# qiimedata = import_qiime(opt$otu, opt$map, opt$tree, opt$rep)
+qiimedata = import_qiime(opt$otu, opt$map, opt$tree)
 
 print("#calculate distance")
 for (distance_matrix in list(c('bray','bray_curtis'), c('unifrac','unweighted_unifrac'), c('wunifrac','weighted_unifrac'))){

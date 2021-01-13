@@ -618,7 +618,7 @@ COMMENT
 
 		source deactivate
 		source activate qm2
-
+<<skip
 		test=${not_rda// */}
 		if [ ! $test == "all" ];then
 			echo "##############################################################\nCorrelation heatmap analysis"
@@ -638,6 +638,24 @@ COMMENT
 				done;
 			done;
 		fi;
+skip
+
+	    test=${not_rda// */}
+	    if [ ! $test == "all" ];then
+	        echo "##############################################################\nCorrelation heatmap analysis"
+	        for nrda in $not_rda;
+	            do echo $nrda;
+	            arr=(${nrda//:/ });
+	            nrda=${arr[0]};
+	            prefix=${arr[1]};
+	            for n7 in "Phylum" "Class" "Order" "Family" "Genus" "Species";
+	                do echo $n7;
+					Rscript ${SCRIPTPATH}/cor_heatmap.R -i otu_table_forlefse/otu_table.${n7}.relative.txt -o 2-CorrelationHeatmap/${n7}/ -n 25 -m $mapping_file -e $nrda -p "$prefix";
+					for category_1 in $category_set;do echo $category_1;Rscript ${SCRIPTPATH}/RDA.R -i exported/Relative/otu_table.${n7}.relative.txt -m $mapping_file -c $category_1 -o exported/Absolute/RDA/${n7} -n 25 -e $nrda -p "$prefix";done;
+	            done;
+	        done;
+	    fi;
+
 
 
 		source deactivate

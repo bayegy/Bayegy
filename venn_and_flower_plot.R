@@ -5,6 +5,7 @@ option_list <- list(
     make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of otu table with taxonomy at last column",default=NULL),
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
+    make_option(c("-k", "--colors"),metavar="string",dest="colors", help="Comma seprated group colors.",default=NULL),
     make_option(c("-t", "--threshold"),metavar="int or float", dest="thresh",help="The threshold of abundance for the judgement of existence, default is 0",default=0),
     make_option(c("-s", "--skip"),metavar="logical",dest="skip", help="T(Skip the first line(e.g. comment line) while reading abundance table) or F(not skip first line)",default=TRUE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
@@ -14,6 +15,7 @@ opt <- parse_args(OptionParser(option_list=option_list,description = "This scrip
 library(VennDiagram)
 library(plotrix)
 library(getopt)
+library(stringr)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #ag<-commandArgs(T)
 #if (length(ag)<3){
@@ -25,9 +27,15 @@ if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #  5.the threshold of abundance for the judgement of existence")
 #}else{
 
-base_dir<-normalizePath(dirname(get_Rscript_filename()))
-source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
-groups_color<-get_colors(opt$group, opt$map)
+
+
+if(is.null(opt$colors)){
+  base_dir<-normalizePath(dirname(get_Rscript_filename()))
+  source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+  groups_color<-get_colors(opt$group, opt$map)
+}else{
+  groups_color<-str_split(opt$colors, ",")[[1]]
+}
 
 
 otu<-opt$otu
@@ -44,10 +52,15 @@ data<-read.table(otu,header = T,skip = sk,sep = "\t",
                  comment.char = "",stringsAsFactors = F,check.names = F,row.names = 1)
 
 
+if(is.character(data[, dim(data)[2]])){
+  taxonomy<-data[,dim(data)[2]]
+  data<-data[,-dim(data)[2]]
+  has_tax<-TRUE
+}else{
+  has_tax<-FALSE
+}
 
-taxonomy<-data[,dim(data)[2]]
-data<-data[,-dim(data)[2]]
-meta<-meta[match(colnames(data),rownames(meta)),]
+meta<-meta[match(colnames(data), rownames(meta)),]
 data<-data[,!is.na(meta)]
 meta<-meta[!is.na(meta)]
 
@@ -64,7 +77,12 @@ d1<-colSums(tb1)
 ll<-length(unig)
 
 com<-sum(d1==ll)
-com_spe<-data.frame(OTUID=colnames(tb1)[d1==ll],Taxonomy=taxonomy[d1==ll],SUM_Abundance=abdc[d1==ll])
+if(has_tax){
+  com_spe<-data.frame(OTUID=colnames(tb1)[d1==ll],Taxonomy=taxonomy[d1==ll],SUM_Abundance=abdc[d1==ll])
+}else{
+  com_spe<-data.frame(Features=colnames(tb1)[d1==ll], SUM_Abundance=abdc[d1==ll])
+}
+
 write.table(com_spe,paste(out,"/",group,"_common_species.xls",sep = ""),row.names = F,sep = "\t")
 
 
@@ -72,7 +90,11 @@ flower_data<-c()
 for(i in 1:ll){
   is_uni<-(d1==1&tb1[i,]==1)
   flower_data[i]<-sum(is_uni)
-	uni_spe<-data.frame(OTUID=colnames(tb1)[is_uni],Taxonomy=taxonomy[is_uni],SUM_Abundance=abdc[is_uni])
+  if(has_tax){
+    uni_spe<-data.frame(OTUID=colnames(tb1)[is_uni],Taxonomy=taxonomy[is_uni],SUM_Abundance=abdc[is_uni])
+  }else{
+    uni_spe<-data.frame(Features=colnames(tb1)[is_uni], SUM_Abundance=abdc[is_uni])
+  }
   write.table(uni_spe,paste(out,"/",group,"_",unig[i],"_special_species.xls",sep = ""),row.names = F,sep = "\t")
 }
 

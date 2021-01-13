@@ -5,6 +5,7 @@ option_list <- list(
     make_option(c("-i", "--input"),metavar="path", dest="ap",help="Specify the path of merged α diversity file",default=NULL),
     make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file",default=NULL),
     make_option(c("-c", "--category"),metavar="string",dest="group", help="Specify category name in mapping file",default="none"),
+    make_option(c("-t", "--transpose"),metavar="logical", dest="trans",help="Transpose the input table. default FALSE",default=FALSE),
     make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files",default="./")
     )
 
@@ -20,9 +21,9 @@ library(ggsignif)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 #ag<-commandArgs(T)
 #if(length(ag)<4){
-#print("Please input: (1) Full path of mapfile; 
-#      (2) Column name in mapfile you want to analyse; 
-#      (3) Full path of merged α diversity file; 
+#print("Please input: (1) Full path of mapfile;
+#      (2) Column name in mapfile you want to analyse;
+#      (3) Full path of merged α diversity file;
 #      (4) Path of the output files")
 #}else{
 
@@ -34,7 +35,9 @@ if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
 map<-read.table(opt$map,header = T, skipNul=TRUE,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "",na.strings="")
 adiv<-read.table(opt$ap,header = T, skipNul=TRUE,row.names = 1,check.names = F,stringsAsFactors = F,sep = "\t",comment.char = "")
 
-
+if(opt$trans){
+  adiv <- t(adiv)
+}
 a<-colnames(adiv)
 
 map<-map[opt$group]

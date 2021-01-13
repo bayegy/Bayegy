@@ -12,6 +12,7 @@ from pylab import *
 # pdb.set_trace()
 from lefse import *
 import numpy as np
+from Bayegy.getColors import get_lefse_colors
 
 dark_colors = [[0.4, 0.0, 0.0], [0.0, 0.2, 0.0], [0.0, 0.0, 0.4], 'm', 'c', [
     1.0, 0.5, 0.0], [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k']
@@ -407,14 +408,15 @@ def draw_tree(out_file, tree, params):
 if __name__ == '__main__':
     params = read_params(sys.argv)
     if params['category'] and params['map']:
-        sys.path.append('/home/admin1/github/Bayegy')
-        from getColors import get_lefse_colors
         category_colors = get_lefse_colors(params['category'], params['map'], params['input_file'])
     else:
         category_colors = False
 
-    colors = params['colors'].split(',') if params['colors'] else False
-    colors = colors or category_colors or ['r', 'g', 'b', 'm', 'c', [1.0, 0.5, 0.0], [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k']
+    # colors = params['colors'].split(',') if params['colors'] else False
+    colors = get_lefse_colors(params['category'], params['map'], params['input_file'],
+                              colors=params['colors']) if params['colors'] else False
+    colors = colors or category_colors or ['r', 'g', 'b', 'm', 'c', [
+        1.0, 0.5, 0.0], [0.0, 1.0, 0.0], [0.33, 0.125, 0.0], [0.75, 0.75, 0.75], 'k']
     # print colors
     params['fore_color'] = 'w' if params['back_color'] == 'k' else 'k'
     clad_tree = read_data(params['input_file'], params)

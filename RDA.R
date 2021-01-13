@@ -4,6 +4,7 @@ option_list <- list(
   make_option(c("-i", "--input"),metavar="path", dest="otu",help="Specify the path of collapsed bacteria table. Required",default=NULL),
   make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
   make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
+  make_option(c("-t", "--colors"),metavar="string",dest="colors", help="Comma seprated group colors.",default=NULL),
   make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if null",default=""),
   make_option(c("-n", "--number"),metavar="int", dest="num",help="The number of species needed to be plotted, default is 20",default=20),
   make_option(c("-e", "--exclude"),metavar="string",dest="ex", help="Specify the numeric variables excluded from plot and seprated by commas in mapping file",default="none"),
@@ -23,12 +24,16 @@ library(ggplot2)
 library(RColorBrewer)
 library(getopt)
 
-base_dir<-normalizePath(dirname(get_Rscript_filename()))
-source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
-groups_color<-get_colors(opt$group, opt$map)
+if(is.null(opt$colors)){
+  base_dir<-normalizePath(dirname(get_Rscript_filename()))
+  source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+  groups_color<-get_colors(opt$group, opt$map)
+}else{
+  groups_color<-str_split(opt$colors, ",")[[1]]
+}
 
 
-ex<-str_split(opt$ex,",")[[1]]
+
 # dat <- read.table(opt$otu, header = TRUE, sep = "\t",comment.char = "",check.names = F)
 dat <- read.table(as.character(opt$otu),quote="",comment.char="",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
 # dat[,2:(ncol(dat)-1)]=apply(dat[,2:(ncol(dat)-1)],2,function(x){x/sum(x)})
@@ -48,9 +53,24 @@ for(i in 1:length(map)){
   notstr[i]=is.numeric(map[,i])
 }
 
-if(ex[1]!="none"){
-  notstr=notstr&(!colnames(map)%in%ex)
+
+if(opt$ex!="none"){
+  pre_ex <- str_split(opt$ex,">")[[1]]
+  if(length(pre_ex)>1){
+    flag <- pre_ex[1]
+    ex <- pre_ex[2]
+  }else{
+    flag<-"exclude"
+    ex <- pre_ex[1]
+  }
+  ex<-str_split(ex,",")[[1]]
+  if(flag=="exclude"){
+    notstr=notstr&(!colnames(map)%in%ex)
+  }else{
+    notstr=notstr&(colnames(map)%in%ex)
+  }
 }
+
 group_name=opt$group
 sel=c(group_name,colnames(map)[notstr])
 

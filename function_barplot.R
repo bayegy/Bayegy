@@ -2,16 +2,20 @@
 #utf-8
 library(optparse)
 #######arguments
-option_list <- list( 
-  make_option(c("-i", "--input"),metavar="path", dest="func",help="Specify the path of predicted KEGG pathway file of level 3. Required",default=NULL),
+option_list <- list(
+  make_option(c("-i", "--input"),metavar="path", dest="func",help="Abundance table. Required",default=NULL),
+  make_option(c("-f", "--feature-col"),metavar="int", dest="fcol",help="which column contain the feature name. -1 for the last column",default=-1),
   make_option(c("-m", "--map"),metavar="path",dest="map", help="Specify the path of mapping file. Required",default=NULL),
   make_option(c("-c", "--category"),metavar="string",dest="group", help="Category to compare. Required",default=NULL),
+  make_option(c("-t", "--colors"),metavar="string",dest="colors", help="Comma seprated group colors.",default=NULL),
   make_option(c("-l", "--log"),metavar = "logical",dest="log", help="If TRUE, log the data before comparing. Options of logical type are TRUE, T, FALSE, F. default = FALSE",default = "FALSE"),
   make_option(c("-j", "--adjust-p"),metavar = "logical",dest="ap", help="If TRUE, adjust the p value before barplot. default = TRUE",default = "TRUE"),
   make_option(c("-e", "--add-se"),metavar = "logical",dest="se", help="If TRUE, add SE error bar, otherwise add SD error bar. default = TRUE",default = "TRUE"),
   make_option(c("-a", "--alpha"),metavar = "float",dest="alpha", help="Alpha for significance. default=0.05",default=0.05),
   make_option(c("-b", "--output-by-L1"),metavar = "logical",dest="bl", help="IF TRUE, output barplot for each pathway of L1 level. If FALSE, output only one plot anyway. Or use auto to determine by the number of siginficant function (10)",default="auto"),
   make_option(c("-s", "--scale"),metavar = "logical",dest="scale", help="IF TRUE, scale the data before plot.",default="F"),
+  make_option(c("-k", "--skip"),metavar = "logical",dest="skip", help="IF TRUE, skip the first line.",default=TRUE),
+  make_option(c("-p", "--prefix"),metavar="str", dest="prefix",help="The prefix of output files, default if ''",default=""),
   make_option(c("-o", "--output"),metavar="directory",dest="out", help="Specify the directory of output files. default=./",default="./")
 )
 
@@ -24,21 +28,46 @@ library(agricolae)
 library(ggplot2)
 library(getopt)
 if(!dir.exists(opt$out)){dir.create(opt$out,recursive = T)}
+opt$out<-paste(opt$out,"/",opt$prefix, sep="")
 
-func<-read.table(opt$func,comment.char="",quote = "",skip = 1,check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+if(as.logical(opt$skip)){
+  func<-read.table(opt$func,comment.char="",quote = "",skip = 1,check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+}else{
+  func<-read.table(opt$func,comment.char="",quote = "",check.names=F,stringsAsFactors=F, header = TRUE, sep = "\t")
+}
+
 map<-read.table(opt$map,sep="\t",na.strings="",header = T,row.names=1,comment.char = "",check.names = F,stringsAsFactors = F)
 group<-map[opt$group]
 group<-na.omit(group)
 #clean na of group
 
-rownames(func)<-func[,ncol(func)]
-func<-func[,-c(1,ncol(func))]
+#兼容云平台和16S流程
+fcol = as.numeric(opt$fcol)
+if(fcol==-1){
+  rownames(func)<-func[,ncol(func)]
+}else{
+  rownames(func)<-func[,fcol]
+}
+
+df_map<-function(df, func){
+  out<-c()
+  for(i in 1:ncol(df)){
+    out[i]<-func(df[, i])
+  }
+  return(out)
+}
+
+#func<-func[,-c(1,ncol(func))]
+func<-func[,df_map(func, is.numeric)]
 #清理数据
+# print(group)
+# print(func)
 func<-func[,match(rownames(group),colnames(func))]
 #clean na of func
 func<-apply(func,2,function(x){x/sum(x)})
 #求相对丰度
 func<-t(func)
+func[is.na(func)] <- 0
 func<-func[,colSums(func>0)>=nrow(func)*0.5]
 #剔除观测样本数小于50%总样本数的功能
 if(as.logical(opt$log)){
@@ -59,7 +88,7 @@ sprintf("Proccesing anova of %d samples",N_sample)
 data_for_anova<-melt(data.frame(group=group,t(func),check.names = FALSE),id.vars = "group")
 
 anova_results<-compare_means(value~group,data = data_for_anova,method = "anova",group.by = "variable")
-write.table(anova_results,paste(opt$out,'/',opt$group,"_all_pathway_anova_results.xls",sep = ""),sep = "\t",row.names = F)
+write.table(anova_results,paste(opt$out, opt$group,"_all_pathway_anova_results.xls",sep = ""),sep = "\t",row.names = F)
 
 if(as.logical(opt$ap)){
   pvalue<-anova_results$p.adj
@@ -99,9 +128,14 @@ if(opt$bl=="auto"){
   }
 }
 
-base_dir<-normalizePath(dirname(get_Rscript_filename()))
-source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
-groups_color<-get_colors(opt$group, opt$map)
+
+if(is.null(opt$colors)){
+  base_dir<-normalizePath(dirname(get_Rscript_filename()))
+  source(paste(base_dir,"/piputils/get_colors.R", sep = ""))
+  groups_color<-get_colors(opt$group, opt$map)
+}else{
+  groups_color<-str_split(opt$colors, ",")[[1]]
+}
 
 
 if(how==1){
@@ -143,13 +177,13 @@ if(how==1){
               axis.line = element_line(),panel.border =  element_blank(),
               axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))+
         scale_fill_manual(values = groups_color)
-      ggsave(plot = p,paste(opt$out,'/',opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
+      ggsave(plot = p,paste(opt$out, opt$group,"_",l1,"_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
       if(as.logical(opt$se)){
         colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
       }else{
         colnames(bar_data)<-c("KEGG pathway","Group","Mean","SD","Duncan significance")
       }
-      write.table(bar_data,paste(opt$out,'/',opt$group,"_",l1,"_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
+      write.table(bar_data,paste(opt$out, opt$group,"_",l1,"_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
     }
   }
 }else{
@@ -187,13 +221,13 @@ if(how==1){
             axis.line = element_line(),panel.border =  element_blank(),
             axis.text.x = element_text(angle = 90,size = 9,vjust = 1,hjust = 1))+scale_y_continuous(expand = c(0, 0))+
       scale_fill_manual(values = groups_color)
-    ggsave(plot = p,paste(opt$out,'/',opt$group,"_all_significant_pathway_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
+    ggsave(plot = p,paste(opt$out, opt$group,"_all_significant_pathway_barplot_of_duncan.pdf",sep = ""),dpi=300,height = 7,width = p1)  
     if(as.logical(opt$se)){
       colnames(bar_data)<-c("KEGG pathway","Group","Mean","SE","Duncan significance")
     }else{
       colnames(bar_data)<-c("KEGG pathway","Group","Mean","SD","Duncan significance")
     }
-    write.table(bar_data,paste(opt$out,'/',opt$group,"_all_significant_pathway_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
+    write.table(bar_data,paste(opt$out, opt$group,"_all_significant_pathway_duncan_results.xls",sep = ""),sep = "\t",row.names = F)
   }
 }
 

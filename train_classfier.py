@@ -17,25 +17,25 @@ p.add_argument('-p', '--prefix', dest='prefix', metavar='<str>', default='', hel
 
 options = p.parse_args()
 if not os.path.exists(options.output):
-  os.makedirs(options.output)
+    os.makedirs(options.output)
 
 options.output = options.output + '/' + options.prefix
 
 if not options.fp or not options.rp:
-  os.system('''qiime tools import --type 'FeatureData[Sequence]'   --input-path %s  --output-path %srep-set.qza&&\
+    os.system('''qiime tools import --type 'FeatureData[Sequence]'   --input-path %s  --output-path %srep-set.qza&&\
 qiime tools import  --type 'FeatureData[Taxonomy]'  --input-format HeaderlessTSVTaxonomyFormat  --input-path %s --output-path %sref-taxonomy.qza&&\
 qiime feature-classifier fit-classifier-naive-bayes --i-reference-reads %srep-set.qza --i-reference-taxonomy %sref-taxonomy.qza --o-classifier %sclassifier.qza''' %
-            (options.input, options.output, options.taxonomy, options.output,
-             options.output, options.output, options.output))
+              (options.input, options.output, options.taxonomy, options.output,
+               options.output, options.output, options.output))
 elif options.taxonomy:
-  os.system('''qiime tools import --type 'FeatureData[Sequence]'   --input-path %s  --output-path %srep-set.qza&&\
+    os.system('''qiime tools import --type 'FeatureData[Sequence]'   --input-path %s  --output-path %srep-set.qza&&\
 qiime tools import  --type 'FeatureData[Taxonomy]'  --input-format HeaderlessTSVTaxonomyFormat  --input-path %s --output-path %sref-taxonomy.qza&&\
 qiime feature-classifier extract-reads  --i-sequences %srep-set.qza  --p-f-primer %s   --p-r-primer %s --o-reads %sref-seqs.qza&&\
 qiime feature-classifier fit-classifier-naive-bayes --i-reference-reads %sref-seqs.qza --i-reference-taxonomy %sref-taxonomy.qza --o-classifier %sclassifier.qza''' %
-            (options.input, options.output, options.taxonomy, options.output,
-             options.output, options.fp, options.rp, options.output, options.output, options.output, options.output))
+              (options.input, options.output, options.taxonomy, options.output,
+               options.output, options.fp, options.rp, options.output, options.output, options.output, options.output))
 else:
-  os.system('''qiime tools import --type 'FeatureData[Sequence]'   --input-path %s  --output-path %srep-set.qza&&\
+    os.system('''qiime tools import --type 'FeatureData[Sequence]'   --input-path %s  --output-path %srep-set.qza&&\
 qiime feature-classifier extract-reads  --i-sequences %srep-set.qza  --p-f-primer %s   --p-r-primer %s --o-reads %sref-seqs.qza''' %
-            (options.input, options.output,
-             options.output, options.fp, options.rp, options.output))
+              (options.input, options.output,
+               options.output, options.fp, options.rp, options.output))

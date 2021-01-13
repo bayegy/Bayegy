@@ -103,7 +103,7 @@ while(<IN>){
                 $matrix{$level}{$full_tax}->[$i] += $l[$i+1];
                 if ($tax !~ /Unspecified/){
                     $spestat && ($samp_spe_num{$level}->[$i] += $l[$i+1]);
-                    print $samp_spe_num{$level}->[$i], "\n";
+                    # print $samp_spe_num{$level}->[$i], "\n";
                 }
             }
             $matrix{$level}{$full_tax}->[$#tag_num+1] = max(@{$matrix{$level}{$full_tax}});

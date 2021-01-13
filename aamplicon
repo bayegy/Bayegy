@@ -1,0 +1,87 @@
+#!/home/bayegy/pipelines/metagenome/miniconda2/bin/python3.8
+
+import argparse
+from Bayegy.ampliconLibs.ampliconPipeline import AmpliconPipeline
+
+p = argparse.ArgumentParser(
+    description="This script is used to analyze the amplicon sequence data.")
+p.add_argument('-i', '--input', dest='input', metavar='<directory>', required=True,
+               help='Directory of demuxed fastq files. Sub-directory is allowed when storing fastq files.')
+p.add_argument('-m', '--map', dest='map', metavar='<path>', required=True,
+               help='Sample metadata file. The sample ID must in first and last column, and two columns do not have to same, but the IDs in first column must be respond to --sample-id-patern')
+p.add_argument('-c', '--categories', dest='categories', metavar='<str>', default=False,
+               help='Column names of metadata, which are categories to compare. You can specify more than one category, and the categories must be seprated by commas. If not specified, categories must starts with Category')
+p.add_argument('-O', '--orders', dest='orders', metavar='<str>', default=False,
+               help='Column names of metadata seprated by commas, which are orders sequence used to reorder samples. If not specified, orders must starts with Order')
+p.add_argument('-t', '--type', dest='type', metavar='<str>', default='16S_PE',
+               help='Amplicon Sequence type in the formation of [16S|18S|ITS|others]_[SE|PE|JPE], default is 16S_PE. PE meaning paired end. JPE meaning joined paired end')
+p.add_argument('-M', '--otu-method', dest='otu_method', metavar='<OTU cluster method>', default='dada2',
+               help='method used to cluster OTU; dada2 or deblur. default: dada2')
+p.add_argument('--otu-args', dest='otu_args', metavar='<arguments>', default=None,
+               help='Additional arguments which will pass to OTU cluster method(qiime dada2 or qiime deblur depend on which cluster method you choose)')
+p.add_argument('--join-args', dest='join_args', metavar='<arguments>', default=None,
+               help='Additional arguments which will pass to reads join method(qiime vsearch join-pairs). Not needed unless the OTU cluster method is deblur.')
+p.add_argument('--classify-method', dest='classify_method', metavar='<classify method>', default='sklearn',
+               help='method used to assigning taxonomy to OTUs; sklearn or vsearch. default: sklearn')
+p.add_argument('--classify-args', dest='classify_args', metavar='<arguments>', default=None,
+               help='Additional arguments which will pass to classification method(qiime feature-classifier classify-sklearn or qiime feature-classifier classify-consensus-vsearch depend on which classification method you choose)')
+p.add_argument('--unspecified', metavar='<yes|no>', default="yes",
+               help='Append Unspecified at missing taxonomy levels. yes or no. default: yes')
+p.add_argument('-e', '--exclude', dest='exclude', default='none', metavar='<str>',
+               help='The strategy for RDA and correlation heatmap analysis in the formation of "[keep|exclude]>Var1,Var2:FileNamePrefix1;[keep|exclude]>Var3,Var4:FileNamePrefix2;none" ; "exclude>" is the default mode, if set to none, all variavles will be used in analysis, if set to all, none variavles will be used. default: none')
+p.add_argument('-k', '--filter-taxa', dest='ftaxa', default='exclude:mitochondria,chloroplast,Unassigned', metavar='<str>',
+               help='Expression used to filter microbiome taxa in the formation of [keep|exclude]:[taxon1,taxon2...]. default: exclude:mitochondria,chloroplast,Unassigned')
+p.add_argument('-s', '--sample-id-patern', dest='sp', default=r'raw\.split\.(.+)\.[12]\.fq$', metavar='<regular expression>',
+               help="The regular expression matching sample ID in raw fastq file names. You must use () to contain sample ID expression, and to prevent unexpected error, using '' to contain the expression is necessary. ")
+p.add_argument('-f', '--forward-pattern', dest='fp', default=r'\.1\.fq$', metavar='<regular expression>',
+               help='The regular expression matching forward fastq file names.')
+p.add_argument('-r', '--reverse-pattern', dest='rp', default=r'\.2\.fq$', metavar='<regular expression>',
+               help='The regular expression matching reverse fastq file names.')
+p.add_argument('-l', '--db-classifier', dest='classifier', default=None, metavar='<path>',
+               help='Path to the classifier for alignment and assigning taxonomy. --db-taxonomy and --db-fasta will be ignored if this flag is specified')
+p.add_argument('--db-taxonomy', dest='taxonomy', default=None, metavar='<path>',
+               help='Path to the database taxonomy. Consensus taxonomy levels must start with d__, p__, c__, o__, f__, g__, s__')
+p.add_argument('--db-fasta', dest='db_fasta', default=None, metavar='<path>',
+               help='Path to the database reference sequence')
+p.add_argument('-F', '--forward-primer', dest='Fprimer', default=None, metavar='<DNA sequence>',
+               help='Forward primer sequence. e.g. ACTCCTACGGGAGGCAGCAG for 16S 338F')
+p.add_argument('-R', '--reverse-primer', dest='Rprimer', default=None, metavar='<DNA sequence>',
+               help='Reverse primer sequence. e.g. GGACTACHVGGGTWTCTAAT for 16S 806R')
+p.add_argument('-a', '--min_align', dest='min_align', default=None, metavar='<float>',
+               help='Picrust2 argument: Proportion of the total length of an input querysequence that must align with reference sequences. Anysequences with lengths below this value after makingan alignment with reference sequences will be excludedfrom the placement and all subsequent steps. Default for 16s is 0.8, and others 0.6')
+p.add_argument('-p', '--processors', dest='processors', default=10, metavar='<str>',
+               help='number of processors')
+p.add_argument('-o', '--outdir', dest='outdir', metavar='<directory>', default='./',
+               help='Specify the output directory')
+
+options = p.parse_args()
+
+
+ap = AmpliconPipeline(
+    raw_dir=options.input,
+    pre_map=options.map,
+    out_dir=options.outdir,
+    sam_pattern=options.sp,
+    fwd_pattern=options.fp,
+    rev_pattern=options.rp,
+    fwd_primer=options.Fprimer,  # 338F ACTCCTACGGGAGGCAGCAG
+    rev_primer=options.Rprimer,  # 806R GGACTACHVGGGTWTCTAAT
+    raw_type=options.type,
+    db_classifier=options.classifier,
+    db_taxonomy=options.taxonomy,
+    db_rep_set=options.db_fasta,
+    threads=options.processors,
+    otu_method=options.otu_method,
+    otu_args=options.otu_args,
+    classify_method=options.classify_method,
+    classify_args=options.classify_args,
+    taxa_filter=options.ftaxa,
+    join_args=options.join_args,
+    categories=options.categories,
+    exclude=options.exclude,
+    unspecified=options.unspecified == "yes",
+    min_align=options.min_align,
+    orders=options.orders
+)
+# breakpoint()
+ap.run()

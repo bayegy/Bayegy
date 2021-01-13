@@ -13,7 +13,7 @@ p.add_argument('-i', '--input', dest='input', metavar='<path>',
 p.add_argument('-m', '--map', dest='meta', metavar='<path>',
                help='raw sample metadata files. The sample ID must in first and last column. Two columns do not have to be same, but the IDs in first column must be respond to --sample-id-patern')
 p.add_argument('-s', '--sample-id-patern', dest='sp', default=r'raw\.split\.(.+)\.[12]\.fq$', metavar='<regular expression>',
-               help='The regular expression of sample ID in file names. You must use \(\) to contain sample ID expression')
+               help=r'The regular expression of sample ID in file names. You must use \(\) to contain sample ID expression')
 p.add_argument('-f', '--forward-file-pattern', dest='fp', default=r'\.1\.fq$', metavar='<regular expression>',
                help='The regular expression representing forward sequence in file names')
 p.add_argument('-r', '--reverse-file-pattern', dest='rp', default=r'\.2\.fq$', metavar='<regular expression>',
@@ -81,7 +81,7 @@ for root, dirs, files in os.walk(options.input):
                     print("{} was found among fastq files, but not found in pre-map file".format(pre_id))
                     ff += 1
             else:
-                print("File {} was filtered".format(fl))
+                print("File {} was filtered out".format(fl))
 
 fout.close()
 # print("\nThe following samples were :")
@@ -90,7 +90,7 @@ with open(options.meta, 'r') as mp, open(options.out + '/' + 'sample-metadata.ts
     miss = 0
     for line in enumerate(mp):
         li = re.split('\t', line[1].strip())
-        li = [l.strip() for l in li]
+        li = [e.strip() for e in li]
         fc = len(li) - 1
         if line[0] == 0:
             li[0] = "#SampleID"
